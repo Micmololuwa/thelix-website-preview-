@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 // ---- Reusable SVG Icons ----
 
@@ -26,131 +28,10 @@ const CheckIcon = () => (
 );
 
 const QuoteIcon = () => (
-  <svg width="123" height="99" viewBox="0 0 123 99" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-thelix-orange">
+  <svg width="123" height="99" viewBox="0 0 123 99" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M69.8493 98.8956V69.1577C69.8493 50.4851 74.2293 35.2705 82.9893 23.5136C91.9798 11.5263 105.235 3.68841 122.755 0V22.4763C114.917 24.3205 108.693 27.7784 104.082 32.8499C99.4719 37.691 96.475 43.5694 95.0919 50.4851H115.839V98.8956H69.8493ZM0 98.8956V69.1577C0 50.4851 4.37999 35.2705 13.14 23.5136C22.1305 11.5263 35.2704 3.68841 52.5599 0V22.4763C44.722 24.3205 38.4978 27.7784 33.8873 32.8499C29.2768 37.691 26.2799 43.5694 24.8968 50.4851H45.6441V98.8956H0Z" fill="#F48220" />
   </svg>
 );
-
-// ---- Credit Veto Logo ----
-const CreditVetoLogo = () => (
-  <div className="flex items-center gap-3">
-    <div className="relative w-10 h-10 flex-shrink-0">
-      <div className="absolute inset-x-0 bottom-0 top-1 rounded-t-[5px] rounded-b-[23px] bg-[#5B32E5]" />
-      <svg style={{ borderRadius: "34.563px", background: "#F7F5F2" }} className="absolute left-[5px] top-0" width="30" height="35" viewBox="0 0 30 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1.5108e-06 17.2815C1.7092e-06 19.551 0.381588 21.7982 1.12297 23.8949C1.86436 25.9916 2.95102 27.8967 4.32092 29.5014C5.69082 31.1062 7.31713 32.3791 9.10699 33.2476C10.8968 34.1161 12.8152 34.5631 14.7525 34.5631C16.6899 34.5631 18.6082 34.1161 20.3981 33.2476C22.188 32.3791 23.8143 31.1062 25.1842 29.5014C26.5541 27.8967 27.6407 25.9916 28.3821 23.8949C29.1235 21.7982 29.5051 19.551 29.5051 17.2815L24.0192 17.2815C24.0192 18.7071 23.7795 20.1186 23.3138 21.4356C22.8481 22.7527 22.1655 23.9493 21.305 24.9573C20.4446 25.9653 19.423 26.7649 18.2987 27.3104C17.1744 27.856 15.9695 28.1367 14.7525 28.1367C13.5356 28.1367 12.3306 27.856 11.2064 27.3104C10.0821 26.7649 9.06053 25.9653 8.20004 24.9573C7.33956 23.9493 6.65698 22.7527 6.19129 21.4356C5.7256 20.1186 5.48591 18.7071 5.48591 17.2815L1.5108e-06 17.2815Z" fill="#F7F5F2" />
-      </svg>
-    </div>
-    <span className="font-bold text-xl text-black" style={{ fontFamily: "Inter, sans-serif" }}>Credit Veto</span>
-  </div>
-);
-
-// ---- ExcelMind Logo ----
-const ExcelMindLogo = () => (
-  <div className="flex items-center gap-2">
-    <svg width="37" height="29" viewBox="0 0 37 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12.9919 4.66585V0C9.4268 0.372862 6.12615 2.05303 3.72694 4.71626C1.32772 7.37948 0 10.837 0 14.4215C0 18.0061 1.32772 21.4636 3.72694 24.1268C6.12615 26.7901 9.4268 28.4702 12.9919 28.8431V24.1868C11.0584 23.8825 9.25818 23.013 7.81784 21.6877C6.37751 20.3625 5.36147 18.6407 4.89765 16.7391H9.58077V12.1001H4.90532C5.36583 10.1996 6.38015 8.47856 7.81975 7.15508C9.25936 5.8316 11.0594 4.96526 12.9919 4.66585ZM36.6684 0H15.0083V4.79631C17.2794 5.21189 19.3328 6.41074 20.8112 8.18417C22.2896 9.9576 23.0992 12.1933 23.0992 14.5021C23.0992 16.8109 22.2896 19.0466 20.8112 20.8201C19.3328 22.5935 17.2794 23.7924 15.0083 24.2079V29.0042H36.6684V24.3653H23.8412C25.1289 22.9778 26.1349 21.3534 26.8034 19.5824C27.4499 17.873 29.1535 16.7967 30.98 16.7967H36.6684V12.1788H30.6059C29.776 12.1687 28.9692 11.9038 28.2949 11.42C27.6206 10.9361 27.1113 10.2567 26.836 9.47367C26.169 7.67279 25.151 6.02228 23.8412 4.61789H36.6684V0Z" fill="#094889" />
-    </svg>
-    <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "1.6rem", color: "#094889" }}>excel</span>
-    <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "1.6rem", color: "#0A7DB6", marginLeft: "-0.4rem" }}>mind</span>
-  </div>
-);
-
-// ---- ExcelMind Cyber Logo ----
-const ExcelMindCyberLogo = () => (
-  <div className="flex items-center gap-2">
-    <svg width="35" height="39" viewBox="0 0 35 39" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clipPath="url(#cyber-clip)">
-        <path d="M22.2595 18.9732C21.836 19.4718 21.4124 19.9109 20.9998 20.3188C18.6555 22.6022 16.6238 23.393 16.6238 23.393C15.054 22.5867 13.6133 21.5506 12.3494 20.3188C11.9102 19.8917 11.4929 19.4426 11.0991 18.9732C11.4929 18.5039 11.9102 18.0548 12.3494 17.6276C13.6129 16.3954 15.0536 15.3592 16.6238 14.5535C16.6238 14.5535 18.6555 15.3443 20.9998 17.6276C21.4124 18.0277 21.836 18.4747 22.2595 18.9732Z" fill="#1283FF" />
-        <path d="M29.3607 16.5961C28.909 17.3275 28.448 18.0183 27.9838 18.6716C27.3805 19.5171 26.7663 20.297 26.1568 21.0159C25.4426 21.8551 24.7315 22.6069 24.036 23.2836C20.0773 27.1267 16.6672 28.4598 16.6672 28.4598C14.0224 27.1032 11.5955 25.3585 9.46706 23.2836C8.73074 22.5639 8.03175 21.807 7.37283 21.0159C6.6127 20.1007 5.90565 19.1426 5.25516 18.1465C4.7863 17.4401 4.36277 16.7212 3.96424 15.996C2.03411 12.4889 0.838528 8.83966 0.0946074 5.48889H0.0789731C0.0789731 5.48889 -0.71965 14.2518 2.7624 23.2836C3.44653 25.0642 4.28317 26.7825 5.26297 28.4191C7.88904 32.8598 11.7072 36.4755 16.2843 38.8559C16.2843 38.8559 22.8326 36.2866 27.9916 27.8909C28.8977 26.4145 29.6963 24.8747 30.3812 23.2836C32.3661 18.6935 33.8195 12.8625 34.0774 5.50921C32.8615 9.96336 31.1939 13.6189 29.3607 16.5961Z" fill="#15194A" />
-        <path d="M29.381 13.4218C28.9288 14.1512 28.4699 14.8435 28.0041 15.4989C27.4009 16.3444 26.7867 17.1227 26.1771 17.8432C25.4629 17.0039 24.7518 16.2522 24.0563 15.5754C20.0976 11.7324 16.6875 10.3993 16.6875 10.3993C14.0427 11.7559 11.6158 13.5006 9.48737 15.5754C8.74953 16.294 8.04897 17.0498 7.38845 17.84C6.62955 16.9242 5.92306 15.9662 5.27235 14.9706C4.80974 14.2621 4.37891 13.5448 3.97986 12.8186C4.36901 12.0184 4.80036 11.2213 5.27235 10.4368C7.89867 5.99521 11.7181 2.37934 16.2967 0C16.2967 0 22.8451 2.56934 28.0041 10.965C28.4777 11.7355 28.9387 12.5498 29.381 13.4218Z" fill="#1283FF" />
-      </g>
-      <defs>
-        <clipPath id="cyber-clip">
-          <rect width="34.0703" height="38.8511" fill="white" />
-        </clipPath>
-      </defs>
-    </svg>
-    <span className="text-[#15194A] font-semibold text-base leading-tight" style={{ fontFamily: "IBM Plex Sans, sans-serif" }}>ExcelMind<br />Cyber</span>
-  </div>
-);
-
-// ---- Lightfort SVG Logo ----
-const LightfortLogo = () => (
-  <svg width="205" height="47" viewBox="0 0 205 47" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M26.1101 1.88908L19.2275 18.1177C19.078 18.4702 19.085 18.8694 19.2467 19.2164L21.7612 24.6116C22.1788 25.5076 21.5247 26.5341 20.5361 26.5341H1.35425C0.154409 26.5341 -0.450516 25.0871 0.392334 24.2331L23.9039 0.411962C24.9508 -0.648655 26.692 0.517142 26.1101 1.88908Z" fill="#21A0FC" />
-    <path d="M47.3765 19.8455L22.2138 45.7187C21.1343 46.8287 19.3394 45.5465 20.0393 44.1655L29.1154 26.257C29.3029 25.8869 29.3101 25.4512 29.1349 25.0751L26.6318 19.7044C26.2173 18.815 26.8589 17.7942 27.8401 17.782L46.3909 17.5517C47.5939 17.5368 48.2154 18.983 47.3765 19.8455Z" fill="#091934" />
-    <path d="M59.8525 35.4028V10.7506H64.3036V35.4028H59.8525ZM61.9754 35.4028V31.8762H76.4243V35.4028H61.9754Z" fill="#091934" />
-    <path d="M77.5713 35.4028V17.9408H81.8854V35.4028H77.5713ZM77.3659 15.0647V10.3055H82.0566V15.0647H77.3659Z" fill="#091934" />
-    <path d="M92.2893 42.7642C89.9839 42.7642 88.0893 42.2621 86.6056 41.2577C85.1448 40.2534 84.2774 38.8952 84.0035 37.1832H88.1122C88.3176 37.7767 88.7627 38.2332 89.4475 38.5528C90.1551 38.8952 91.0682 39.0664 92.1866 39.0664C93.8073 39.0664 95.0057 38.7012 95.7817 37.9707C96.5578 37.2631 96.9459 36.1789 96.9459 34.718V30.9517L97.254 31.0202C96.9801 32.2984 96.2839 33.3256 95.1654 34.1017C94.047 34.855 92.6774 35.2316 91.0567 35.2316C89.5046 35.2316 88.1464 34.8664 86.9823 34.1359C85.841 33.4055 84.9507 32.3897 84.3116 31.0887C83.6725 29.7647 83.3529 28.224 83.3529 26.4664C83.3529 24.6859 83.6839 23.1337 84.3459 21.8098C85.0078 20.4859 85.9323 19.4587 87.1192 18.7283C88.329 17.975 89.7328 17.5984 91.3307 17.5984C92.9741 17.5984 94.3209 17.9979 95.3709 18.7968C96.4437 19.5729 97.1057 20.6571 97.3568 22.0495L97.0828 22.0837V17.9408H101.294V34.6838C101.294 37.1718 100.484 39.1349 98.8633 40.5729C97.2654 42.0338 95.0741 42.7642 92.2893 42.7642ZM92.4605 31.8077C93.8529 31.8077 94.96 31.3397 95.7817 30.4039C96.6263 29.4452 97.0486 28.1098 97.0486 26.3979C97.0486 24.6859 96.6263 23.362 95.7817 22.4261C94.9372 21.4903 93.8187 21.0223 92.4263 21.0223C91.0567 21.0223 89.9497 21.5017 89.1051 22.4604C88.2605 23.3963 87.8383 24.7202 87.8383 26.4321C87.8383 28.1441 88.2605 29.468 89.1051 30.4039C89.9497 31.3397 91.0682 31.8077 92.4605 31.8077Z" fill="#091934" />
-    <path d="M104.174 35.4028V10.7506H108.488V35.4028H104.174ZM116.431 35.4028V24.3778C116.431 23.3049 116.157 22.4946 115.609 21.9468C115.062 21.399 114.263 21.125 113.213 21.125C112.3 21.125 111.478 21.3305 110.747 21.7414C110.04 22.1522 109.481 22.7229 109.07 23.4533C108.682 24.1838 108.488 25.0283 108.488 25.987L108.043 21.8098C108.636 20.5316 109.503 19.5158 110.645 18.7625C111.786 17.9865 113.156 17.5984 114.753 17.5984C116.648 17.5984 118.12 18.1348 119.17 19.2077C120.243 20.2805 120.78 21.7071 120.78 23.4876V35.4028H116.431Z" fill="#091934" />
-    <path d="M130.632 35.7452C128.486 35.7452 126.9 35.243 125.873 34.2387C124.868 33.2115 124.366 31.6821 124.366 29.6506V13.9691L128.715 12.3598V29.7533C128.715 30.5979 128.943 31.2256 129.399 31.6365C129.856 32.0474 130.575 32.2528 131.556 32.2528C131.944 32.2528 132.287 32.23 132.584 32.1843C132.903 32.1158 133.2 32.0359 133.474 31.9446V35.3001C133.2 35.437 132.812 35.5398 132.31 35.6082C131.807 35.6995 131.248 35.7452 130.632 35.7452ZM121.011 21.3305V17.9408H133.474V21.3305H121.011Z" fill="#091934" />
-    <path d="M136.592 35.4028V16.3316C136.592 14.4142 137.117 12.9533 138.167 11.9489C139.24 10.9218 140.838 10.4082 142.961 10.4082C143.44 10.4082 143.84 10.431 144.159 10.4767C144.479 10.5223 144.787 10.5908 145.084 10.6821V14.0375C144.924 13.9691 144.719 13.9234 144.467 13.9006C144.216 13.8549 143.931 13.8321 143.612 13.8321C142.698 13.8321 142.014 14.0604 141.557 14.5169C141.123 14.9506 140.907 15.5897 140.907 16.4343V35.4028H136.592ZM133.442 21.3305V17.9408H144.707V21.3305H133.442Z" fill="#091934" />
-    <path d="M153.358 35.7452C151.509 35.7452 149.877 35.3571 148.462 34.5811C147.069 33.805 145.985 32.7321 145.209 31.3626C144.433 29.9702 144.045 28.3838 144.045 26.6033C144.045 24.8229 144.433 23.2593 145.209 21.9126C145.985 20.5658 147.069 19.5158 148.462 18.7625C149.877 17.9865 151.509 17.5984 153.358 17.5984C155.23 17.5984 156.862 17.9865 158.254 18.7625C159.646 19.5158 160.731 20.5658 161.507 21.9126C162.283 23.2593 162.671 24.8229 162.671 26.6033C162.671 28.3838 162.272 29.9702 161.473 31.3626C160.697 32.7321 159.612 33.805 158.22 34.5811C156.827 35.3571 155.207 35.7452 153.358 35.7452ZM153.358 32.287C154.271 32.287 155.093 32.0588 155.823 31.6022C156.554 31.1229 157.124 30.4609 157.535 29.6164C157.946 28.749 158.151 27.7332 158.151 26.5691C158.151 24.8571 157.695 23.5104 156.782 22.5289C155.892 21.5473 154.75 21.0566 153.358 21.0566C151.966 21.0566 150.813 21.5473 149.9 22.5289C148.987 23.5104 148.53 24.8571 148.53 26.5691C148.53 27.7332 148.736 28.749 149.146 29.6164C149.58 30.4609 150.151 31.1229 150.858 31.6022C151.589 32.0588 152.422 32.287 153.358 32.287Z" fill="#091934" />
-    <path d="M164.132 35.4028V17.9408H168.344V22.1522H168.446V35.4028H164.132ZM168.446 26.2952L168.001 22.1522C168.412 20.6685 169.108 19.5386 170.09 18.7625C171.071 17.9865 172.247 17.5984 173.617 17.5984C174.096 17.5984 174.438 17.6441 174.644 17.7354V21.8098C174.53 21.7642 174.37 21.7414 174.164 21.7414C173.959 21.7185 173.708 21.7071 173.411 21.7071C171.745 21.7071 170.501 22.0723 169.679 22.8028C168.857 23.5332 168.446 24.6973 168.446 26.2952Z" fill="#091934" />
-    <path d="M185.552 35.7452C183.406 35.7452 181.82 35.243 180.793 34.2387C179.788 33.2115 179.286 31.6821 179.286 29.6506V13.9691L183.635 12.3598V29.7533C183.635 30.5979 183.863 31.2256 184.319 31.6365C184.776 32.0474 185.495 32.2528 186.477 32.2528C186.865 32.2528 187.207 32.23 187.504 32.1843C187.823 32.1158 188.12 32.0359 188.394 31.9446V35.3001C188.12 35.437 187.732 35.5398 187.23 35.6082C186.728 35.6995 186.168 35.7452 185.552 35.7452ZM175.931 21.3305V17.9408H188.394V21.3305H175.931Z" fill="#091934" />
-    <path d="M189.723 35.4028V10.7506H194.038V35.4028H189.723ZM201.981 35.4028V24.3778C201.981 23.3049 201.707 22.4946 201.159 21.9468C200.612 21.399 199.813 21.125 198.763 21.125C197.85 21.125 197.028 21.3305 196.297 21.7414C195.59 22.1522 195.031 22.7229 194.62 23.4533C194.232 24.1838 194.038 25.0283 194.038 25.987L193.592 21.8098C194.186 20.5316 195.053 19.5158 196.195 18.7625C197.336 17.9865 198.706 17.5984 200.303 17.5984C202.198 17.5984 203.67 18.1348 204.72 19.2077C205.793 20.2805 206.329 21.7071 206.329 23.4876V35.4028H201.981Z" fill="#091934" />
-  </svg>
-);
-
-// ---- Navbar ----
-const Navbar = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const navLinks = [
-    { label: "About Us", to: "/about" },
-    { label: "Solutions", to: "/solutions" },
-    { label: "Philanthropy", to: "/philanthropy" },
-    { label: "News", to: "/news" },
-    { label: "Career", to: "/career" },
-  ];
-
-  return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-white/40 shadow-sm">
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] flex items-center justify-between h-[70px]">
-        <img
-          src="https://api.builder.io/api/v1/image/assets/TEMP/53e3ed38afe6949bf8626b35ba337900da7d6c16?width=188"
-          alt="Thelix"
-          className="h-9 w-auto"
-        />
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              className="text-black font-medium text-sm font-jakarta hover:text-thelix-orange transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-        {/* Mobile toggle */}
-        <button
-          className="md:hidden text-black p-1"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-      {/* Mobile drawer */}
-      {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-6 pb-4">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              className="block py-3 text-black font-medium text-sm font-jakarta border-b border-gray-50 hover:text-thelix-orange transition-colors"
-              onClick={() => setMobileOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-      )}
-    </nav>
-  );
-};
 
 // ---- Hero Section ----
 const HeroSection = () => (
@@ -160,14 +41,14 @@ const HeroSection = () => (
       background: "linear-gradient(180deg, #C4DFE8 0%, #F6F6F5 30.55%, #F2D1C0 59.77%)",
     }}
   >
-    <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] pt-16 pb-0">
-      <div className="flex flex-col items-center gap-3 text-center max-w-3xl mx-auto mb-12">
-        <h1 className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-black font-jakarta leading-tight">
+    <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] pt-24 pb-0">
+      <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-12">
+        <h1 className="text-[43px] sm:text-[58px] lg:text-[78px] font-bold text-black font-jakarta leading-[1.1]">
           Leading the way in global innovation
         </h1>
-        <p className="text-black/80 text-base leading-[25px] max-w-[675px] font-jakarta">
-          Tincidunt neque viverra facilisi non consectetur morbi nisl pulvinar acel aliquam
-          pellentesque sit vitae massa lacinia velit unc risus blandit.
+        <p className="text-black/80 text-base leading-[25px] max-w-[675px] font-jakarta mt-6">
+          Unlocking potentials, impacting 300,000+ lives by 2030 through six strategic business
+          units built to transform industries. Creating pathways to economic freedom across continents.
         </p>
       </div>
     </div>
@@ -175,26 +56,34 @@ const HeroSection = () => (
       <img
         src="https://api.builder.io/api/v1/image/assets/TEMP/0a6d6ea00c511924219aea8f4bcaf4a9cf5542ab?width=2880"
         alt="Thelix global innovation"
-        className="w-full object-cover max-h-[520px] lg:max-h-[720px]"
+        className="w-full h-auto"
       />
     </div>
   </section>
 );
 
 // ---- Partners Section ----
+const partnerLogos = [
+  { src: "/emc.png", alt: "ExcelMind Cyber" },
+  { src: "/excelmind.png", alt: "ExcelMind" },
+  { src: "/lft.png", alt: "Lightforth" },
+  { src: "/Vizacheck.png", alt: "Vizacheck" },
+  { src: "/veripass.png", alt: "Veripass" },
+  { src: "/creditveto.png", alt: "Credit Veto" },
+];
+
 const PartnersSection = () => (
   <section className="bg-white py-8 border-b border-gray-100">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
       <div className="flex flex-wrap items-center justify-between gap-8">
-        <CreditVetoLogo />
-        <ExcelMindLogo />
-        <ExcelMindCyberLogo />
-        <LightfortLogo />
-        <img
-          src="https://api.builder.io/api/v1/image/assets/TEMP/597c9eb33616ddcc2e861c5728792cc6f2e327ea?width=308"
-          alt="Partner"
-          className="h-10 w-auto object-contain"
-        />
+        {partnerLogos.map((logo) => (
+          <img
+            key={logo.alt}
+            src={logo.src}
+            alt={logo.alt}
+            className="h-10 w-auto object-contain"
+          />
+        ))}
       </div>
     </div>
   </section>
@@ -207,19 +96,20 @@ const OrangeFeaturesBanner = () => (
       <div className="flex flex-col gap-12 lg:gap-20">
         <div className="flex flex-col gap-3 max-w-3xl">
           <h2 className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-white font-jakarta leading-tight tracking-[2.6px]">
-            Euismod sodales quis odio ullamcorper gravida.
+            Building Tomorrow's Economy Through Strategic Business Units
           </h2>
           <p className="text-white/80 text-base leading-[25px] max-w-[868px] font-jakarta">
-            Tincidunt neque viverra facilisi non consectetur morbi nisl pulvinar acel aliquam
-            pellentesque sit vitae massa
+            We built and operate high-impact companies across fintech, EdTech, cybersecurity,
+            education, identity verification, and healthcare — each one designed to transform its
+            industry and create lasting value across emerging and developed markets.
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4">
           {[
-            "Tincidunt neque viverra facilisi non consectetur morbi",
-            "Tincidunt neque viverra facilisi non consectetur morbi",
-            "Tincidunt neque viverra facilisi non consectetur morbi",
+            "Strategic business units built from the ground up to solve real problems at global scale",
+            "Deep operational expertise embedded across every company we own and operate",
+            "Community empowerment programmes that create lasting economic freedom",
           ].map((text, i) => (
             <div
               key={i}
@@ -238,40 +128,59 @@ const OrangeFeaturesBanner = () => (
 // ---- Venture Cards Section ----
 const VentureCardsSection = () => {
   const cards = [
-    { text: "Sit hendrerit quis id vel duis eleifend vitae pulvinar justo." },
-    { text: "Sit hendrerit quis id vel duis eleifend vitae pulvinar justo." },
-    { text: "Sit hendrerit quis id vel duis eleifend vitae pulvinar justo." },
-    { text: "Sit hendrerit quis id vel duis eleifend vitae pulvinar justo." },
+    { text: "We build the knowledge and tools that protect individuals, businesses, and communities in an increasingly complex world." },
+    { text: "We create the systems that move talented professionals from where they are to where they deserve to be." },
+    { text: "Thelix opens the doors — to markets, to mobility, to financial participation — that should never have been closed." },
+    { text: "We verify identity and enable access so no one is locked out of the opportunities, markets, or systems they deserve to participate in." },
   ];
 
   return (
     <section className="bg-[#160A00] py-16 lg:py-24">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
         <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
-          {/* Left text */}
-          <div className="flex flex-col gap-3 lg:w-[45%] lg:flex-shrink-0">
+          <div className="flex flex-col gap-6 lg:w-[45%] lg:flex-shrink-0">
             <h2 className="text-4xl sm:text-[45px] font-bold text-white font-jakarta leading-tight tracking-[1.8px]">
-              Euismod sodales quis odio ullam.
+              Built to Remove the Barriers That Hold People Back
             </h2>
-            <p className="text-white/80 text-base leading-[25px] font-jakarta">
-              Tincidunt neque viverra facilisi non consectetur morbi nisl pulvinar acel aliquam
-              pellentesque sit vitae massa
+
+            <p className="text-white/80 text-base leading-[27px] font-jakarta">
+              Thelix Holdings was built to remove those barriers — across cybersecurity, education,
+              career technology, financial services, and global mobility. A shared conviction that
+              the right system, built well, changes lives at scale.
             </p>
           </div>
 
-          {/* Right cards grid */}
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {cards.map((card, i) => (
-              <div
-                key={i}
-                className="flex flex-col gap-10 p-5 rounded-xl border border-black/5 bg-thelix-orange"
-              >
+          <div className="flex-1 flex flex-col sm:flex-row gap-4" style={{ minHeight: "560px" }}>
+            {/* Left column: short top, stretching bottom */}
+            <div className="flex flex-col gap-4 flex-1">
+              <div className="flex flex-col justify-between p-5 rounded-xl border border-black/5 bg-thelix-orange h-[300px]">
                 <LightbulbIcon />
-                <p className="text-white font-medium text-xl font-jakarta tracking-[0.84px] leading-normal">
-                  {card.text}
+                <p className="text-white font-medium text-base font-jakarta tracking-[0.84px] leading-normal">
+                  {cards[0].text}
                 </p>
               </div>
-            ))}
+              <div className="flex flex-col justify-between p-5 rounded-xl border border-black/5 bg-thelix-orange flex-1">
+                <LightbulbIcon />
+                <p className="text-white font-medium text-base font-jakarta tracking-[0.84px] leading-normal">
+                  {cards[2].text}
+                </p>
+              </div>
+            </div>
+            {/* Right column: stretching top, short bottom */}
+            <div className="flex flex-col gap-4 flex-1">
+              <div className="flex flex-col justify-between p-5 rounded-xl border border-black/5 bg-thelix-orange flex-1">
+                <LightbulbIcon />
+                <p className="text-white font-medium text-base font-jakarta tracking-[0.84px] leading-normal">
+                  {cards[1].text}
+                </p>
+              </div>
+              <div className="flex flex-col justify-between p-5 rounded-xl border border-black/5 bg-thelix-orange h-[300px]">
+                <LightbulbIcon />
+                <p className="text-white font-medium text-base font-jakarta tracking-[0.84px] leading-normal">
+                  {cards[3].text}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -280,77 +189,170 @@ const VentureCardsSection = () => {
 };
 
 // ---- Portfolio Gallery Section ----
+const businessUnits = [
+  {
+    id: "financial",
+    label: "Financial Services",
+    logo: "/Creditveto-white.png",
+    raw: true,
+    description: "Pioneering credit access and financial inclusion for underserved communities, removing barriers and enabling more people to access the capital they need.",
+    url: "https://www.creditvetoafrica.com/",
+    src: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=600&fit=crop&q=80",
+  },
+  {
+    id: "edtech",
+    label: "Ed-Tech",
+    logo: "/excelmind.png",
+    raw: false,
+    description: "Delivering world-class digital learning at scale, bridging the gap between education and employment across Africa and global markets.",
+    url: "https://excelmind.org/",
+    src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=600&fit=crop&q=80",
+  },
+  {
+    id: "education",
+    label: "Education",
+    logo: "/emc.png",
+    raw: false,
+    description: "Equipping individuals and organisations with the cybersecurity knowledge and skills required to thrive in today's increasingly complex threat landscape.",
+    url: "https://excelmindcyber.com/",
+    src: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&h=600&fit=crop&q=80",
+  },
+  {
+    id: "tourism",
+    label: "Tourism",
+    logo: "/veripass.png",
+    raw: false,
+    description: "A business-led, company-funded immigration model — built for founders, executives, and exceptional professionals who want to expand to the American market.",
+    url: "https://veripass.org/",
+    src: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop&q=80",
+  },
+  {
+    id: "visa",
+    label: "Visa Screening",
+    logo: "/Vizacheck.png",
+    raw: false,
+    description: "VizaCheck cross-references your visa forms, documents, and social media profiles to flag rejection risks before embassy submission.",
+    url: "https://vizacheck.com/",
+    src: "https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?w=800&h=600&fit=crop&q=80",
+  },
+  {
+    id: "career",
+    label: "Career",
+    logo: "/lft.png",
+    raw: false,
+    description: "Lightforth is an AI-powered career acceleration platform. We optimize your resume for any job, automatically apply to matching opportunities, and prepare you to ace every interview — all in one place.",
+    url: "https://lightforth.ai/",
+    src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&h=600&fit=crop&q=80",
+  },
+];
+
 const PortfolioSection = () => {
-  const smallImages = [
-    { src: "https://api.builder.io/api/v1/image/assets/TEMP/baa461bf5edf6f253113b6716bc58173a99f248a?width=356", label: "Ed-tech" },
-    { src: "https://api.builder.io/api/v1/image/assets/TEMP/0c0c5836a83aea33c39ab20c61cdb46d9a18a946?width=356", label: "Education" },
-    { src: "https://api.builder.io/api/v1/image/assets/TEMP/c7c19425256418570a647c3fd217f08433a2206d?width=358", label: "Tourism" },
-    { src: "https://api.builder.io/api/v1/image/assets/TEMP/8b222d3826c392e1f6a24d38c8cb258a8b436427?width=356", label: "Healthcare" },
-  ];
+  const [active, setActive] = useState<string>("financial");
 
   return (
     <section className="py-16 lg:py-24" style={{ background: "rgba(13,6,0,0.03)" }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-        {/* Heading */}
         <div className="text-center mb-12">
           <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
-            Euismod sodales quis odio ullam.
+            Our Business Units
           </h2>
           <p className="text-black/80 text-base leading-[25px] font-jakarta mt-3 max-w-xl mx-auto">
-            Tincidunt neque viverra facilisi non consectetur morbi nisl pulvinar acel aliquam
-            pellentesque sit vitae massa
+            Companies we built across the sectors defining the global economy of tomorrow —
+            each designed to deliver measurable industry impact and sustainable long-term growth.
           </p>
         </div>
 
-        {/* Image grid */}
-        <div className="flex flex-col lg:flex-row gap-3">
-          {/* Large image */}
-          <div className="relative rounded-lg overflow-hidden lg:w-[34%] flex-shrink-0 min-h-[280px] lg:min-h-[351px]">
-            <img
-              src="https://api.builder.io/api/v1/image/assets/TEMP/2644524c99e42097cbb6643ada4f13d81e8ce601?width=858"
-              alt="Portfolio"
-              className="w-full h-full object-cover absolute inset-0"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col gap-2">
-              <h3 className="text-white font-bold text-2xl font-jakarta tracking-[1.12px]">
-                Euismod sodales
-              </h3>
-              <p className="text-white/80 text-sm leading-[25px] font-jakarta">
-                Tincidunt neque viverra facilisi non consectetur morbi nisl pulvinar acel aliquam
-                pellentesque sit vitae massa
-              </p>
-              <button className="flex items-center gap-2 bg-thelix-orange text-white/80 text-base font-jakarta px-4 py-2 rounded w-fit mt-1 hover:bg-orange-500 transition-colors">
-                Learn more
-                <ArrowRight size={20} className="text-white" />
-              </button>
-            </div>
-          </div>
-
-          {/* Small images */}
-          <div className="flex flex-row lg:flex-row gap-3 flex-1 overflow-x-auto lg:overflow-visible">
-            {smallImages.map((img) => (
+        {/* Desktop accordion */}
+        <div className="hidden lg:flex gap-3 h-[420px]">
+          {businessUnits.map((unit) => {
+            const isActive = unit.id === active;
+            return (
               <div
-                key={img.label}
-                className="relative rounded-lg overflow-hidden flex-shrink-0 w-[calc(50%-6px)] lg:w-auto lg:flex-1 min-h-[200px] lg:min-h-[351px]"
+                key={unit.id}
+                onClick={() => setActive(unit.id)}
+                className={`relative rounded-lg overflow-hidden cursor-pointer transition-all duration-500 ease-in-out ${isActive ? "flex-[3]" : "flex-[1]"
+                  }`}
               >
-                <img
-                  src={img.src}
-                  alt={img.label}
-                  className="w-full h-full object-cover absolute inset-0"
-                />
-                <div className="absolute inset-0 bg-black/20" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span
-                    className="text-white font-bold text-2xl font-jakarta tracking-[1.12px] whitespace-nowrap"
-                    style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-                  >
-                    {img.label}
-                  </span>
-                </div>
+                <img src={unit.src} alt={unit.label} className="w-full h-full object-cover absolute inset-0" />
+                <div className={`absolute inset-0 transition-all duration-500 ${isActive ? "bg-gradient-to-t from-black/70 via-black/30 to-transparent" : "bg-black/30"}`} />
+
+                {!isActive && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span
+                      className="text-white font-bold text-xl font-jakarta tracking-[1.12px] whitespace-nowrap"
+                      style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+                    >
+                      {unit.label}
+                    </span>
+                  </div>
+                )}
+
+                {isActive && (
+                  <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-2">
+                    <img src={unit.logo} alt={unit.label} className={`h-8 w-auto object-contain mb-1 self-start${unit.raw ? "" : " brightness-0 invert"}`} />
+                    <h3 className="text-white font-bold text-2xl font-jakarta tracking-[1.12px]">
+                      {unit.label}
+                    </h3>
+                    <p className="text-white/80 text-sm leading-[22px] font-jakarta">
+                      {unit.description}
+                    </p>
+                    <a
+                      href={unit.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center gap-2 bg-thelix-orange text-white text-sm font-jakarta px-4 py-2 rounded w-fit mt-1 hover:bg-orange-500 transition-colors"
+                    >
+                      Learn more <ArrowRight size={16} />
+                    </a>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
+            );
+          })}
+        </div>
+
+        {/* Mobile stack */}
+        <div className="flex flex-col gap-3 lg:hidden">
+          {businessUnits.map((unit) => {
+            const isActive = unit.id === active;
+            return (
+              <div
+                key={unit.id}
+                onClick={() => setActive(isActive ? "" : unit.id)}
+                className={`relative rounded-lg overflow-hidden cursor-pointer transition-all duration-500 ease-in-out ${isActive ? "h-[280px]" : "h-[70px]"
+                  }`}
+              >
+                <img src={unit.src} alt={unit.label} className="w-full h-full object-cover absolute inset-0" />
+                <div className={`absolute inset-0 transition-all duration-500 ${isActive ? "bg-gradient-to-t from-black/70 via-black/30 to-transparent" : "bg-black/40"}`} />
+
+                {!isActive && (
+                  <div className="absolute inset-0 flex items-center px-5">
+                    <span className="text-white font-bold text-lg font-jakarta tracking-[1.12px]">
+                      {unit.label}
+                    </span>
+                  </div>
+                )}
+
+                {isActive && (
+                  <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-2">
+                    <img src={unit.logo} alt={unit.label} className={`h-7 w-auto object-contain mb-1 self-start${unit.raw ? "" : " brightness-0 invert"}`} />
+                    <h3 className="text-white font-bold text-xl font-jakarta">{unit.label}</h3>
+                    <p className="text-white/80 text-sm leading-[22px] font-jakarta">{unit.description}</p>
+                    <a
+                      href={unit.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center gap-2 bg-thelix-orange text-white text-sm font-jakarta px-4 py-2 rounded w-fit mt-1 hover:bg-orange-500 transition-colors"
+                    >
+                      Learn more <ArrowRight size={16} />
+                    </a>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -362,19 +364,17 @@ const CommitmentSection = () => (
   <section className="bg-white py-16 lg:py-24">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-        {/* Left */}
         <div className="flex flex-col gap-10 lg:w-[46%]">
           <div className="flex flex-col gap-3">
             <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
-              Our Commitment to Impactful Investments
+              Our Commitment to Impactful Business Building
             </h2>
             <p className="text-black/80 text-base leading-[25px] font-jakarta">
-              Our investment philosophy is centered on sectors that offer significant long-term
-              returns and the potential to revolutionize economies. We believe in creating value that
-              benefits all stakeholders, ensuring sustainable and inclusive growth.
+              Every company we build is centered on sectors that offer significant long-term impact
+              and the potential to reshape economies. We believe in creating value that benefits all
+              stakeholders, ensuring sustainable and inclusive growth across every community we serve.
             </p>
           </div>
-          {/* Feature card */}
           <div
             className="flex flex-col gap-3 p-5 rounded-xl border-b-2"
             style={{
@@ -387,13 +387,13 @@ const CommitmentSection = () => (
             </h3>
             <p className="text-black/80 text-sm leading-[25px] font-jakarta">
               Thelix Holdings is committed to creating positive change by empowering communities,
-              promoting sustainable development, and enhancing lives through innovative programs and
-              strategic support. Our investments prioritize meaningful, lasting social impact.
+              promoting sustainable development, and enhancing lives through the businesses we build
+              and the programmes we run. Every decision we make prioritizes meaningful, lasting
+              social impact.
             </p>
           </div>
         </div>
 
-        {/* Right image */}
         <div className="lg:w-[38%]">
           <img
             src="https://api.builder.io/api/v1/image/assets/TEMP/a7a40cae2f45bc869b9e8566f866baa424d3ac6f?width=976"
@@ -408,8 +408,9 @@ const CommitmentSection = () => (
 
 // ---- Quote Section ----
 const QuoteSection = () => (
-  <section className="bg-[#160A00] py-20 lg:py-28">
+  <section className="bg-white py-10">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
+    <div className="bg-[#160A00] rounded-2xl py-20 lg:py-28 px-6 lg:px-[100px]">
       <div className="flex flex-col items-center gap-10 max-w-3xl mx-auto text-center">
         <QuoteIcon />
         <p className="text-white/80 text-3xl sm:text-4xl lg:text-[45px] font-normal font-jakarta leading-tight">
@@ -419,143 +420,123 @@ const QuoteSection = () => (
           <p className="text-thelix-orange text-2xl font-bold font-jakarta uppercase tracking-wide">
             Tolu Micheal
           </p>
-          <p className="text-thelix-orange/49 text-2xl font-normal font-jakarta" style={{ color: "rgba(244,130,32,0.49)" }}>
+          <p className="text-sm font-normal font-jakarta text-white/40">
             CVO - Chief Visionary Officer
           </p>
         </div>
       </div>
     </div>
+    </div>
   </section>
 );
 
 // ---- Latest Updates Section ----
+interface NewsArticle {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  url: string;
+  date: string;
+  source: string;
+}
+
 const LatestUpdatesSection = () => {
-  const articles = [
-    {
-      title: "Phasellus quis volutpat arcu ante in in. Nullam non.",
-      date: "Sept. 16, 2025",
-      img: "https://api.builder.io/api/v1/image/assets/TEMP/cd2f37f65034036e86c19ca0c3533b2ddbad43d0?width=738",
-    },
-    {
-      title: "Phasellus quis volutpat arcu ante in in. Nullam non.",
-      date: "Sept. 16, 2025",
-      img: "https://api.builder.io/api/v1/image/assets/TEMP/cd2f37f65034036e86c19ca0c3533b2ddbad43d0?width=738",
-    },
-    {
-      title: "Phasellus quis volutpat arcu ante in in. Nullam non.",
-      date: "Sept. 16, 2025",
-      img: "https://api.builder.io/api/v1/image/assets/TEMP/cd2f37f65034036e86c19ca0c3533b2ddbad43d0?width=738",
-    },
-  ];
+  const [articles, setArticles] = useState<NewsArticle[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/news")
+      .then((r) => r.json())
+      .then((data: NewsArticle[]) => setArticles(data.slice(0, 3)))
+      .catch(() => {})
+      .finally(() => setLoaded(true));
+  }, []);
+
+  const hasArticles = loaded && articles.length > 0;
 
   return (
     <section className="bg-white py-16 lg:py-24">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-        {/* Heading */}
         <div className="text-center mb-12 max-w-lg mx-auto">
           <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
             Latest Update
           </h2>
           <p className="text-black/80 text-base leading-[25px] font-jakarta mt-3">
-            Tincidunt neque viverra facilisi non consectetur morbi nisl pulvinar acel aliquam
-            pellentesque sit vitae massa
+            News and coverage of Thelix Holdings and our business units — from press features
+            and industry blogs to milestone announcements across global media.
           </p>
         </div>
 
-        {/* Articles grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {articles.map((article, i) => (
-            <div key={i} className="flex flex-col gap-3">
-              <img
-                src={article.img}
-                alt={article.title}
-                className="w-full h-[296px] object-cover rounded-xl"
-              />
-              <h3 className="text-black font-medium text-2xl font-jakarta tracking-[1.04px] leading-normal">
-                {article.title}
-              </h3>
-              <p className="text-black/80 text-base leading-[25px] font-jakarta">{article.date}</p>
-            </div>
-          ))}
+        {!loaded && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex flex-col gap-3 animate-pulse">
+                <div className="w-full h-[296px] rounded-xl bg-gray-100" />
+                <div className="h-6 bg-gray-100 rounded w-3/4" />
+                <div className="h-4 bg-gray-100 rounded w-1/3" />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {loaded && !hasArticles && (
+          <p className="text-center text-black/40 font-jakarta text-sm py-10">
+            No articles yet. Add some from the{" "}
+            <Link to="/admin" className="text-thelix-orange underline">admin panel</Link>.
+          </p>
+        )}
+
+        {hasArticles && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {articles.map((article) => (
+              <a
+                key={article.id}
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col gap-3 group"
+              >
+                {article.image ? (
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-[296px] object-cover rounded-xl group-hover:opacity-90 transition-opacity"
+                  />
+                ) : (
+                  <div className="w-full h-[296px] rounded-xl bg-gray-100 flex items-center justify-center">
+                    <span className="text-black/20 text-sm font-jakarta">No image</span>
+                  </div>
+                )}
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-black font-medium text-2xl font-jakarta tracking-[1.04px] leading-normal group-hover:text-thelix-orange transition-colors">
+                    {article.title}
+                  </h3>
+                  <p className="text-black/50 text-sm font-jakarta">
+                    {article.source && <span>{article.source} · </span>}
+                    {article.date}
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+
+        <div className="flex justify-center mt-12">
+          <Link
+            to="/news"
+            className="flex items-center gap-2 px-8 py-3 border border-thelix-orange text-thelix-orange font-medium text-base font-jakarta rounded hover:bg-thelix-orange hover:text-white transition-colors"
+          >
+            See all Updates
+            <ArrowRight size={18} />
+          </Link>
         </div>
       </div>
     </section>
   );
 };
 
-// ---- Footer ----
-const Footer = () => (
-  <footer className="bg-[#0D0600] pt-16 pb-8">
-    <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <div className="flex flex-col lg:flex-row gap-12 lg:gap-0 lg:justify-between mb-12">
-        {/* Brand */}
-        <div className="max-w-sm">
-          <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/d840ca7463e4773ecd0f97ee78112084829c961e?width=409"
-            alt="Thelix Holdings"
-            className="h-16 w-auto mb-5"
-          />
-          <p className="text-white/80 text-base leading-[23px] font-jakarta">
-            Ipsum nec nisi lacus morbi egestas ornare iaculis. Nulla porttitor volutpat eu purus
-            elementum nunc aenean purus tellus. Ipsum commodo commodo facilisi commodo adipiscing
-            dui non.
-          </p>
-        </div>
-
-        {/* Footer links */}
-        <div className="flex flex-col sm:flex-row gap-12 sm:gap-20 lg:gap-32">
-          <div className="flex flex-col gap-6">
-            <h4 className="text-white/80 font-bold text-xl font-jakarta leading-[25px]">
-              Our Company
-            </h4>
-            <div className="flex flex-col gap-1">
-              {["About Us", "Investment", "Philanthropy", "Sustainability", "News", "Careers"].map(
-                (item) => (
-                  <Link
-                    key={item}
-                    to={`/${item.toLowerCase().replace(" ", "-")}`}
-                    className="text-white/80 text-sm font-jakarta leading-[34px] hover:text-thelix-orange transition-colors"
-                  >
-                    {item}
-                  </Link>
-                )
-              )}
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-6">
-            <h4 className="text-white/80 font-bold text-xl font-jakarta leading-[25px]">
-              Our Solution
-            </h4>
-            <div className="flex flex-col gap-1">
-              {["Finance", "Edutech", "Education", "Healthcare", "Tourism"].map((item) => (
-                <Link
-                  key={item}
-                  to={`/solutions`}
-                  className="text-white/80 text-sm font-jakarta leading-[34px] hover:text-thelix-orange transition-colors"
-                >
-                  {item}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div className="border-t border-white/12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="text-white/80 text-base leading-[23px] font-jakarta">
-          Copyright © 2025 Thelix Holdings
-        </p>
-        <p className="text-white/80 text-base leading-[23px] font-jakarta">
-          Powered by Thelix Holdings
-        </p>
-      </div>
-    </div>
-  </footer>
-);
-
-// ---- Main Page ----
+// ---- Page ----
 export default function Index() {
   return (
     <div className="min-h-screen">
