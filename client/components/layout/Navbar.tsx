@@ -3,7 +3,9 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
+  { label: "Home", to: "/" },
   { label: "About Us", to: "/about" },
+  { label: "Our Founder", to: "/founder" },
   { label: "Solutions", to: "/solutions" },
   { label: "Philanthropy", to: "/philanthropy" },
   { label: "News", to: "/news" },
@@ -39,12 +41,14 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link
-            to="/career"
+          <a
+            href="https://jobs.thelixholdings.com/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="px-5 py-2 bg-thelix-orange text-white text-sm font-medium font-jakarta rounded hover:bg-orange-500 transition-colors"
           >
             Join Us
-          </Link>
+          </a>
         </div>
 
         {/* Mobile toggle */}
@@ -72,13 +76,15 @@ export function Navbar() {
             </Link>
           ))}
           <div className="pt-4">
-            <Link
-              to="/career"
+            <a
+              href="https://jobs.thelixholdings.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-block px-5 py-2 bg-thelix-orange text-white text-sm font-medium font-jakarta rounded hover:bg-orange-500 transition-colors"
               onClick={() => setMobileOpen(false)}
             >
               Join Us
-            </Link>
+            </a>
           </div>
         </div>
       )}
