@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 
-const COMPANY_LINKS = [
+const COMPANY_LINKS: { label: string; to: string; external?: boolean }[] = [
   { label: "About Us", to: "/about" },
   { label: "Investment", to: "/investment" },
   { label: "Philanthropy", to: "/philanthropy" },
   { label: "Sustainability", to: "/sustainability" },
   { label: "News", to: "/news" },
-  { label: "Careers", to: "/careers" },
+  { label: "Careers", to: "https://jobs.thelixholdings.com/", external: true },
 ];
 
 const SOLUTION_LINKS = [
@@ -42,15 +42,27 @@ export function Footer() {
                 Our Company
               </h4>
               <nav aria-label="Company links" className="flex flex-col gap-1">
-                {COMPANY_LINKS.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.to}
-                    className="text-white/80 text-sm font-jakarta leading-[34px] hover:text-thelix-orange transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {COMPANY_LINKS.map((link) =>
+                  link.external ? (
+                    <a
+                      key={link.label}
+                      href={link.to}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/80 text-sm font-jakarta leading-[34px] hover:text-thelix-orange transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.label}
+                      to={link.to}
+                      className="text-white/80 text-sm font-jakarta leading-[34px] hover:text-thelix-orange transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  )
+                )}
               </nav>
             </div>
 
