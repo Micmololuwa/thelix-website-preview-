@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Trash2, Link2, Loader2, Plus, LogOut, Newspaper, Users, ImagePlus, X, Pencil, Check, Briefcase, MapPin } from "lucide-react";
+import { RichTextEditor } from "@/components/RichTextEditor";
 
 const STORAGE_KEY = "thelix_admin_key";
 
@@ -598,7 +599,14 @@ function CareersTab({ adminKey }: { adminKey: string }) {
           <Field label="Location (e.g. Lagos, Nigeria · Remote)" value={addForm.location} onChange={(v) => setAddForm((f) => ({ ...f, location: v }))} />
         </div>
         <Field label="Application URL" value={addForm.applyUrl} onChange={(v) => setAddForm((f) => ({ ...f, applyUrl: v }))} />
-        <Field label="Job Description" value={addForm.description} onChange={(v) => setAddForm((f) => ({ ...f, description: v }))} multiline />
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-black/50 font-jakarta">Job Description</label>
+          <RichTextEditor
+            value={addForm.description}
+            onChange={(v) => setAddForm((f) => ({ ...f, description: v }))}
+            placeholder="Describe the role, responsibilities, and requirements…"
+          />
+        </div>
         {addError && <p className="text-red-500 text-xs font-jakarta">{addError}</p>}
         {addSuccess && <p className="text-green-600 text-xs font-jakarta">Job posted successfully.</p>}
         <button
@@ -643,7 +651,13 @@ function CareersTab({ adminKey }: { adminKey: string }) {
                   <Field label="Location" value={editForm.location} onChange={(v) => setEditForm((f) => ({ ...f, location: v }))} />
                 </div>
                 <Field label="Application URL" value={editForm.applyUrl} onChange={(v) => setEditForm((f) => ({ ...f, applyUrl: v }))} />
-                <Field label="Job Description" value={editForm.description} onChange={(v) => setEditForm((f) => ({ ...f, description: v }))} multiline />
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-medium text-black/50 font-jakarta">Job Description</label>
+                  <RichTextEditor
+                    value={editForm.description}
+                    onChange={(v) => setEditForm((f) => ({ ...f, description: v }))}
+                  />
+                </div>
                 {editError && <p className="text-red-500 text-xs font-jakarta">{editError}</p>}
                 <div className="flex gap-3">
                   <button onClick={saveEdit} disabled={saving} className="flex items-center gap-2 bg-[#07060f] text-white px-4 py-2 rounded-lg text-sm font-medium font-jakarta hover:bg-gray-800 transition-colors disabled:opacity-50">
@@ -772,7 +786,7 @@ function Field({
     <div className="flex flex-col gap-1">
       <label className="text-xs font-medium text-black/50 font-jakarta">{label}</label>
       {multiline ? (
-        <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={3} className={base} />
+        <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={6} className={`${base} resize-y`} />
       ) : (
         <input type="text" value={value} onChange={(e) => onChange(e.target.value)} className={base} />
       )}

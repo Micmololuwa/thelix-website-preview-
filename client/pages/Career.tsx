@@ -180,18 +180,17 @@ const JobCard = ({ job }: { job: Job }) => {
         </a>
       </div>
 
-      <div className={`text-black/70 text-base leading-[27px] font-jakarta ${expanded ? "" : "line-clamp-3"}`}>
-        {job.description}
-      </div>
+      <div
+        className={`rte-output text-black/70 font-jakarta overflow-hidden transition-all ${expanded ? "" : "max-h-[110px] [mask-image:linear-gradient(to_bottom,black_50%,transparent_100%)]"}`}
+        dangerouslySetInnerHTML={{ __html: job.description }}
+      />
 
-      {job.description.length > 200 && (
-        <button
-          onClick={() => setExpanded((e) => !e)}
-          className="text-thelix-orange text-sm font-medium font-jakarta hover:underline w-fit"
-        >
-          {expanded ? "Show less" : "Read full description"}
-        </button>
-      )}
+      <button
+        onClick={() => setExpanded((e) => !e)}
+        className="text-thelix-orange text-sm font-medium font-jakarta hover:underline w-fit"
+      >
+        {expanded ? "Show less" : "Read full description"}
+      </button>
     </article>
   );
 };
