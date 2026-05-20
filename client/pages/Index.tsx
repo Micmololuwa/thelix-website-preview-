@@ -1,8 +1,19 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import {
+  FadeUp,
+  FadeIn,
+  SlideLeft,
+  SlideRight,
+  ScaleIn,
+  StaggerGrid,
+  StaggerItem,
+  PageTransition,
+} from "@/components/ui/motion";
 
 // ---- Reusable SVG Icons ----
 
@@ -43,22 +54,34 @@ const HeroSection = () => (
   >
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] pt-24 pb-0">
       <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-12">
-        <h1 className="text-[43px] sm:text-[58px] lg:text-[78px] font-bold text-black font-jakarta leading-[1.1]">
+        <motion.h1
+          className="text-[43px] sm:text-[58px] lg:text-[78px] font-bold text-black font-jakarta leading-[1.1]"
+          initial={{ opacity: 0, y: 36 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+        >
           Leading the way in global innovation
-        </h1>
-        <p className="text-black/80 text-base leading-[25px] max-w-[675px] font-jakarta mt-6">
+        </motion.h1>
+        <motion.p
+          className="text-black/80 text-base leading-[25px] max-w-[675px] font-jakarta mt-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1], delay: 0.22 }}
+        >
           Unlocking potentials, impacting 300,000+ lives by 2030 through six strategic business
           units built to transform industries. Creating pathways to economic freedom across continents.
-        </p>
+        </motion.p>
       </div>
     </div>
-    <div className="w-full">
-      <img
-        src="https://api.builder.io/api/v1/image/assets/TEMP/0a6d6ea00c511924219aea8f4bcaf4a9cf5542ab?width=2880"
-        alt="Thelix global innovation"
-        className="w-full h-auto"
-      />
-    </div>
+    <FadeIn>
+      <div className="w-full">
+        <img
+          src="https://api.builder.io/api/v1/image/assets/TEMP/0a6d6ea00c511924219aea8f4bcaf4a9cf5542ab?width=2880"
+          alt="Thelix global innovation"
+          className="w-full h-auto"
+        />
+      </div>
+    </FadeIn>
   </section>
 );
 
@@ -75,16 +98,17 @@ const partnerLogos = [
 const PartnersSection = () => (
   <section className="bg-white py-8 border-b border-gray-100">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <div className="flex flex-wrap items-center justify-between gap-8">
+      <StaggerGrid className="flex flex-wrap items-center justify-between gap-8">
         {partnerLogos.map((logo) => (
-          <img
-            key={logo.alt}
-            src={logo.src}
-            alt={logo.alt}
-            className="h-10 w-auto object-contain"
-          />
+          <StaggerItem key={logo.alt}>
+            <img
+              src={logo.src}
+              alt={logo.alt}
+              className="h-10 w-auto object-contain"
+            />
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerGrid>
     </div>
   </section>
 );
@@ -94,32 +118,33 @@ const OrangeFeaturesBanner = () => (
   <section className="bg-thelix-orange py-16 lg:py-24">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
       <div className="flex flex-col gap-12 lg:gap-20">
-        <div className="flex flex-col gap-3 max-w-3xl">
-          <h2 className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-white font-jakarta leading-tight tracking-[2.6px]">
-            Building Tomorrow's Economy Through Strategic Business Units
-          </h2>
-          <p className="text-white/80 text-base leading-[25px] max-w-[868px] font-jakarta">
-            We built and operate high-impact companies across fintech, EdTech, cybersecurity,
-            education, identity verification, and healthcare — each one designed to transform its
-            industry and create lasting value across emerging and developed markets.
-          </p>
-        </div>
+        <FadeUp>
+          <div className="flex flex-col gap-3 max-w-3xl">
+            <h2 className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-white font-jakarta leading-tight tracking-[2.6px]">
+              Building Tomorrow's Economy Through Strategic Business Units
+            </h2>
+            <p className="text-white/80 text-base leading-[25px] max-w-[868px] font-jakarta">
+              We built and operate high-impact companies across fintech, EdTech, cybersecurity,
+              education, identity verification, and healthcare — each one designed to transform its
+              industry and create lasting value across emerging and developed markets.
+            </p>
+          </div>
+        </FadeUp>
 
-        <div className="flex flex-col sm:flex-row gap-4">
+        <StaggerGrid className="flex flex-col sm:flex-row gap-4">
           {[
             "Strategic business units built from the ground up to solve real problems at global scale",
             "Deep operational expertise embedded across every company we own and operate",
             "Community empowerment programmes that create lasting economic freedom",
           ].map((text, i) => (
-            <div
-              key={i}
-              className="flex-1 flex items-center gap-4 px-5 py-5 rounded-full border border-white"
-            >
-              <CheckIcon />
-              <p className="text-white/80 text-base leading-5 font-jakarta">{text}</p>
-            </div>
+            <StaggerItem key={i}>
+              <div className="flex-1 flex items-center gap-4 px-5 py-5 rounded-full border border-white">
+                <CheckIcon />
+                <p className="text-white/80 text-base leading-5 font-jakarta">{text}</p>
+              </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGrid>
       </div>
     </div>
   </section>
@@ -138,20 +163,19 @@ const VentureCardsSection = () => {
     <section className="bg-[#160A00] py-16 lg:py-24">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
         <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
-          <div className="flex flex-col gap-6 lg:w-[45%] lg:flex-shrink-0">
+          <SlideLeft className="flex flex-col gap-6 lg:w-[45%] lg:flex-shrink-0">
             <h2 className="text-4xl sm:text-[45px] font-bold text-white font-jakarta leading-tight tracking-[1.8px]">
               Built to Remove the Barriers That Hold People Back
             </h2>
-
             <p className="text-white/80 text-base leading-[27px] font-jakarta">
               Thelix Holdings was built to remove those barriers — across cybersecurity, education,
               career technology, financial services, and global mobility. A shared conviction that
               the right system, built well, changes lives at scale.
             </p>
-          </div>
+          </SlideLeft>
 
-          <div className="flex-1 flex flex-col sm:flex-row gap-4" style={{ minHeight: "560px" }}>
-            {/* Left column: short top, stretching bottom */}
+          <SlideRight className="flex-1 flex flex-col sm:flex-row gap-4" style={{ minHeight: "560px" }}>
+            {/* Left column */}
             <div className="flex flex-col gap-4 flex-1">
               <div className="flex flex-col justify-between p-5 rounded-xl border border-black/5 bg-thelix-orange h-[300px]">
                 <LightbulbIcon />
@@ -166,7 +190,7 @@ const VentureCardsSection = () => {
                 </p>
               </div>
             </div>
-            {/* Right column: stretching top, short bottom */}
+            {/* Right column */}
             <div className="flex flex-col gap-4 flex-1">
               <div className="flex flex-col justify-between p-5 rounded-xl border border-black/5 bg-thelix-orange flex-1">
                 <LightbulbIcon />
@@ -181,7 +205,7 @@ const VentureCardsSection = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </SlideRight>
         </div>
       </div>
     </section>
@@ -252,7 +276,7 @@ const PortfolioSection = () => {
   return (
     <section className="py-16 lg:py-24" style={{ background: "rgba(13,6,0,0.03)" }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-        <div className="text-center mb-12">
+        <FadeUp className="text-center mb-12">
           <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
             Our Business Units
           </h2>
@@ -260,57 +284,59 @@ const PortfolioSection = () => {
             Companies we built across the sectors defining the global economy of tomorrow —
             each designed to deliver measurable industry impact and sustainable long-term growth.
           </p>
-        </div>
+        </FadeUp>
 
         {/* Desktop accordion */}
-        <div className="hidden lg:flex gap-3 h-[420px]">
-          {businessUnits.map((unit) => {
-            const isActive = unit.id === active;
-            return (
-              <div
-                key={unit.id}
-                onClick={() => setActive(unit.id)}
-                className={`relative rounded-lg overflow-hidden cursor-pointer transition-all duration-500 ease-in-out ${isActive ? "flex-[3]" : "flex-[1]"
-                  }`}
-              >
-                <img src={unit.src} alt={unit.label} className="w-full h-full object-cover absolute inset-0" />
-                <div className={`absolute inset-0 transition-all duration-500 ${isActive ? "bg-gradient-to-t from-black/70 via-black/30 to-transparent" : "bg-black/30"}`} />
+        <FadeIn>
+          <div className="hidden lg:flex gap-3 h-[420px]">
+            {businessUnits.map((unit) => {
+              const isActive = unit.id === active;
+              return (
+                <div
+                  key={unit.id}
+                  onClick={() => setActive(unit.id)}
+                  className={`relative rounded-lg overflow-hidden cursor-pointer transition-all duration-500 ease-in-out ${isActive ? "flex-[3]" : "flex-[1]"
+                    }`}
+                >
+                  <img src={unit.src} alt={unit.label} className="w-full h-full object-cover absolute inset-0" />
+                  <div className={`absolute inset-0 transition-all duration-500 ${isActive ? "bg-gradient-to-t from-black/70 via-black/30 to-transparent" : "bg-black/30"}`} />
 
-                {!isActive && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span
-                      className="text-white font-bold text-xl font-jakarta tracking-[1.12px] whitespace-nowrap"
-                      style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-                    >
-                      {unit.label}
-                    </span>
-                  </div>
-                )}
+                  {!isActive && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span
+                        className="text-white font-bold text-xl font-jakarta tracking-[1.12px] whitespace-nowrap"
+                        style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+                      >
+                        {unit.label}
+                      </span>
+                    </div>
+                  )}
 
-                {isActive && (
-                  <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-2">
-                    <img src={unit.logo} alt={unit.label} className={`h-8 w-auto object-contain mb-1 self-start${unit.raw ? "" : " brightness-0 invert"}`} />
-                    <h3 className="text-white font-bold text-2xl font-jakarta tracking-[1.12px]">
-                      {unit.label}
-                    </h3>
-                    <p className="text-white/80 text-sm leading-[22px] font-jakarta">
-                      {unit.description}
-                    </p>
-                    <a
-                      href={unit.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-2 bg-thelix-orange text-white text-sm font-jakarta px-4 py-2 rounded w-fit mt-1 hover:bg-orange-500 transition-colors"
-                    >
-                      Learn more <ArrowRight size={16} />
-                    </a>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                  {isActive && (
+                    <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-2">
+                      <img src={unit.logo} alt={unit.label} className={`h-8 w-auto object-contain mb-1 self-start${unit.raw ? "" : " brightness-0 invert"}`} />
+                      <h3 className="text-white font-bold text-2xl font-jakarta tracking-[1.12px]">
+                        {unit.label}
+                      </h3>
+                      <p className="text-white/80 text-sm leading-[22px] font-jakarta">
+                        {unit.description}
+                      </p>
+                      <a
+                        href={unit.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center gap-2 bg-thelix-orange text-white text-sm font-jakarta px-4 py-2 rounded w-fit mt-1 hover:bg-orange-500 transition-colors"
+                      >
+                        Learn more <ArrowRight size={16} />
+                      </a>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </FadeIn>
 
         {/* Mobile stack */}
         <div className="flex flex-col gap-3 lg:hidden">
@@ -364,7 +390,7 @@ const CommitmentSection = () => (
   <section className="bg-white py-16 lg:py-24">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-        <div className="flex flex-col gap-10 lg:w-[46%]">
+        <SlideLeft className="flex flex-col gap-10 lg:w-[46%]">
           <div className="flex flex-col gap-3">
             <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
               Our Commitment to Impactful Business Building
@@ -392,15 +418,15 @@ const CommitmentSection = () => (
               social impact.
             </p>
           </div>
-        </div>
+        </SlideLeft>
 
-        <div className="lg:w-[38%]">
+        <SlideRight className="lg:w-[38%]">
           <img
             src="https://api.builder.io/api/v1/image/assets/TEMP/a7a40cae2f45bc869b9e8566f866baa424d3ac6f?width=976"
             alt="Impactful Investments"
             className="w-full aspect-square object-cover rounded-2xl"
           />
-        </div>
+        </SlideRight>
       </div>
     </div>
   </section>
@@ -410,22 +436,24 @@ const CommitmentSection = () => (
 const QuoteSection = () => (
   <section className="bg-white py-10">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-    <div className="bg-[#160A00] rounded-2xl py-20 lg:py-28 px-6 lg:px-[100px]">
-      <div className="flex flex-col items-center gap-10 max-w-3xl mx-auto text-center">
-        <QuoteIcon />
-        <p className="text-white/80 text-3xl sm:text-4xl lg:text-[45px] font-normal font-jakarta leading-tight">
-          Innovation is the lifeblood of any economy. When we stop innovating, we stop growing.
-        </p>
-        <div className="flex flex-col gap-2">
-          <p className="text-thelix-orange text-2xl font-bold font-jakarta uppercase tracking-wide">
-            Tolu Micheal
-          </p>
-          <p className="text-sm font-normal font-jakarta text-white/40">
-            CVO - Chief Visionary Officer
-          </p>
+      <ScaleIn>
+        <div className="bg-[#160A00] rounded-2xl py-20 lg:py-28 px-6 lg:px-[100px]">
+          <div className="flex flex-col items-center gap-10 max-w-3xl mx-auto text-center">
+            <QuoteIcon />
+            <p className="text-white/80 text-3xl sm:text-4xl lg:text-[45px] font-normal font-jakarta leading-tight">
+              Innovation is the lifeblood of any economy. When we stop innovating, we stop growing.
+            </p>
+            <div className="flex flex-col gap-2">
+              <p className="text-thelix-orange text-2xl font-bold font-jakarta uppercase tracking-wide">
+                Tolu Micheal
+              </p>
+              <p className="text-sm font-normal font-jakarta text-white/40">
+                CVO - Chief Visionary Officer
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </ScaleIn>
     </div>
   </section>
 );
@@ -458,7 +486,7 @@ const LatestUpdatesSection = () => {
   return (
     <section className="bg-white py-16 lg:py-24">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-        <div className="text-center mb-12 max-w-lg mx-auto">
+        <FadeUp className="text-center mb-12 max-w-lg mx-auto">
           <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
             Latest Update
           </h2>
@@ -466,7 +494,7 @@ const LatestUpdatesSection = () => {
             News and coverage of Thelix Holdings and our business units — from press features
             and industry blogs to milestone announcements across global media.
           </p>
-        </div>
+        </FadeUp>
 
         {!loaded && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -482,47 +510,47 @@ const LatestUpdatesSection = () => {
 
         {loaded && !hasArticles && (
           <p className="text-center text-black/40 font-jakarta text-sm py-10">
-            No articles yet. Add some from the{" "}
-            <Link to="/admin" className="text-thelix-orange underline">admin panel</Link>.
+            No articles yet.
           </p>
         )}
 
         {hasArticles && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <StaggerGrid className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {articles.map((article) => (
-              <a
-                key={article.id}
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col gap-3 group"
-              >
-                {article.image ? (
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="w-full h-[296px] object-cover rounded-xl group-hover:opacity-90 transition-opacity"
-                  />
-                ) : (
-                  <div className="w-full h-[296px] rounded-xl bg-gray-100 flex items-center justify-center">
-                    <span className="text-black/20 text-sm font-jakarta">No image</span>
+              <StaggerItem key={article.id}>
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col gap-3 group"
+                >
+                  {article.image ? (
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      className="w-full h-[296px] object-cover rounded-xl group-hover:opacity-90 transition-opacity"
+                    />
+                  ) : (
+                    <div className="w-full h-[296px] rounded-xl bg-gray-100 flex items-center justify-center">
+                      <span className="text-black/20 text-sm font-jakarta">No image</span>
+                    </div>
+                  )}
+                  <div className="flex flex-col gap-1">
+                    <h3 className="text-black font-medium text-2xl font-jakarta tracking-[1.04px] leading-normal group-hover:text-thelix-orange transition-colors">
+                      {article.title}
+                    </h3>
+                    <p className="text-black/50 text-sm font-jakarta">
+                      {article.source && <span>{article.source} · </span>}
+                      {article.date}
+                    </p>
                   </div>
-                )}
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-black font-medium text-2xl font-jakarta tracking-[1.04px] leading-normal group-hover:text-thelix-orange transition-colors">
-                    {article.title}
-                  </h3>
-                  <p className="text-black/50 text-sm font-jakarta">
-                    {article.source && <span>{article.source} · </span>}
-                    {article.date}
-                  </p>
-                </div>
-              </a>
+                </a>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerGrid>
         )}
 
-        <div className="flex justify-center mt-12">
+        <FadeUp className="flex justify-center mt-12">
           <Link
             to="/news"
             className="flex items-center gap-2 px-8 py-3 border border-thelix-orange text-thelix-orange font-medium text-base font-jakarta rounded hover:bg-thelix-orange hover:text-white transition-colors"
@@ -530,7 +558,7 @@ const LatestUpdatesSection = () => {
             See all Updates
             <ArrowRight size={18} />
           </Link>
-        </div>
+        </FadeUp>
       </div>
     </section>
   );
@@ -539,17 +567,19 @@ const LatestUpdatesSection = () => {
 // ---- Page ----
 export default function Index() {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <HeroSection />
-      <PartnersSection />
-      <OrangeFeaturesBanner />
-      <VentureCardsSection />
-      <PortfolioSection />
-      <CommitmentSection />
-      <QuoteSection />
-      <LatestUpdatesSection />
-      <Footer />
-    </div>
+    <PageTransition>
+      <div className="min-h-screen">
+        <Navbar />
+        <HeroSection />
+        <PartnersSection />
+        <OrangeFeaturesBanner />
+        <VentureCardsSection />
+        <PortfolioSection />
+        <CommitmentSection />
+        <QuoteSection />
+        <LatestUpdatesSection />
+        <Footer />
+      </div>
+    </PageTransition>
   );
 }

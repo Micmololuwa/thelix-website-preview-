@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { FadeUp, FadeIn, StaggerGrid, StaggerItem, PageTransition } from "@/components/ui/motion";
 
 const PAGE_SIZE = 15;
 
@@ -25,16 +27,24 @@ const NewsHero = () => (
     }}
   >
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] pt-16 pb-20 text-center flex flex-col items-center">
-      <h1
+      <motion.h1
         id="hero-intro-title"
         className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-black font-jakarta leading-tight mb-4"
+        initial={{ opacity: 0, y: 36 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
       >
         Stay Informed with the Latest<br /> from Thelix Holdings
-      </h1>
-      <p className="text-black/80 text-base leading-[25px] font-jakarta max-w-[675px]">
+      </motion.h1>
+      <motion.p
+        className="text-black/80 text-base leading-[25px] font-jakarta max-w-[675px]"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1], delay: 0.22 }}
+      >
         Explore our latest news, insights, and updates — from press coverage and industry blogs
         to milestone announcements across global media.
-      </p>
+      </motion.p>
     </div>
   </section>
 );
@@ -43,48 +53,50 @@ const NewsHero = () => (
 const FeaturedArticle = ({ article }: { article: Article }) => (
   <section aria-labelledby="featured-heading" className="bg-white py-10 lg:py-14">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-stretch">
-        {/* Image */}
-        <div className="lg:flex-[1.4] flex-shrink-0">
-          {article.image ? (
-            <img
-              src={article.image}
-              alt={article.title}
-              className="w-full h-[280px] sm:h-[380px] lg:h-full object-cover rounded-2xl"
-            />
-          ) : (
-            <div className="w-full h-[280px] sm:h-[380px] lg:h-full bg-gray-100 rounded-2xl" />
-          )}
-        </div>
+      <FadeIn>
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-stretch">
+          {/* Image */}
+          <div className="lg:flex-[1.4] flex-shrink-0">
+            {article.image ? (
+              <img
+                src={article.image}
+                alt={article.title}
+                className="w-full h-[280px] sm:h-[380px] lg:h-full object-cover rounded-2xl"
+              />
+            ) : (
+              <div className="w-full h-[280px] sm:h-[380px] lg:h-full bg-gray-100 rounded-2xl" />
+            )}
+          </div>
 
-        {/* Text */}
-        <div className="lg:flex-1 bg-[#f6f5f5] rounded-2xl p-6 lg:p-10 flex flex-col gap-6 justify-center">
-          <time className="text-black/40 text-sm font-jakarta">
-            {article.source && <span>{article.source} · </span>}
-            {article.date}
-          </time>
-          <h2
-            id="featured-heading"
-            className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px] leading-snug"
-          >
-            {article.title}
-          </h2>
-          {article.description && (
-            <p className="text-black/80 text-base leading-[27px] font-jakarta">
-              {article.description}
-            </p>
-          )}
-          <a
-            href={article.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 px-4 py-2.5 bg-white rounded border border-thelix-orange/40 w-fit hover:bg-orange-50 transition-colors"
-          >
-            <span className="text-thelix-orange text-base font-medium font-jakarta">Read article</span>
-            <ExternalLink size={16} className="text-thelix-orange" />
-          </a>
+          {/* Text */}
+          <div className="lg:flex-1 bg-[#f6f5f5] rounded-2xl p-6 lg:p-10 flex flex-col gap-6 justify-center">
+            <time className="text-black/40 text-sm font-jakarta">
+              {article.source && <span>{article.source} · </span>}
+              {article.date}
+            </time>
+            <h2
+              id="featured-heading"
+              className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px] leading-snug"
+            >
+              {article.title}
+            </h2>
+            {article.description && (
+              <p className="text-black/80 text-base leading-[27px] font-jakarta">
+                {article.description}
+              </p>
+            )}
+            <a
+              href={article.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 px-4 py-2.5 bg-white rounded border border-thelix-orange/40 w-fit hover:bg-orange-50 transition-colors"
+            >
+              <span className="text-thelix-orange text-base font-medium font-jakarta">Read article</span>
+              <ExternalLink size={16} className="text-thelix-orange" />
+            </a>
+          </div>
         </div>
-      </div>
+      </FadeIn>
     </div>
   </section>
 );
@@ -180,7 +192,6 @@ export default function News() {
   const featured = articles[0] ?? null;
   const rest = articles.slice(1);
 
-  // Pagination on rest (14 per page, since featured takes 1 slot on page 1)
   const GRID_SIZE = PAGE_SIZE - 1;
   const totalPages = Math.max(1, Math.ceil(rest.length / GRID_SIZE));
   const paginated = rest.slice((page - 1) * GRID_SIZE, page * GRID_SIZE);
@@ -188,67 +199,72 @@ export default function News() {
   const goUp = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <NewsHero />
+    <PageTransition>
+      <div className="min-h-screen">
+        <Navbar />
+        <NewsHero />
 
-      {loading && (
-        <section className="bg-white py-16 lg:py-24">
-          <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {!loading && articles.length === 0 && (
-        <section className="bg-white py-24">
-          <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] text-center">
-            <p className="text-black/40 font-jakarta text-lg">
-              No articles published yet. Add some from the admin panel.
-            </p>
-          </div>
-        </section>
-      )}
-
-      {!loading && featured && (
-        <>
-          {/* Only show featured on page 1 */}
-          {page === 1 && <FeaturedArticle article={featured} />}
-
-          <section className="bg-white py-16 lg:py-24 border-t border-gray-100">
+        {loading && (
+          <section className="bg-white py-16 lg:py-24">
             <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-              <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] mb-12">
-                {page === 1 ? "Latest News" : `All News — Page ${page}`}
-              </h2>
-
-              {paginated.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {paginated.map((article) => (
-                    <ArticleCard key={article.id} article={article} />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-black/40 font-jakarta text-sm">
-                  Only one article published so far.
-                </p>
-              )}
-
-              {totalPages > 1 && (
-                <Pagination
-                  page={page}
-                  totalPages={totalPages}
-                  onPrev={() => { setPage((p) => p - 1); goUp(); }}
-                  onNext={() => { setPage((p) => p + 1); goUp(); }}
-                />
-              )}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+              </div>
             </div>
           </section>
-        </>
-      )}
+        )}
 
-      <Footer />
-    </div>
+        {!loading && articles.length === 0 && (
+          <section className="bg-white py-24">
+            <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] text-center">
+              <p className="text-black/40 font-jakarta text-lg">
+                No articles published yet. Add some from the admin panel.
+              </p>
+            </div>
+          </section>
+        )}
+
+        {!loading && featured && (
+          <>
+            {page === 1 && <FeaturedArticle article={featured} />}
+
+            <section className="bg-white py-16 lg:py-24 border-t border-gray-100">
+              <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
+                <FadeUp>
+                  <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] mb-12">
+                    {page === 1 ? "Latest News" : `All News — Page ${page}`}
+                  </h2>
+                </FadeUp>
+
+                {paginated.length > 0 ? (
+                  <StaggerGrid className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {paginated.map((article) => (
+                      <StaggerItem key={article.id}>
+                        <ArticleCard article={article} />
+                      </StaggerItem>
+                    ))}
+                  </StaggerGrid>
+                ) : (
+                  <p className="text-black/40 font-jakarta text-sm">
+                    Only one article published so far.
+                  </p>
+                )}
+
+                {totalPages > 1 && (
+                  <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    onPrev={() => { setPage((p) => p - 1); goUp(); }}
+                    onNext={() => { setPage((p) => p + 1); goUp(); }}
+                  />
+                )}
+              </div>
+            </section>
+          </>
+        )}
+
+        <Footer />
+      </div>
+    </PageTransition>
   );
 }

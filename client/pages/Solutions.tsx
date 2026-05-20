@@ -1,6 +1,8 @@
 import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { FadeUp, SlideLeft, SlideRight, PageTransition } from "@/components/ui/motion";
 
 // ---- Hero ----
 const SolutionsHero = () => (
@@ -10,14 +12,24 @@ const SolutionsHero = () => (
     }}
   >
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] pt-16 pb-20 text-center">
-      <h1 className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-black font-jakarta leading-tight max-w-3xl mx-auto">
+      <motion.h1
+        className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-black font-jakarta leading-tight max-w-3xl mx-auto"
+        initial={{ opacity: 0, y: 36 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+      >
         Our Strategic Business Units
-      </h1>
-      <p className="text-black/80 text-base leading-[25px] max-w-[675px] mx-auto mt-4 font-jakarta">
+      </motion.h1>
+      <motion.p
+        className="text-black/80 text-base leading-[25px] max-w-[675px] mx-auto mt-4 font-jakarta"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1], delay: 0.22 }}
+      >
         Companies we built spanning fintech, EdTech, cybersecurity, education, identity
         verification, and healthcare — each designed to solve real problems at scale and reshape
         their respective industries.
-      </p>
+      </motion.p>
     </div>
   </section>
 );
@@ -93,33 +105,63 @@ const SolutionsSection = () => (
               isEven ? "" : "lg:flex-row-reverse"
             }`}
           >
-            {/* Text */}
-            <div className="flex flex-col gap-6 lg:flex-1">
-              <div>{sbu.logo}</div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-black font-jakarta leading-snug">
-                {sbu.heading}
-              </h2>
-              <p className="text-black/80 text-base leading-[27px] font-jakarta">{sbu.body}</p>
-              <a
-                href={sbu.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 bg-thelix-orange text-white font-jakarta text-base px-6 py-3 rounded-full w-fit hover:bg-orange-500 transition-colors"
-              >
-                <span>Learn more</span>
-                <ArrowRight size={18} />
-              </a>
-            </div>
+            {/* Text — slides in from the side it starts on */}
+            {isEven ? (
+              <SlideLeft className="flex flex-col gap-6 lg:flex-1">
+                <div>{sbu.logo}</div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-black font-jakarta leading-snug">
+                  {sbu.heading}
+                </h2>
+                <p className="text-black/80 text-base leading-[27px] font-jakarta">{sbu.body}</p>
+                <a
+                  href={sbu.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 bg-thelix-orange text-white font-jakarta text-base px-6 py-3 rounded-full w-fit hover:bg-orange-500 transition-colors"
+                >
+                  <span>Learn more</span>
+                  <ArrowRight size={18} />
+                </a>
+              </SlideLeft>
+            ) : (
+              <SlideRight className="flex flex-col gap-6 lg:flex-1">
+                <div>{sbu.logo}</div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-black font-jakarta leading-snug">
+                  {sbu.heading}
+                </h2>
+                <p className="text-black/80 text-base leading-[27px] font-jakarta">{sbu.body}</p>
+                <a
+                  href={sbu.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 bg-thelix-orange text-white font-jakarta text-base px-6 py-3 rounded-full w-fit hover:bg-orange-500 transition-colors"
+                >
+                  <span>Learn more</span>
+                  <ArrowRight size={18} />
+                </a>
+              </SlideRight>
+            )}
 
-            {/* Image */}
-            <div className="lg:flex-1 w-full">
-              <img
-                src={sbu.image}
-                alt={sbu.imageAlt}
-                className="w-full h-[320px] lg:h-[420px] object-cover rounded-2xl"
-                loading="lazy"
-              />
-            </div>
+            {/* Image — slides in from the opposite side */}
+            {isEven ? (
+              <SlideRight className="lg:flex-1 w-full">
+                <img
+                  src={sbu.image}
+                  alt={sbu.imageAlt}
+                  className="w-full h-[320px] lg:h-[420px] object-cover rounded-2xl"
+                  loading="lazy"
+                />
+              </SlideRight>
+            ) : (
+              <SlideLeft className="lg:flex-1 w-full">
+                <img
+                  src={sbu.image}
+                  alt={sbu.imageAlt}
+                  className="w-full h-[320px] lg:h-[420px] object-cover rounded-2xl"
+                  loading="lazy"
+                />
+              </SlideLeft>
+            )}
           </article>
         );
       })}
@@ -130,11 +172,13 @@ const SolutionsSection = () => (
 // ---- Page ----
 export default function Solutions() {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <SolutionsHero />
-      <SolutionsSection />
-      <Footer />
-    </div>
+    <PageTransition>
+      <div className="min-h-screen">
+        <Navbar />
+        <SolutionsHero />
+        <SolutionsSection />
+        <Footer />
+      </div>
+    </PageTransition>
   );
 }

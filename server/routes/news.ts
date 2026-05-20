@@ -4,7 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_FILE = path.join(__dirname, "../data/news.json");
+const DATA_DIR = path.join(__dirname, "../data");
+const DATA_FILE = path.join(DATA_DIR, "news.json");
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "thelix2025";
 
@@ -29,6 +30,7 @@ function readNews(): Article[] {
 }
 
 function writeNews(data: Article[]) {
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
 }
 
@@ -82,9 +84,14 @@ newsRouter.post("/fetch-meta", async (req: Request, res: Response) => {
     const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
     const pageTitle = titleMatch ? titleMatch[1].trim() : "";
 
+    const decodeEntities = (str: string) =>
+      str.replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+         .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+         .replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/&apos;/g, "'");
+
     res.json({
-      title: getMeta("og:title") || pageTitle,
-      description: getMeta("og:description") || getMeta("description"),
+      title: decodeEntities(getMeta("og:title") || pageTitle),
+      description: decodeEntities(getMeta("og:description") || getMeta("description")),
       image: getMeta("og:image"),
       source: getMeta("og:site_name"),
     });

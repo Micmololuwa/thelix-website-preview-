@@ -19,7 +19,7 @@ const SOLUTION_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="bg-[#0D0600] pt-16 pb-8">
+    <footer className="bg-[#1c1714] pt-16 pb-8">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-0 lg:justify-between mb-12">
           {/* Brand */}

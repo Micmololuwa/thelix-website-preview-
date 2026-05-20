@@ -4,6 +4,7 @@ import cors from "cors";
 import { newsRouter } from "./routes/news.js";
 import { teamRouter } from "./routes/team.js";
 import { careersRouter } from "./routes/careers.js";
+import { booksRouter } from "./routes/books.js";
 
 export function createServer() {
   const app = express();
@@ -20,6 +21,13 @@ export function createServer() {
   app.use("/api/news", newsRouter);
   app.use("/api/team", teamRouter);
   app.use("/api/careers", careersRouter);
+  app.use("/api/books", booksRouter);
+
+  // Catch-all error handler — always returns JSON, never HTML
+  app.use((err: any, _req: any, res: any, _next: any) => {
+    console.error(err);
+    res.status(err.status || 500).json({ error: err.message || "Internal server error" });
+  });
 
   return app;
 }

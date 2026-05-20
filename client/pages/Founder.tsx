@@ -1,5 +1,15 @@
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import {
+  FadeUp,
+  SlideLeft,
+  SlideRight,
+  StaggerGrid,
+  StaggerItem,
+  PageTransition,
+} from "@/components/ui/motion";
 
 // ---- Hero ----
 const FounderHero = () => (
@@ -12,41 +22,41 @@ const FounderHero = () => (
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] pt-16 pb-16">
       <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
         {/* Photo */}
-        <div className="flex-shrink-0">
+        <SlideLeft className="flex-shrink-0">
           <img
-            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=480&h=560&fit=crop&q=80"
+            src="/TM's Image.png"
             alt="Tolulope Michael"
             className="w-[260px] sm:w-[320px] lg:w-[380px] h-auto aspect-[4/5] object-cover rounded-2xl"
           />
-        </div>
+        </SlideLeft>
 
         {/* Intro */}
-        <div className="flex flex-col gap-5 lg:flex-1">
+        <SlideRight className="flex flex-col gap-5 lg:flex-1">
           <div>
-            <p className="text-thelix-orange font-medium text-base font-jakarta mb-2">Founder & Chief Visionary Officer</p>
-            <h1
+            <motion.p
+              className="text-thelix-orange font-medium text-base font-jakarta mb-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              Founder & Chief Visionary Officer
+            </motion.p>
+            <motion.h1
               className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-black font-jakarta"
               style={{ lineHeight: 1.1 }}
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
             >
               Tolulope Michael
-            </h1>
+            </motion.h1>
           </div>
           <p className="text-black/70 text-lg leading-[30px] font-jakarta max-w-[560px]">
             Entrepreneur, author, and visionary leader building world-class companies across
             six industries — driven by a mission to create lasting economic freedom for
             communities across Africa and beyond.
           </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            {["Fintech", "EdTech", "Cybersecurity", "Immigration Tech", "Career AI", "Philanthropy"].map((tag) => (
-              <span
-                key={tag}
-                className="px-4 py-1.5 rounded-full border border-black/10 text-sm font-jakarta text-black/60"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
+        </SlideRight>
       </div>
     </div>
   </section>
@@ -57,10 +67,12 @@ const BiographySection = () => (
   <section className="bg-white py-16 lg:py-24">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
       <div className="flex flex-col lg:flex-row items-start gap-10 lg:gap-16">
-        <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px] lg:w-[220px] flex-shrink-0">
-          Biography
-        </h2>
-        <div className="flex flex-col gap-6 flex-1 text-black/80 text-lg leading-[30px] font-jakarta">
+        <FadeUp className="lg:w-[220px] flex-shrink-0">
+          <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px]">
+            Biography
+          </h2>
+        </FadeUp>
+        <FadeUp delay={0.12} className="flex flex-col gap-6 flex-1 text-black/80 text-lg leading-[30px] font-jakarta">
           <p>
             Tolulope Michael is the founder and Chief Visionary Officer of Thelix Holdings, a
             global holding company that has built six strategic business units spanning Financial
@@ -88,7 +100,7 @@ const BiographySection = () => (
             The Guardian Nigeria, BusinessDay, and Yahoo Finance. He continues to be a sought-after
             voice on entrepreneurship, African economic development, and the future of work.
           </p>
-        </div>
+        </FadeUp>
       </div>
     </div>
   </section>
@@ -106,7 +118,7 @@ const experiences = [
   {
     role: "Founder",
     org: "Tolu Michael Foundation",
-    period: "2021 — Present",
+    period: "2023 — Present",
     description:
       "Established a philanthropic organisation focused on entrepreneurship development, economic research, and community empowerment in Africa and the diaspora. Programmes have reached thousands of beneficiaries across multiple countries.",
   },
@@ -120,7 +132,7 @@ const experiences = [
   {
     role: "EdTech Entrepreneur",
     org: "ExcelMind",
-    period: "2018 — Present",
+    period: "2022 — Present",
     description:
       "Founded ExcelMind, a school management and EdTech platform serving educational institutions across Nigeria and Africa. The platform simplifies admissions, automates records, and drives measurable improvements in student performance.",
   },
@@ -129,119 +141,123 @@ const experiences = [
 const ExperienceSection = () => (
   <section className="bg-[#f8f8f7] py-16 lg:py-24">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px] mb-12">
-        Experience
-      </h2>
-      <div className="flex flex-col gap-0 divide-y divide-gray-200">
+      <FadeUp>
+        <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px] mb-12">
+          Experience
+        </h2>
+      </FadeUp>
+      <StaggerGrid className="flex flex-col gap-0 divide-y divide-gray-200">
         {experiences.map((exp) => (
-          <div key={exp.role + exp.org} className="flex flex-col lg:flex-row gap-4 lg:gap-16 py-8">
-            <div className="lg:w-[260px] flex-shrink-0">
-              <p className="font-bold text-black font-jakarta text-base">{exp.role}</p>
-              <p className="text-thelix-orange font-medium text-sm font-jakarta mt-0.5">{exp.org}</p>
-              <p className="text-black/40 text-sm font-jakarta mt-1">{exp.period}</p>
+          <StaggerItem key={exp.role + exp.org}>
+            <div className="flex flex-col lg:flex-row gap-4 lg:gap-16 py-8">
+              <div className="lg:w-[260px] flex-shrink-0">
+                <p className="font-bold text-black font-jakarta text-base">{exp.role}</p>
+                <p className="text-thelix-orange font-medium text-sm font-jakarta mt-0.5">{exp.org}</p>
+                <p className="text-black/40 text-sm font-jakarta mt-1">{exp.period}</p>
+              </div>
+              <p className="text-black/70 text-base leading-[27px] font-jakarta flex-1">
+                {exp.description}
+              </p>
             </div>
-            <p className="text-black/70 text-base leading-[27px] font-jakarta flex-1">
-              {exp.description}
-            </p>
-          </div>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerGrid>
     </div>
   </section>
 );
 
 // ---- Books ----
-const books = [
-  {
-    title: "Cybersecurity for the African Enterprise",
-    year: "2023",
-    description:
-      "A practical guide for business leaders navigating the cybersecurity landscape in emerging markets — covering risk frameworks, compliance, and building resilient organisations in a digital-first world.",
-    cover: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=420&fit=crop&q=80",
-  },
-  {
-    title: "The Purposeful Entrepreneur",
-    year: "2022",
-    description:
-      "An exploration of how purpose-driven entrepreneurship can unlock economic freedom — drawing from Tolulope's experience building companies across Africa and his philosophy on business as a vehicle for social change.",
-    cover: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=300&h=420&fit=crop&q=80",
-  },
-  {
-    title: "Building for Billions",
-    year: "2024",
-    description:
-      "A strategic blueprint for entrepreneurs and executives who want to build scalable companies in high-growth sectors across Africa — from EdTech to fintech, with lessons drawn directly from the Thelix Holdings playbook.",
-    cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=420&fit=crop&q=80",
-  },
-];
+interface Book {
+  id: string;
+  title: string;
+  year: string;
+  sellingUrl: string;
+  cover: string;
+}
 
-const BooksSection = () => (
-  <section className="bg-white py-16 lg:py-24">
-    <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px] mb-12">
-        Books & Publications
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {books.map((book) => (
-          <article key={book.title} className="flex flex-col gap-5">
-            <img
-              src={book.cover}
-              alt={`Cover of ${book.title}`}
-              className="w-full h-[280px] object-cover rounded-2xl"
-              loading="lazy"
-            />
-            <div className="flex flex-col gap-2">
-              <p className="text-thelix-orange text-sm font-jakarta font-medium">{book.year}</p>
-              <h3 className="text-xl font-bold text-black font-jakarta leading-snug">{book.title}</h3>
-              <p className="text-black/60 text-sm leading-[24px] font-jakarta">{book.description}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-);
+const BooksSection = () => {
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
-// ---- Press / Features ----
-const pressItems = [
-  { publication: "This Day Live", headline: "Tolulope Michael Continues Making Impact in the Cybersecurity Workspace", year: "2023" },
-  { publication: "The Guardian Nigeria", headline: "How Technology Can Drive Cost Savings and Boost Student Performance", year: "2025" },
-  { publication: "BusinessDay NG", headline: "Nigerian Schools Can Save N1.5M Yearly with Digital Docs, Expert Says", year: "2025" },
-  { publication: "Yahoo Finance", headline: "ExcelMind Cyber Institute Launches New Cybersecurity Governance Certification Program", year: "2025" },
-];
+  useEffect(() => {
+    fetch("/api/books")
+      .then((r) => r.json())
+      .then((data: Book[]) => setBooks(data))
+      .catch(() => {})
+      .finally(() => setLoaded(true));
+  }, []);
 
-const PressSection = () => (
-  <section className="bg-[#07060f] py-16 lg:py-24">
-    <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <h2 className="text-2xl sm:text-[28px] font-bold text-white font-jakarta tracking-[1.12px] mb-12">
-        In the Press
-      </h2>
-      <div className="flex flex-col gap-0 divide-y divide-white/10">
-        {pressItems.map((item) => (
-          <div key={item.headline} className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-10 py-6">
-            <p className="text-thelix-orange text-sm font-medium font-jakarta sm:w-[180px] flex-shrink-0">
-              {item.publication}
-            </p>
-            <p className="text-white font-jakarta text-base flex-1">{item.headline}</p>
-            <p className="text-white/30 text-sm font-jakarta flex-shrink-0">{item.year}</p>
+  if (loaded && books.length === 0) return null;
+
+  return (
+    <section className="bg-white py-16 lg:py-24">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
+        <FadeUp>
+          <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px] mb-12">
+            Books & Publications
+          </h2>
+        </FadeUp>
+        {!loaded && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex flex-col gap-3 animate-pulse">
+                <div className="w-full h-[280px] rounded-2xl bg-gray-100" />
+                <div className="h-4 bg-gray-100 rounded w-1/4" />
+                <div className="h-5 bg-gray-100 rounded w-3/4" />
+              </div>
+            ))}
           </div>
-        ))}
+        )}
+        {loaded && books.length > 0 && (
+          <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {books.map((book) => (
+              <StaggerItem key={book.id}>
+                <a
+                  href={book.sellingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col gap-5 group"
+                >
+                  {book.cover ? (
+                    <img
+                      src={book.cover}
+                      alt={`Cover of ${book.title}`}
+                      className="w-full h-[280px] object-cover rounded-2xl group-hover:opacity-90 transition-opacity"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-[280px] rounded-2xl bg-gray-100 flex items-center justify-center">
+                      <span className="text-black/20 text-sm font-jakarta">No cover</span>
+                    </div>
+                  )}
+                  <div className="flex flex-col gap-2">
+                    <p className="text-thelix-orange text-sm font-jakarta font-medium">{book.year}</p>
+                    <h3 className="text-xl font-bold text-black font-jakarta leading-snug group-hover:text-thelix-orange transition-colors">
+                      {book.title}
+                    </h3>
+                  </div>
+                </a>
+              </StaggerItem>
+            ))}
+          </StaggerGrid>
+        )}
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 // ---- Page ----
 export default function Founder() {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <FounderHero />
-      <BiographySection />
-      <ExperienceSection />
-      <BooksSection />
-      <PressSection />
-      <Footer />
-    </div>
+    <PageTransition>
+      <div className="min-h-screen">
+        <Navbar />
+        <FounderHero />
+        <BiographySection />
+        <ExperienceSection />
+        <BooksSection />
+        <Footer />
+      </div>
+    </PageTransition>
   );
 }

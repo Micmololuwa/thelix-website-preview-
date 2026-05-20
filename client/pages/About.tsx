@@ -1,7 +1,17 @@
 import { useState, useEffect } from "react";
 import { Target, Eye, TrendingUp, Users, Globe, Lightbulb, Heart, ShieldCheck } from "lucide-react";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import {
+  FadeUp,
+  FadeIn,
+  SlideLeft,
+  SlideRight,
+  StaggerGrid,
+  StaggerItem,
+  PageTransition,
+} from "@/components/ui/motion";
 
 interface TeamMember {
   id: string;
@@ -19,16 +29,24 @@ const AboutHero = () => (
     }}
   >
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] pt-16 pb-12">
-      <h1 className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-black font-jakarta max-w-3xl" style={{ lineHeight: 1.2 }}>
+      <motion.h1
+        className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-black font-jakarta max-w-3xl"
+        style={{ lineHeight: 1.2 }}
+        initial={{ opacity: 0, y: 36 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+      >
         Building Strategic Business Units for Long-term Growth
-      </h1>
+      </motion.h1>
     </div>
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] pb-16">
-      <img
-        src="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1440&h=544&fit=crop&q=80"
-        alt="Team members gathered in a meeting room"
-        className="w-full h-[300px] sm:h-[400px] lg:h-[544px] object-cover rounded-2xl"
-      />
+      <FadeIn>
+        <img
+          src="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1440&h=544&fit=crop&q=80"
+          alt="Team members gathered in a meeting room"
+          className="w-full h-[300px] sm:h-[400px] lg:h-[544px] object-cover rounded-2xl"
+        />
+      </FadeIn>
     </div>
   </section>
 );
@@ -38,10 +56,12 @@ const OurStorySection = () => (
   <section className="bg-white py-16 lg:py-24">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
       <div className="flex flex-col lg:flex-row items-start gap-10 lg:gap-[11px]">
-        <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px] lg:flex-1 flex-shrink-0">
-          Our Story
-        </h2>
-        <div className="lg:flex-1 flex flex-col gap-[27px]">
+        <FadeUp className="lg:flex-1 flex-shrink-0">
+          <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px]">
+            Our Story
+          </h2>
+        </FadeUp>
+        <FadeUp delay={0.12} className="lg:flex-1 flex flex-col gap-[27px]">
           <p className="text-black/80 text-lg leading-[27px] font-jakarta">
             Thelix Holdings is a holding company that has built six strategic business units
             spanning Financial Services, EdTech, Cybersecurity, Education, Healthcare, and
@@ -56,7 +76,7 @@ const OurStorySection = () => (
             programs, are dedicated to encouraging entrepreneurship, advocating for economic
             development, and conducting impactful research worldwide.
           </p>
-        </div>
+        </FadeUp>
       </div>
     </div>
   </section>
@@ -68,7 +88,7 @@ const MissionVisionSection = () => (
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
       <div className="flex flex-col lg:flex-row gap-10 lg:gap-8">
         {/* Mission */}
-        <article className="flex flex-col gap-[27px] flex-1">
+        <SlideLeft className="flex flex-col gap-[27px] flex-1">
           <div className="flex items-center gap-[27px]">
             <Target className="w-[45px] h-[45px] text-thelix-orange flex-shrink-0" />
           </div>
@@ -89,10 +109,10 @@ const MissionVisionSection = () => (
               innovation, and empowering communities globally with cutting-edge solutions.
             </p>
           </div>
-        </article>
+        </SlideLeft>
 
         {/* Vision */}
-        <article className="flex flex-col gap-[27px] flex-1">
+        <SlideRight className="flex flex-col gap-[27px] flex-1">
           <div className="flex items-center gap-[27px]">
             <Eye className="w-[45px] h-[45px] text-thelix-orange flex-shrink-0" />
           </div>
@@ -112,7 +132,7 @@ const MissionVisionSection = () => (
               continents.
             </p>
           </div>
-        </article>
+        </SlideRight>
       </div>
     </div>
   </section>
@@ -168,32 +188,34 @@ const FeaturesSection = () => (
   <section className="bg-[#07060f] py-[70px]">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[101px]">
       <div className="max-w-[1238px] mx-auto flex flex-col gap-[72px]">
-        <h2 className="text-white text-4xl sm:text-[45px] font-bold font-jakarta tracking-[1.8px]">
-          What Sets Thelix Holdings Apart
-        </h2>
+        <FadeUp>
+          <h2 className="text-white text-4xl sm:text-[45px] font-bold font-jakarta tracking-[1.8px]">
+            What Sets Thelix Holdings Apart
+          </h2>
+        </FadeUp>
         <div className="flex flex-col gap-[50px]">
           {featureRows.map((row, rowIndex) => (
-            <div
+            <StaggerGrid
               key={rowIndex}
               className="flex flex-col sm:flex-row items-start gap-10 sm:gap-[55px]"
+              delay={rowIndex * 0.05}
             >
               {row.map((feature) => (
-                <article
-                  key={feature.title}
-                  className="flex flex-col gap-[35px] flex-1 min-w-0"
-                >
-                  <feature.Icon className="w-[41px] h-[41px] text-thelix-orange flex-shrink-0" />
-                  <div className="flex flex-col gap-3">
-                    <h3 className="text-white text-[26.8px] font-bold font-jakarta">
-                      {feature.title}
-                    </h3>
-                    <p className="text-white/70 text-[18.6px] font-jakarta leading-[30.9px]">
-                      {feature.description}
-                    </p>
-                  </div>
-                </article>
+                <StaggerItem key={feature.title}>
+                  <article className="flex flex-col gap-[35px] flex-1 min-w-0">
+                    <feature.Icon className="w-[41px] h-[41px] text-thelix-orange flex-shrink-0" />
+                    <div className="flex flex-col gap-3">
+                      <h3 className="text-white text-[26.8px] font-bold font-jakarta">
+                        {feature.title}
+                      </h3>
+                      <p className="text-white/70 text-[18.6px] font-jakarta leading-[30.9px]">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </article>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerGrid>
           ))}
         </div>
       </div>
@@ -220,12 +242,14 @@ const TeamSection = () => {
   return (
     <section className="bg-[#f8f8f7] py-16 lg:py-24" aria-labelledby="team-title">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-        <h2
-          id="team-title"
-          className="text-4xl sm:text-[45px] font-bold text-black font-jakarta text-center mb-16"
-        >
-          Meet The Team
-        </h2>
+        <FadeUp>
+          <h2
+            id="team-title"
+            className="text-4xl sm:text-[45px] font-bold text-black font-jakarta text-center mb-16"
+          >
+            Meet The Team
+          </h2>
+        </FadeUp>
 
         {loading && (
           <div className="flex justify-center py-12">
@@ -241,8 +265,7 @@ const TeamSection = () => {
 
         {!loading && featured && (
           <>
-            {/* Featured / CVO slot */}
-            <div className="flex justify-center mb-12">
+            <FadeUp className="flex justify-center mb-12">
               <article className="flex flex-col items-center gap-4">
                 {featured.image ? (
                   <img
@@ -264,35 +287,36 @@ const TeamSection = () => {
                   </p>
                 </div>
               </article>
-            </div>
+            </FadeUp>
 
-            {/* Grid */}
             {rest.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+              <StaggerGrid className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
                 {rest.map((member) => (
-                  <article key={member.id} className="flex flex-col items-center gap-4">
-                    {member.image ? (
-                      <img
-                        src={member.image}
-                        alt={`${member.name} portrait`}
-                        className="w-full h-[200px] sm:h-[285px] object-cover rounded-xl"
-                      />
-                    ) : (
-                      <div className="w-full h-[200px] sm:h-[285px] bg-gray-100 rounded-xl flex items-center justify-center">
-                        <Users className="w-10 h-10 text-gray-300" />
+                  <StaggerItem key={member.id}>
+                    <article className="flex flex-col items-center gap-4">
+                      {member.image ? (
+                        <img
+                          src={member.image}
+                          alt={`${member.name} portrait`}
+                          className="w-full h-[200px] sm:h-[285px] object-cover rounded-xl"
+                        />
+                      ) : (
+                        <div className="w-full h-[200px] sm:h-[285px] bg-gray-100 rounded-xl flex items-center justify-center">
+                          <Users className="w-10 h-10 text-gray-300" />
+                        </div>
+                      )}
+                      <div className="text-center">
+                        <h3 className="font-bold text-[#07060f] text-xl sm:text-2xl font-jakarta">
+                          {member.name}
+                        </h3>
+                        <p className="text-[#4c4c4c] text-sm font-jakarta leading-[30px]">
+                          {member.designation}
+                        </p>
                       </div>
-                    )}
-                    <div className="text-center">
-                      <h3 className="font-bold text-[#07060f] text-xl sm:text-2xl font-jakarta">
-                        {member.name}
-                      </h3>
-                      <p className="text-[#4c4c4c] text-sm font-jakarta leading-[30px]">
-                        {member.designation}
-                      </p>
-                    </div>
-                  </article>
+                    </article>
+                  </StaggerItem>
                 ))}
-              </div>
+              </StaggerGrid>
             )}
           </>
         )}
@@ -304,14 +328,16 @@ const TeamSection = () => {
 // ---- Page ----
 export default function About() {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <AboutHero />
-      <OurStorySection />
-      <MissionVisionSection />
-      <FeaturesSection />
-      <TeamSection />
-      <Footer />
-    </div>
+    <PageTransition>
+      <div className="min-h-screen">
+        <Navbar />
+        <AboutHero />
+        <OurStorySection />
+        <MissionVisionSection />
+        <FeaturesSection />
+        <TeamSection />
+        <Footer />
+      </div>
+    </PageTransition>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Trash2, Link2, Loader2, Plus, LogOut, Newspaper, Users, ImagePlus, X, Pencil, Check, Briefcase, MapPin } from "lucide-react";
+import { Trash2, Link2, Loader2, Plus, LogOut, Newspaper, Users, ImagePlus, X, Pencil, Check, Briefcase, MapPin, BookOpen } from "lucide-react";
 import { RichTextEditor } from "@/components/RichTextEditor";
 
 const STORAGE_KEY = "thelix_admin_key";
@@ -675,11 +675,187 @@ function CareersTab({ adminKey }: { adminKey: string }) {
   );
 }
 
+// ---- Books Tab ----
+interface Book {
+  id: string;
+  title: string;
+  year: string;
+  sellingUrl: string;
+  cover: string;
+  createdAt: string;
+}
+
+function BooksTab({ adminKey }: { adminKey: string }) {
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [addForm, setAddForm] = useState({ title: "", year: "", sellingUrl: "", cover: "" });
+  const [addFileName, setAddFileName] = useState("");
+  const addFileRef = useRef<HTMLInputElement>(null);
+  const [adding, setAdding] = useState(false);
+  const [addError, setAddError] = useState("");
+  const [addSuccess, setAddSuccess] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({ title: "", year: "", sellingUrl: "", cover: "" });
+  const [editFileName, setEditFileName] = useState("");
+  const editFileRef = useRef<HTMLInputElement>(null);
+  const [saving, setSaving] = useState(false);
+  const [editError, setEditError] = useState("");
+
+  const headers = { "Content-Type": "application/json", "x-admin-key": adminKey };
+
+  useEffect(() => {
+    setLoading(true);
+    fetch("/api/books")
+      .then((r) => r.json())
+      .then((data) => setBooks(data))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const addBook = async () => {
+    if (!addForm.title || !addForm.year || !addForm.sellingUrl) return;
+    setAdding(true); setAddError(""); setAddSuccess(false);
+    try {
+      const res = await fetch("/api/books", { method: "POST", headers, body: JSON.stringify(addForm) });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setBooks((prev) => [...prev, data]);
+      setAddForm({ title: "", year: "", sellingUrl: "", cover: "" });
+      setAddFileName("");
+      if (addFileRef.current) addFileRef.current.value = "";
+      setAddSuccess(true);
+      setTimeout(() => setAddSuccess(false), 3000);
+    } catch (err: any) { setAddError(err.message || "Failed to save"); }
+    finally { setAdding(false); }
+  };
+
+  const startEdit = (book: Book) => {
+    setEditId(book.id);
+    setEditForm({ title: book.title, year: book.year, sellingUrl: book.sellingUrl, cover: book.cover });
+    setEditFileName("");
+    setEditError("");
+  };
+
+  const cancelEdit = () => { setEditId(null); setEditFileName(""); if (editFileRef.current) editFileRef.current.value = ""; };
+
+  const saveEdit = async () => {
+    if (!editId) return;
+    setSaving(true); setEditError("");
+    try {
+      const res = await fetch(`/api/books/${editId}`, { method: "PUT", headers, body: JSON.stringify(editForm) });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setBooks((prev) => prev.map((b) => (b.id === editId ? data : b)));
+      cancelEdit();
+    } catch (err: any) { setEditError(err.message || "Failed to update"); }
+    finally { setSaving(false); }
+  };
+
+  const deleteBook = async (id: string) => {
+    if (!confirm("Remove this book?")) return;
+    await fetch(`/api/books/${id}`, { method: "DELETE", headers });
+    setBooks((prev) => prev.filter((b) => b.id !== id));
+    if (editId === id) cancelEdit();
+  };
+
+  return (
+    <div className="flex flex-col gap-10">
+      {/* Add Book */}
+      <div className="bg-white rounded-2xl p-6 flex flex-col gap-5 shadow-sm">
+        <div>
+          <h2 className="text-lg font-bold text-black font-jakarta">Add a Book</h2>
+          <p className="text-xs text-black/40 font-jakarta mt-1">
+            Books added here appear on the Founder page and link to their purchase page.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Field label="Book Title" value={addForm.title} onChange={(v) => setAddForm((f) => ({ ...f, title: v }))} />
+          <Field label="Year Published" value={addForm.year} onChange={(v) => setAddForm((f) => ({ ...f, year: v }))} />
+        </div>
+        <Field label="Selling Page URL (Amazon, etc.)" value={addForm.sellingUrl} onChange={(v) => setAddForm((f) => ({ ...f, sellingUrl: v }))} />
+        <PhotoUpload
+          image={addForm.cover}
+          fileName={addFileName}
+          onFile={(base64, name) => { setAddForm((f) => ({ ...f, cover: base64 })); setAddFileName(name); }}
+          onClear={() => { setAddForm((f) => ({ ...f, cover: "" })); setAddFileName(""); if (addFileRef.current) addFileRef.current.value = ""; }}
+          inputRef={addFileRef}
+        />
+        {addError && <p className="text-red-500 text-xs font-jakarta">{addError}</p>}
+        {addSuccess && <p className="text-green-600 text-xs font-jakarta">Book added successfully.</p>}
+        <button
+          onClick={addBook}
+          disabled={adding || !addForm.title || !addForm.year || !addForm.sellingUrl}
+          className="flex items-center gap-2 bg-[#07060f] text-white px-5 py-3 rounded-lg text-sm font-medium font-jakarta hover:bg-gray-800 transition-colors disabled:opacity-50 w-fit"
+        >
+          {adding ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
+          {adding ? "Saving…" : "Add Book"}
+        </button>
+      </div>
+
+      {/* Book list */}
+      <div className="flex flex-col gap-4">
+        <h2 className="text-lg font-bold text-black font-jakarta">Books ({books.length})</h2>
+        {loading && <div className="flex items-center gap-2 text-black/40 text-sm font-jakarta"><Loader2 size={16} className="animate-spin" /> Loading…</div>}
+        {!loading && books.length === 0 && <p className="text-black/40 text-sm font-jakarta">No books yet. Add one above.</p>}
+        {books.map((book) => (
+          <div key={book.id} className="bg-white rounded-xl shadow-sm overflow-hidden">
+            {editId !== book.id ? (
+              <div className="p-4 flex gap-4 items-center">
+                {book.cover ? (
+                  <img src={book.cover} alt="" className="w-14 h-20 object-cover rounded-lg flex-shrink-0" />
+                ) : (
+                  <div className="w-14 h-20 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                    <BookOpen size={20} className="text-gray-300" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-black font-jakarta">{book.title}</p>
+                  <p className="text-xs text-thelix-orange font-jakarta mt-0.5">{book.year}</p>
+                  <a href={book.sellingUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-black/40 font-jakarta hover:text-[#F48220] transition-colors truncate block mt-1">
+                    {book.sellingUrl}
+                  </a>
+                </div>
+                <div className="flex gap-1 flex-shrink-0">
+                  <button onClick={() => startEdit(book)} className="text-black/30 hover:text-black transition-colors p-1"><Pencil size={15} /></button>
+                  <button onClick={() => deleteBook(book.id)} className="text-red-400 hover:text-red-600 transition-colors p-1"><Trash2 size={15} /></button>
+                </div>
+              </div>
+            ) : (
+              <div className="p-5 flex flex-col gap-4 border-l-2 border-[#F48220]">
+                <p className="text-xs font-medium text-[#F48220] font-jakarta">Editing — {book.title}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Field label="Book Title" value={editForm.title} onChange={(v) => setEditForm((f) => ({ ...f, title: v }))} />
+                  <Field label="Year Published" value={editForm.year} onChange={(v) => setEditForm((f) => ({ ...f, year: v }))} />
+                </div>
+                <Field label="Selling Page URL" value={editForm.sellingUrl} onChange={(v) => setEditForm((f) => ({ ...f, sellingUrl: v }))} />
+                <PhotoUpload
+                  image={editForm.cover}
+                  fileName={editFileName}
+                  onFile={(base64, name) => { setEditForm((f) => ({ ...f, cover: base64 })); setEditFileName(name); }}
+                  onClear={() => { setEditForm((f) => ({ ...f, cover: "" })); setEditFileName(""); if (editFileRef.current) editFileRef.current.value = ""; }}
+                  inputRef={editFileRef}
+                />
+                {editError && <p className="text-red-500 text-xs font-jakarta">{editError}</p>}
+                <div className="flex gap-3">
+                  <button onClick={saveEdit} disabled={saving} className="flex items-center gap-2 bg-[#07060f] text-white px-4 py-2 rounded-lg text-sm font-medium font-jakarta hover:bg-gray-800 transition-colors disabled:opacity-50">
+                    {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                    {saving ? "Saving…" : "Save changes"}
+                  </button>
+                  <button onClick={cancelEdit} className="px-4 py-2 rounded-lg text-sm font-medium font-jakarta text-black/50 hover:text-black border border-gray-200 hover:border-gray-300 transition-colors">Cancel</button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ---- Main Admin Panel ----
 export default function Admin() {
   const [adminKey, setAdminKey] = useState<string>(() => sessionStorage.getItem(STORAGE_KEY) || "");
   const [authed, setAuthed] = useState(false);
-  const [tab, setTab] = useState<"news" | "team" | "careers">("news");
+  const [tab, setTab] = useState<"news" | "team" | "careers" | "books">("news");
 
   const tryAuth = async (key: string): Promise<boolean> => {
     const res = await fetch("/api/news/fetch-meta", {
@@ -760,6 +936,16 @@ export default function Admin() {
           >
             <Briefcase size={16} /> Careers
           </button>
+          <button
+            onClick={() => setTab("books")}
+            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${
+              tab === "books"
+                ? "border-[#F48220] text-[#F48220]"
+                : "border-transparent text-black/50 hover:text-black"
+            }`}
+          >
+            <BookOpen size={16} /> Books
+          </button>
         </div>
       </div>
 
@@ -767,6 +953,7 @@ export default function Admin() {
         {tab === "news" && <NewsTab adminKey={adminKey} />}
         {tab === "team" && <TeamTab adminKey={adminKey} />}
         {tab === "careers" && <CareersTab adminKey={adminKey} />}
+        {tab === "books" && <BooksTab adminKey={adminKey} />}
       </div>
     </div>
   );

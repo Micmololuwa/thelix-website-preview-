@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { MapPin, ArrowRight, Briefcase, Globe, TrendingUp, Users, Heart, Zap, Coffee, BookOpen, Plane } from "lucide-react";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import {
+  FadeUp,
+  SlideLeft,
+  SlideRight,
+  StaggerGrid,
+  StaggerItem,
+  PageTransition,
+} from "@/components/ui/motion";
 
 interface Job {
   id: string;
@@ -20,22 +29,35 @@ const CareerHero = () => (
     }}
   >
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] pt-16 pb-20 text-center flex flex-col items-center gap-6">
-      <h1
+      <motion.h1
         className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-black font-jakarta max-w-4xl"
         style={{ lineHeight: 1.15 }}
+        initial={{ opacity: 0, y: 36 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
       >
         Build the Future<br className="hidden sm:block" /> with Thelix Holdings
-      </h1>
-      <p className="text-black/80 text-base leading-[27px] font-jakarta max-w-[620px]">
+      </motion.h1>
+      <motion.p
+        className="text-black/80 text-base leading-[27px] font-jakarta max-w-[620px]"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1], delay: 0.22 }}
+      >
         Join a team of builders, innovators, and problem-solvers working across six
         transformative business units to create lasting economic and social impact globally.
-      </p>
-      <a
-        href="#open-positions"
+      </motion.p>
+      <motion.a
+        href="https://jobs.thelixholdings.com"
+        target="_blank"
+        rel="noopener noreferrer"
         className="flex items-center gap-2 bg-[#07060f] text-white px-6 py-3 rounded-full text-sm font-medium font-jakarta hover:bg-gray-800 transition-colors w-fit"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.38 }}
       >
         View Open Roles <ArrowRight size={16} />
-      </a>
+      </motion.a>
     </div>
   </section>
 );
@@ -62,33 +84,37 @@ const values = [
 const ValuesSection = () => (
   <section className="bg-white py-16 lg:py-24">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <h2 className="text-3xl sm:text-[45px] font-bold text-black font-jakarta mb-12">
-        Why Thelix?
-      </h2>
+      <FadeUp>
+        <h2 className="text-3xl sm:text-[45px] font-bold text-black font-jakarta mb-12">
+          Why Thelix?
+        </h2>
+      </FadeUp>
       <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-stretch">
         {/* Image */}
-        <div className="lg:w-[45%] flex-shrink-0">
+        <SlideLeft className="lg:w-[45%] flex-shrink-0">
           <img
             src="/joinus-image.png"
             alt="Thelix Holdings team"
             className="w-full h-[300px] lg:h-full object-cover rounded-2xl"
           />
-        </div>
+        </SlideLeft>
 
         {/* Cards */}
-        <div className="flex flex-col gap-5 flex-1">
+        <StaggerGrid className="flex flex-col gap-5 flex-1">
           {values.map(({ Icon, title, body }) => (
-            <div key={title} className="flex gap-5 p-6 bg-[#f8f8f7] rounded-2xl items-start">
-              <div className="w-12 h-12 rounded-xl bg-[#F48220]/10 flex items-center justify-center flex-shrink-0">
-                <Icon size={22} className="text-[#F48220]" />
+            <StaggerItem key={title}>
+              <div className="flex gap-5 p-6 bg-[#f8f8f7] rounded-2xl items-start">
+                <div className="w-12 h-12 rounded-xl bg-[#F48220]/10 flex items-center justify-center flex-shrink-0">
+                  <Icon size={22} className="text-[#F48220]" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <h3 className="text-xl font-bold text-black font-jakarta">{title}</h3>
+                  <p className="text-black/70 text-base leading-[27px] font-jakarta">{body}</p>
+                </div>
               </div>
-              <div className="flex flex-col gap-1.5">
-                <h3 className="text-xl font-bold text-black font-jakarta">{title}</h3>
-                <p className="text-black/70 text-base leading-[27px] font-jakarta">{body}</p>
-              </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGrid>
       </div>
     </div>
   </section>
@@ -131,27 +157,29 @@ const perks = [
 const PerksSection = () => (
   <section className="bg-[#07060f] py-16 lg:py-24">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <div className="mb-12">
+      <FadeUp className="mb-12">
         <h2 className="text-3xl sm:text-[45px] font-bold text-white font-jakarta mb-3">
           Perks & Benefits
         </h2>
         <p className="text-white/60 text-base leading-[27px] font-jakarta max-w-[560px]">
           We take care of our people so they can take care of building great things.
         </p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      </FadeUp>
+      <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {perks.map(({ Icon, title, body }) => (
-          <div key={title} className="flex flex-col gap-4 p-6 rounded-2xl border border-white/10 hover:border-[#F48220]/40 transition-colors">
-            <div className="w-11 h-11 rounded-xl bg-[#F48220]/15 flex items-center justify-center flex-shrink-0">
-              <Icon size={20} className="text-[#F48220]" />
+          <StaggerItem key={title}>
+            <div className="flex flex-col gap-4 p-6 rounded-2xl border border-white/10 hover:border-[#F48220]/40 transition-colors h-full">
+              <div className="w-11 h-11 rounded-xl bg-[#F48220]/15 flex items-center justify-center flex-shrink-0">
+                <Icon size={20} className="text-[#F48220]" />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <h3 className="text-lg font-bold text-white font-jakarta">{title}</h3>
+                <p className="text-white/60 text-sm leading-[24px] font-jakarta">{body}</p>
+              </div>
             </div>
-            <div className="flex flex-col gap-1.5">
-              <h3 className="text-lg font-bold text-white font-jakarta">{title}</h3>
-              <p className="text-white/60 text-sm leading-[24px] font-jakarta">{body}</p>
-            </div>
-          </div>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerGrid>
     </div>
   </section>
 );
@@ -211,7 +239,7 @@ const OpenPositionsSection = () => {
   return (
     <section id="open-positions" className="bg-[#f8f8f7] py-16 lg:py-24">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
+        <FadeUp className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
           <h2 className="text-3xl sm:text-[45px] font-bold text-black font-jakarta">
             Open Positions
           </h2>
@@ -220,7 +248,7 @@ const OpenPositionsSection = () => {
               {jobs.length} role{jobs.length !== 1 ? "s" : ""} available
             </p>
           )}
-        </div>
+        </FadeUp>
 
         {loading && (
           <div className="flex flex-col gap-4">
@@ -244,9 +272,13 @@ const OpenPositionsSection = () => {
         )}
 
         {!loading && jobs.length > 0 && (
-          <div className="flex flex-col gap-5">
-            {jobs.map((job) => <JobCard key={job.id} job={job} />)}
-          </div>
+          <StaggerGrid className="flex flex-col gap-5">
+            {jobs.map((job) => (
+              <StaggerItem key={job.id}>
+                <JobCard job={job} />
+              </StaggerItem>
+            ))}
+          </StaggerGrid>
         )}
       </div>
     </section>
@@ -256,13 +288,15 @@ const OpenPositionsSection = () => {
 // ---- Page ----
 export default function Career() {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <CareerHero />
-      <ValuesSection />
-      <PerksSection />
-      <OpenPositionsSection />
-      <Footer />
-    </div>
+    <PageTransition>
+      <div className="min-h-screen">
+        <Navbar />
+        <CareerHero />
+        <ValuesSection />
+        <PerksSection />
+        <OpenPositionsSection />
+        <Footer />
+      </div>
+    </PageTransition>
   );
 }
