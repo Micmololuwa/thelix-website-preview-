@@ -27,7 +27,7 @@ teamRouter.get("/", async (_req, res) => {
     .select("*")
     .order("created_at", { ascending: true });
   if (error) { res.status(500).json({ error: error.message }); return; }
-  res.json(data);
+  res.json(data.map((m) => ({ ...m, image: m.image_url })));
 });
 
 teamRouter.post("/", async (req, res) => {
