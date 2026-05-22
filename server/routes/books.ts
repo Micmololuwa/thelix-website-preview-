@@ -1,103 +1,77 @@
 import { Router } from "express";
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { supabase } from "../lib/supabase.js";
+import { auth } from "../lib/auth.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "../data");
-const DATA_FILE = path.join(DATA_DIR, "books.json");
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "thelix2025";
-
-interface Book {
-  id: string;
-  title: string;
-  year: string;
-  sellingUrl: string;
-  cover: string;
-  createdAt: string;
-}
-
-function readBooks(): Book[] {
-  if (!existsSync(DATA_FILE)) return [];
-  try {
-    return JSON.parse(readFileSync(DATA_FILE, "utf-8"));
-  } catch {
-    return [];
-  }
-}
-
-function writeBooks(books: Book[]) {
-  if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
-  writeFileSync(DATA_FILE, JSON.stringify(books, null, 2));
-}
-
-function auth(req: any, res: any): boolean {
-  if (req.headers["x-admin-key"] !== ADMIN_PASSWORD) {
-    res.status(401).json({ error: "Unauthorized" });
-    return false;
-  }
-  return true;
+async function uploadImage(base64: string, id: string): Promise<string> {
+  if (!base64 || !base64.startsWith("data:")) return base64;
+  const match = base64.match(/^data:(image\/\w+);base64,(.+)$/);
+  if (!match) return base64;
+  const mimeType = match[1];
+  const buffer = Buffer.from(match[2], "base64");
+  const ext = mimeType.split("/")[1];
+  const path = `books/${id}.${ext}`;
+  const { error } = await supabase.storage.from("images").upload(path, buffer, {
+    contentType: mimeType,
+    upsert: true,
+  });
+  if (error) throw error;
+  const { data } = supabase.storage.from("images").getPublicUrl(path);
+  return data.publicUrl;
 }
 
 export const booksRouter = Router();
 
-booksRouter.get("/", (_req, res) => {
-  res.json(readBooks());
+booksRouter.get("/", async (_req, res) => {
+  const { data, error } = await supabase
+    .from("books")
+    .select("*")
+    .order("created_at", { ascending: true });
+  if (error) { res.status(500).json({ error: error.message }); return; }
+  res.json(data.map((b) => ({ ...b, sellingUrl: b.selling_url, cover: b.cover_url })));
 });
 
-booksRouter.post("/", (req, res) => {
-  if (!auth(req, res)) return;
-  const { title, year, sellingUrl, cover } = req.body as Partial<Book>;
+booksRouter.post("/", async (req, res) => {
+  if (!await auth(req, res)) return;
+  const { title, year, sellingUrl, cover } = req.body;
   if (!title || !year || !sellingUrl) {
     res.status(400).json({ error: "title, year, and sellingUrl are required" });
     return;
   }
-  const book: Book = {
-    id: Date.now().toString(),
-    title: title.trim(),
-    year: year.trim(),
-    sellingUrl: sellingUrl.trim(),
-    cover: (cover || "").trim(),
-    createdAt: new Date().toISOString(),
-  };
-  const books = readBooks();
-  books.push(book);
-  writeBooks(books);
-  res.status(201).json(book);
+  const id = Date.now().toString();
+  const coverUrl = cover ? await uploadImage(cover, id).catch(() => "") : "";
+  const { data, error } = await supabase
+    .from("books")
+    .insert({ id, title: title.trim(), year: year.trim(), selling_url: sellingUrl.trim(), cover_url: coverUrl })
+    .select()
+    .single();
+  if (error) { res.status(500).json({ error: error.message }); return; }
+  res.status(201).json({ ...data, sellingUrl: data.selling_url, cover: data.cover_url });
 });
 
-booksRouter.put("/:id", (req, res) => {
-  if (!auth(req, res)) return;
-  const { title, year, sellingUrl, cover } = req.body as Partial<Book>;
+booksRouter.put("/:id", async (req, res) => {
+  if (!await auth(req, res)) return;
+  const { title, year, sellingUrl, cover } = req.body;
   if (!title || !year || !sellingUrl) {
     res.status(400).json({ error: "title, year, and sellingUrl are required" });
     return;
   }
-  const books = readBooks();
-  const idx = books.findIndex((b) => b.id === req.params.id);
-  if (idx === -1) {
-    res.status(404).json({ error: "Book not found" });
-    return;
+  const update: any = { title: title.trim(), year: year.trim(), selling_url: sellingUrl.trim() };
+  if (cover !== undefined) {
+    update.cover_url = cover ? await uploadImage(cover, req.params.id).catch(() => "") : "";
   }
-  books[idx] = {
-    ...books[idx],
-    title: title.trim(),
-    year: year.trim(),
-    sellingUrl: sellingUrl.trim(),
-    cover: cover !== undefined ? cover.trim() : books[idx].cover,
-  };
-  writeBooks(books);
-  res.json(books[idx]);
+  const { data, error } = await supabase
+    .from("books")
+    .update(update)
+    .eq("id", req.params.id)
+    .select()
+    .single();
+  if (error) { res.status(error.code === "PGRST116" ? 404 : 500).json({ error: error.message }); return; }
+  res.json({ ...data, sellingUrl: data.selling_url, cover: data.cover_url });
 });
 
-booksRouter.delete("/:id", (req, res) => {
-  if (!auth(req, res)) return;
-  const books = readBooks();
-  const filtered = books.filter((b) => b.id !== req.params.id);
-  if (filtered.length === books.length) {
-    res.status(404).json({ error: "Book not found" });
-    return;
-  }
-  writeBooks(filtered);
+booksRouter.delete("/:id", async (req, res) => {
+  if (!await auth(req, res)) return;
+  const { error } = await supabase.from("books").delete().eq("id", req.params.id);
+  if (error) { res.status(500).json({ error: error.message }); return; }
   res.json({ ok: true });
 });
