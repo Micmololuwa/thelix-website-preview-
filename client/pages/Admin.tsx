@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Trash2, Link2, Loader2, Plus, LogOut, Newspaper, Users, ImagePlus, X, Pencil, Check, Briefcase, MapPin, BookOpen } from "lucide-react";
+import { Trash2, Link2, Loader2, Plus, LogOut, Newspaper, Users, ImagePlus, X, Pencil, Check, Briefcase, MapPin, BookOpen, Eye, EyeOff } from "lucide-react";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { supabase } from "@/lib/supabase";
 
@@ -35,6 +35,7 @@ function LoginGate({ onAuth }: { onAuth: (token: string, email: string) => void 
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,13 +66,22 @@ function LoginGate({ onAuth }: { onAuth: (token: string, email: string) => void 
             onChange={(e) => setEmail(e.target.value)}
             className="border border-gray-200 rounded-lg px-4 py-3 text-sm font-jakarta focus:outline-none focus:border-[#F48220]"
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border border-gray-200 rounded-lg px-4 py-3 text-sm font-jakarta focus:outline-none focus:border-[#F48220]"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-4 py-3 pr-11 text-sm font-jakarta focus:outline-none focus:border-[#F48220]"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-black/30 hover:text-black transition-colors"
+            >
+              {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+            </button>
+          </div>
           {error && <p className="text-red-500 text-xs font-jakarta">{error}</p>}
           <button
             type="submit"
