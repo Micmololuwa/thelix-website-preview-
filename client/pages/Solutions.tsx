@@ -39,11 +39,11 @@ const SBUS = [
   {
     id: "creditveto",
     logo: <img src="/creditveto.png" alt="CreditVeto" className="h-10 w-auto object-contain" />,
-    heading: "Transforming Credit Access for a New Generation of Borrowers",
+    heading: "Build Your Credit Score By Paying Bills",
     body: "CreditVeto is a fintech platform that empowers individuals and businesses to understand, manage, and improve their credit profiles. By making credit scoring transparent and actionable, we are removing barriers to financial inclusion and enabling more people to access the capital they need to build better futures.",
-    image: "https://c.animaapp.com/nC2rat2M/img/rectangle-288.png",
+    image: "/magnific__talk__11997.png",
     imageAlt: "CreditVeto platform in action",
-    url: "https://creditveto.com",
+    url: "https://www.creditvetoafrica.com/",
   },
   {
     id: "excelmind",
@@ -57,8 +57,8 @@ const SBUS = [
   {
     id: "excelmindcyber",
     logo: <img src="/emc.png" alt="ExcelMind Cyber" className="h-10 w-auto object-contain" />,
-    heading: "Protecting Businesses in an Increasingly Digital World",
-    body: "ExcelMind Cyber equips individuals and organisations with the cybersecurity skills required to thrive in today's threat landscape. Our comprehensive training programmes, taught by industry practitioners, cover everything from ethical hacking to enterprise security architecture and compliance.",
+    heading: "Break Into a High-Paying Cybersecurity Career in 90 Days — No Tech Background Required.",
+    body: "Join 1,000+ professionals from nursing, logistics, finance, and the military who used ExcelMindCyber's proven 90-day accelerator to transition into cybersecurity roles — without quitting their jobs or going back to school. Roles our graduates hold today pay between $75,000 and $120,000 per year.*",
     image: "https://c.animaapp.com/nC2rat2M/img/rectangle-288-1.png",
     imageAlt: "Cybersecurity professional at work",
     url: "https://excelmindcyber.com",
