@@ -1,15 +1,6 @@
 import { Router, Request, Response } from "express";
 import { supabase } from "../lib/supabase.js";
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "thelix2025";
-
-function checkAuth(req: Request, res: Response): boolean {
-  if (req.headers["x-admin-key"] !== ADMIN_PASSWORD) {
-    res.status(401).json({ error: "Unauthorized" });
-    return false;
-  }
-  return true;
-}
+import { auth as checkAuth } from "../lib/auth.js";
 
 export const newsRouter = Router();
 
@@ -23,7 +14,7 @@ newsRouter.get("/", async (_req, res) => {
 });
 
 newsRouter.post("/fetch-meta", async (req: Request, res: Response) => {
-  if (!checkAuth(req, res)) return;
+  if (!await checkAuth(req, res)) return;
   const { url } = req.body;
   if (!url) { res.status(400).json({ error: "URL is required" }); return; }
   try {
@@ -65,7 +56,7 @@ newsRouter.post("/fetch-meta", async (req: Request, res: Response) => {
 });
 
 newsRouter.post("/", async (req: Request, res: Response) => {
-  if (!checkAuth(req, res)) return;
+  if (!await checkAuth(req, res)) return;
   const { title, description, image, url, date, source } = req.body;
   if (!title || !url) { res.status(400).json({ error: "Title and URL are required" }); return; }
   const id = Date.now().toString();
@@ -87,7 +78,7 @@ newsRouter.post("/", async (req: Request, res: Response) => {
 });
 
 newsRouter.delete("/:id", async (req: Request, res: Response) => {
-  if (!checkAuth(req, res)) return;
+  if (!await checkAuth(req, res)) return;
   const { error } = await supabase.from("news").delete().eq("id", req.params.id);
   if (error) { res.status(500).json({ error: error.message }); return; }
   res.json({ success: true });

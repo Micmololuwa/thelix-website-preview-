@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Trash2, Link2, Loader2, Plus, LogOut, Newspaper, Users, ImagePlus, X, Pencil, Check, Briefcase, MapPin, BookOpen } from "lucide-react";
 import { RichTextEditor } from "@/components/RichTextEditor";
-
-const STORAGE_KEY = "thelix_admin_key";
+import { supabase } from "@/lib/supabase";
 
 interface Article {
   id: string;
@@ -30,16 +29,25 @@ interface TeamMember {
   createdAt: string;
 }
 
-// ---- Password Gate ----
-function PasswordGate({ onAuth }: { onAuth: (key: string) => void }) {
-  const [value, setValue] = useState("");
+// ---- Login Gate ----
+function LoginGate({ onAuth }: { onAuth: (token: string, email: string) => void }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!value.trim()) return;
-    const ok = await onAuth(value.trim());
-    if (!ok) setError("Wrong password. Try again.");
+    if (!email.trim() || !password.trim()) return;
+    setLoading(true);
+    setError("");
+    const { data, error: authError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    setLoading(false);
+    if (authError || !data.session) {
+      setError(authError?.message || "Invalid email or password.");
+      return;
+    }
+    onAuth(data.session.access_token, data.user.email ?? email);
   };
 
   return (
@@ -47,22 +55,31 @@ function PasswordGate({ onAuth }: { onAuth: (key: string) => void }) {
       <div className="bg-white rounded-2xl p-8 w-full max-w-sm flex flex-col gap-6">
         <div>
           <h1 className="text-2xl font-bold text-black font-jakarta">Admin Access</h1>
-          <p className="text-black/50 text-sm mt-1 font-jakarta">Enter your admin password to continue.</p>
+          <p className="text-black/50 text-sm mt-1 font-jakarta">Sign in with your Thelix admin account.</p>
         </div>
         <form onSubmit={submit} className="flex flex-col gap-3">
           <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="border border-gray-200 rounded-lg px-4 py-3 text-sm font-jakarta focus:outline-none focus:border-[#F48220]"
+          />
+          <input
             type="password"
             placeholder="Password"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="border border-gray-200 rounded-lg px-4 py-3 text-sm font-jakarta focus:outline-none focus:border-[#F48220]"
           />
           {error && <p className="text-red-500 text-xs font-jakarta">{error}</p>}
           <button
             type="submit"
-            className="bg-[#F48220] text-white py-3 rounded-lg text-sm font-medium font-jakarta hover:bg-orange-500 transition-colors"
+            disabled={loading}
+            className="bg-[#F48220] text-white py-3 rounded-lg text-sm font-medium font-jakarta hover:bg-orange-500 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
           >
-            Sign In
+            {loading && <Loader2 size={15} className="animate-spin" />}
+            {loading ? "Signing in…" : "Sign In"}
           </button>
         </form>
       </div>
@@ -853,42 +870,52 @@ function BooksTab({ adminKey }: { adminKey: string }) {
 
 // ---- Main Admin Panel ----
 export default function Admin() {
-  const [adminKey, setAdminKey] = useState<string>(() => sessionStorage.getItem(STORAGE_KEY) || "");
+  const [adminKey, setAdminKey] = useState<string>("");
+  const [adminEmail, setAdminEmail] = useState<string>("");
   const [authed, setAuthed] = useState(false);
+  const [checking, setChecking] = useState(true);
   const [tab, setTab] = useState<"news" | "team" | "careers" | "books">("news");
 
-  const tryAuth = async (key: string): Promise<boolean> => {
-    const res = await fetch("/api/news/fetch-meta", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-admin-key": key },
-      body: JSON.stringify({ url: "https://example.com" }),
-    });
-    return res.status !== 401;
-  };
-
-  const handleAuth = async (key: string): Promise<boolean> => {
-    const ok = await tryAuth(key);
-    if (ok) {
-      setAdminKey(key);
-      sessionStorage.setItem(STORAGE_KEY, key);
-      setAuthed(true);
-    } else {
-      sessionStorage.removeItem(STORAGE_KEY);
-    }
-    return ok;
-  };
-
   useEffect(() => {
-    if (adminKey) handleAuth(adminKey);
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        setAdminKey(data.session.access_token);
+        setAdminEmail(data.session.user.email ?? "");
+        setAuthed(true);
+      }
+      setChecking(false);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        setAdminKey(session.access_token);
+        setAdminEmail(session.user.email ?? "");
+        setAuthed(true);
+      } else {
+        setAdminKey("");
+        setAdminEmail("");
+        setAuthed(false);
+      }
+    });
+    return () => listener.subscription.unsubscribe();
   }, []);
 
-  const signOut = () => {
-    sessionStorage.removeItem(STORAGE_KEY);
-    setAuthed(false);
-    setAdminKey("");
+  const handleAuth = (token: string, email: string) => {
+    setAdminKey(token);
+    setAdminEmail(email);
+    setAuthed(true);
   };
 
-  if (!authed) return <PasswordGate onAuth={handleAuth} />;
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
+
+  if (checking) return (
+    <div className="min-h-screen bg-[#07060f] flex items-center justify-center">
+      <Loader2 size={24} className="animate-spin text-white/40" />
+    </div>
+  );
+
+  if (!authed) return <LoginGate onAuth={handleAuth} />;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -896,7 +923,7 @@ export default function Admin() {
       <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-black font-jakarta">Thelix Admin</h1>
-          <p className="text-black/40 text-xs font-jakarta">Thelix Holdings</p>
+          <p className="text-black/40 text-xs font-jakarta">{adminEmail || "Thelix Holdings"}</p>
         </div>
         <button onClick={signOut} className="flex items-center gap-2 text-sm text-black/50 hover:text-black font-jakarta transition-colors">
           <LogOut size={16} /> Sign out

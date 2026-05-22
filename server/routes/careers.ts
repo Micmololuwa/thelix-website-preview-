@@ -1,15 +1,6 @@
 import { Router } from "express";
 import { supabase } from "../lib/supabase.js";
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "thelix2025";
-
-function auth(req: any, res: any): boolean {
-  if (req.headers["x-admin-key"] !== ADMIN_PASSWORD) {
-    res.status(401).json({ error: "Unauthorized" });
-    return false;
-  }
-  return true;
-}
+import { auth } from "../lib/auth.js";
 
 export const careersRouter = Router();
 
@@ -23,7 +14,7 @@ careersRouter.get("/", async (_req, res) => {
 });
 
 careersRouter.post("/", async (req, res) => {
-  if (!auth(req, res)) return;
+  if (!await auth(req, res)) return;
   const { title, location, description, applyUrl } = req.body;
   if (!title || !location || !description || !applyUrl) {
     res.status(400).json({ error: "title, location, description and applyUrl are required" });
@@ -40,7 +31,7 @@ careersRouter.post("/", async (req, res) => {
 });
 
 careersRouter.put("/:id", async (req, res) => {
-  if (!auth(req, res)) return;
+  if (!await auth(req, res)) return;
   const { title, location, description, applyUrl } = req.body;
   if (!title || !location || !description || !applyUrl) {
     res.status(400).json({ error: "title, location, description and applyUrl are required" });
@@ -57,7 +48,7 @@ careersRouter.put("/:id", async (req, res) => {
 });
 
 careersRouter.delete("/:id", async (req, res) => {
-  if (!auth(req, res)) return;
+  if (!await auth(req, res)) return;
   const { error } = await supabase.from("careers").delete().eq("id", req.params.id);
   if (error) { res.status(500).json({ error: error.message }); return; }
   res.json({ ok: true });

@@ -1,15 +1,6 @@
 import { Router } from "express";
 import { supabase } from "../lib/supabase.js";
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "thelix2025";
-
-function auth(req: any, res: any): boolean {
-  if (req.headers["x-admin-key"] !== ADMIN_PASSWORD) {
-    res.status(401).json({ error: "Unauthorized" });
-    return false;
-  }
-  return true;
-}
+import { auth } from "../lib/auth.js";
 
 async function uploadImage(base64: string, id: string): Promise<string> {
   if (!base64 || !base64.startsWith("data:")) return base64;
@@ -40,7 +31,7 @@ booksRouter.get("/", async (_req, res) => {
 });
 
 booksRouter.post("/", async (req, res) => {
-  if (!auth(req, res)) return;
+  if (!await auth(req, res)) return;
   const { title, year, sellingUrl, cover } = req.body;
   if (!title || !year || !sellingUrl) {
     res.status(400).json({ error: "title, year, and sellingUrl are required" });
@@ -58,7 +49,7 @@ booksRouter.post("/", async (req, res) => {
 });
 
 booksRouter.put("/:id", async (req, res) => {
-  if (!auth(req, res)) return;
+  if (!await auth(req, res)) return;
   const { title, year, sellingUrl, cover } = req.body;
   if (!title || !year || !sellingUrl) {
     res.status(400).json({ error: "title, year, and sellingUrl are required" });
@@ -79,7 +70,7 @@ booksRouter.put("/:id", async (req, res) => {
 });
 
 booksRouter.delete("/:id", async (req, res) => {
-  if (!auth(req, res)) return;
+  if (!await auth(req, res)) return;
   const { error } = await supabase.from("books").delete().eq("id", req.params.id);
   if (error) { res.status(500).json({ error: error.message }); return; }
   res.json({ ok: true });
