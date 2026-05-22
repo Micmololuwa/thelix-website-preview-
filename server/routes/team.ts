@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = path.join(__dirname, "../data");
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "../data");
 const DATA_FILE = path.join(DATA_DIR, "team.json");
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "thelix2025";
 

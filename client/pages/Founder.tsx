@@ -109,32 +109,60 @@ const BiographySection = () => (
 // ---- Experience ----
 const experiences = [
   {
-    role: "Founder & Chief Visionary Officer",
-    org: "Thelix Holdings",
-    period: "2020 — Present",
+    role: "Founder & Mentor",
+    org: "ExcelMindCyber",
+    period: "Jan 2023 — Present",
     description:
-      "Built and scaled six strategic business units spanning fintech, EdTech, cybersecurity, education, immigration technology, and AI-driven career development. Oversees global operations and long-term strategic direction across all portfolio companies.",
+      "ExcelMindCyber is a leading cybersecurity training and consulting firm specialising in facilitating the transition of both non-IT and IT professionals into lucrative careers in cybersecurity. We provide tailored training programs and strategic solutions to businesses and organisations, empowering individuals and enhancing cybersecurity resilience.",
   },
   {
-    role: "Founder",
-    org: "Tolu Michael Foundation",
-    period: "2023 — Present",
+    role: "Chief Operating Officer",
+    org: "PearMonie",
+    period: "Jan 2022 — Present",
     description:
-      "Established a philanthropic organisation focused on entrepreneurship development, economic research, and community empowerment in Africa and the diaspora. Programmes have reached thousands of beneficiaries across multiple countries.",
+      "PearMonie is a cutting-edge all-in-one platform designed to empower freelancers by facilitating faster payment processes, efficient expense tracking, and overall business growth.",
   },
   {
-    role: "Cybersecurity Strategist & Educator",
-    org: "ExcelMind Cyber Institute",
+    role: "Author",
+    org: "",
+    period: "Dec 2020 — Present",
+    description:
+      "Tolulope has written several books, including: The GRC Bible: A Comprehensive Guide For The Modern Age · GRC Chronicles: Navigating The Cyber Seas Of Governance, Risk, And Compliance · Beyond Checkboxes: The Human Element of GRC · Bridging Realms: Translating Your Non-Tech Skills into GRC Gold · Hacking Your Way To The Job Of Your Dreams: The Cybersecurity Career Handbook.",
+  },
+  {
+    role: "Founder and CEO",
+    org: "ExcelMind",
     period: "2019 — Present",
     description:
-      "Conceived and launched a cybersecurity training institution delivering governance, risk, and compliance certification programmes. Featured by ThisDay for continued impact in the cybersecurity workspace.",
+      "ExcelMind is an educational platform that provides past questions from some of the most popular exams in the world.",
   },
   {
-    role: "EdTech Entrepreneur",
-    org: "ExcelMind",
-    period: "2022 — Present",
+    role: "Senior Cloud Engineer",
+    org: "Nomad Health",
+    period: "Dec 2021 — Dec 2022",
     description:
-      "Founded ExcelMind, a school management and EdTech platform serving educational institutions across Nigeria and Africa. The platform simplifies admissions, automates records, and drives measurable improvements in student performance.",
+      "Nomad Health is a leading online staffing marketplace designed to connect healthcare professionals with diverse job opportunities.",
+  },
+  {
+    role: "Cloud Security Engineer",
+    org: "ShopRunner",
+    period: "Feb 2019 — Jan 2022",
+    description:
+      "ShopRunner is an online, members-only network that provides benefits across 100+ stores.",
+  },
+  {
+    role: "Cyber Security Engineer",
+    org: "Insight",
+    period: "Feb 2017 — Dec 2019",
+    description:
+      "Insight Global is a leading provider of top talent and staffing solutions, specialising in connecting skilled professionals with opportunities in diverse sectors such as healthcare, finance, IT, and government.",
+  },
+  {
+    role: "Administrator",
+    org: "Lagos State Government",
+    period: "2013 — Jan 2017",
+    description:
+      "Lagos State Government is a leading public organisation dedicated to the welfare and development of the Lagos State community, operating within a professional and collaborative environment.",
   },
 ];
 
@@ -152,12 +180,16 @@ const ExperienceSection = () => (
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-16 py-8">
               <div className="lg:w-[260px] flex-shrink-0">
                 <p className="font-bold text-black font-jakarta text-base">{exp.role}</p>
-                <p className="text-thelix-orange font-medium text-sm font-jakarta mt-0.5">{exp.org}</p>
+                {exp.org && (
+                  <p className="text-thelix-orange font-medium text-sm font-jakarta mt-0.5">{exp.org}</p>
+                )}
                 <p className="text-black/40 text-sm font-jakarta mt-1">{exp.period}</p>
               </div>
-              <p className="text-black/70 text-base leading-[27px] font-jakarta flex-1">
-                {exp.description}
-              </p>
+              {exp.description && (
+                <p className="text-black/70 text-base leading-[27px] font-jakarta flex-1">
+                  {exp.description}
+                </p>
+              )}
             </div>
           </StaggerItem>
         ))}
