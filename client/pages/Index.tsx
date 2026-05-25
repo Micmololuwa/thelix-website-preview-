@@ -392,7 +392,7 @@ const CommitmentSection = () => (
       <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
         <SlideLeft className="flex flex-col gap-10 lg:w-[46%]">
           <div className="flex flex-col gap-3">
-            <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
+            <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-normal leading-tight">
               Our Commitment to Impactful Business Building
             </h2>
             <p className="text-black/80 text-base leading-[25px] font-jakarta">
@@ -422,7 +422,7 @@ const CommitmentSection = () => (
 
         <SlideRight className="lg:w-[38%]">
           <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/a7a40cae2f45bc869b9e8566f866baa424d3ac6f?width=976"
+            src="/home_page_photo.jpg"
             alt="Impactful Investments"
             className="w-full aspect-square object-cover rounded-2xl"
           />

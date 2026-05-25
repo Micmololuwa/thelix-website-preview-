@@ -44,9 +44,9 @@ export function Footer() {
           {/* Brand */}
           <div className="max-w-xs flex flex-col gap-5">
             <img
-              src="https://api.builder.io/api/v1/image/assets/TEMP/d840ca7463e4773ecd0f97ee78112084829c961e?width=409"
+              src="/Thelix-white-logo.png"
               alt="Thelix Holdings"
-              className="h-16 w-auto"
+              className="h-16 w-auto object-contain object-left"
             />
             <p className="text-white/80 text-base leading-[23px] font-jakarta">
               Building sustainable economic and social wealth through six strategic business

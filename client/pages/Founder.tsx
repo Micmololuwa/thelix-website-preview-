@@ -39,7 +39,7 @@ const FounderHero = () => (
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Founder & Chief Visionary Officer
+              Technology Executive | Cybersecurity Leader | Founder | Author | Strategic Operator
             </motion.p>
             <motion.h1
               className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-black font-jakarta"
@@ -52,9 +52,10 @@ const FounderHero = () => (
             </motion.h1>
           </div>
           <p className="text-black/70 text-lg leading-[30px] font-jakarta max-w-[560px]">
-            Entrepreneur, author, and visionary leader building world-class companies across
-            six industries — driven by a mission to create lasting economic freedom for
-            communities across Africa and beyond.
+            Technology executive, cybersecurity leader, entrepreneur, and founder of Thelix Holdings —
+            a multi-sector technology and innovation group focused on cybersecurity, education
+            technology, workforce transformation, fintech, artificial intelligence, and economic
+            empowerment.
           </p>
         </SlideRight>
       </div>
@@ -74,31 +75,26 @@ const BiographySection = () => (
         </FadeUp>
         <FadeUp delay={0.12} className="flex flex-col gap-6 flex-1 text-black/80 text-lg leading-[30px] font-jakarta">
           <p>
-            Tolulope Michael is the founder and Chief Visionary Officer of Thelix Holdings, a
-            global holding company that has built six strategic business units spanning Financial
-            Services, EdTech, Cybersecurity, Education, Identity Verification, and Career
-            Development. With operations across multiple continents, Thelix Holdings stands as
-            one of Africa's most ambitious multi-sector conglomerates.
+            Tolulope Michael is a technology executive, cybersecurity leader, entrepreneur, and
+            founder of Thelix Holdings, a multi-sector technology and innovation group focused on
+            cybersecurity, education technology, workforce transformation, fintech, artificial
+            intelligence, and economic empowerment.
           </p>
           <p>
-            With a background rooted in technology, business strategy, and social impact, Tolulope
-            has spent over a decade building and scaling organisations that address systemic
-            challenges in education, financial inclusion, and economic mobility. He brings together
-            a rare combination of operational expertise, entrepreneurial drive, and deep industry
-            knowledge across sectors that are reshaping the global economy.
+            Over the years, he has built and scaled platforms, institutions, operational systems,
+            and technology-driven companies serving professionals, students, immigrants, and
+            organisations across the United States, Canada, the United Kingdom, and Africa.
           </p>
           <p>
-            Beyond his work at Thelix Holdings, Tolulope is the founder of the Tolu Michael
-            Foundation, a philanthropic organisation dedicated to entrepreneurship development,
-            economic research and advocacy, and community empowerment across Africa and the
-            diaspora. Through the Foundation, he has directly impacted thousands of lives through
-            grants, mentorship programmes, and policy engagement with government institutions.
+            Known for combining deep technical expertise with operational execution, Tolulope has
+            become recognised for helping individuals transition into high-income technology careers
+            while simultaneously building scalable infrastructure-driven businesses designed to
+            create long-term impact.
           </p>
           <p>
-            Tolulope is widely recognised as a thought leader in cybersecurity, EdTech, and
-            financial inclusion, and has been featured in leading publications including This Day,
-            The Guardian Nigeria, BusinessDay, and Yahoo Finance. He continues to be a sought-after
-            voice on entrepreneurship, African economic development, and the future of work.
+            His work spans cybersecurity engineering, cloud infrastructure, enterprise security
+            operations, AI systems, educational technology, workforce acceleration, and operational
+            leadership.
           </p>
         </FadeUp>
       </div>
@@ -109,60 +105,60 @@ const BiographySection = () => (
 // ---- Experience ----
 const experiences = [
   {
-    role: "Founder & Mentor",
-    org: "ExcelMindCyber",
-    period: "Jan 2023 — Present",
+    role: "Founder & Chief Visionary Officer",
+    org: "Thelix Holdings",
+    period: "2019 — Present",
     description:
-      "ExcelMindCyber is a leading cybersecurity training and consulting firm specialising in facilitating the transition of both non-IT and IT professionals into lucrative careers in cybersecurity. We provide tailored training programs and strategic solutions to businesses and organisations, empowering individuals and enhancing cybersecurity resilience.",
+      "Tolulope Michael is the Founder and Chief Visionary Officer of Thelix Holdings, a technology holding company overseeing multiple high-growth ventures across cybersecurity, education technology, fintech, workforce development, and artificial intelligence. Under Thelix Holdings, he founded and scaled ExcelMindCyber, ExcelMind, Lightforth, Credit Veto, VeriPass, and additional workforce and technology initiatives. Through Thelix Holdings, he has led the development of systems designed to create economic mobility and career transformation opportunities for Africans, Black professionals, immigrants, and underserved communities globally. His leadership has helped position Thelix Holdings as an emerging technology ecosystem focused on combining automation, education, operational excellence, and AI-driven infrastructure to solve real-world problems at scale.",
+  },
+  {
+    role: "Security Engineer",
+    org: "Amazon",
+    period: "2022 — 2024",
+    description:
+      "As a Security Engineer at Amazon, Tolulope Michael contributed to the protection, scalability, and operational resilience of enterprise-grade cloud and security infrastructure within one of the world's most sophisticated technology environments. His work involved helping secure large-scale systems operating across distributed cloud environments while maintaining strict security, operational, and reliability standards. Areas of expertise included cloud security engineering, identity and access management, security monitoring and incident response, governance, risk and compliance, security automation, and infrastructure protection within cloud-native environments. His experience at Amazon further deepened his understanding of world-class operational standards, cloud infrastructure, security engineering discipline, and large-scale systems thinking — all of which later influenced the operational frameworks and execution culture embedded across Thelix Holdings and ExcelMindCyber.",
   },
   {
     role: "Chief Operating Officer",
     org: "PearMonie",
-    period: "Jan 2022 — Present",
+    period: "2022 — Present",
     description:
-      "PearMonie is a cutting-edge all-in-one platform designed to empower freelancers by facilitating faster payment processes, efficient expense tracking, and overall business growth.",
+      "Tolulope Michael serves as the Chief Operating Officer of PearMonie, a modern fintech platform focused on empowering freelancers and digital entrepreneurs through streamlined payment infrastructure, operational tools, and financial management systems. He oversees operational strategy, scalability, product execution, and growth initiatives designed to improve financial efficiency and business expansion opportunities for freelancers operating in the digital economy.",
   },
   {
     role: "Author",
     org: "",
-    period: "Dec 2020 — Present",
+    period: "2020 — Present",
     description:
-      "Tolulope has written several books, including: The GRC Bible: A Comprehensive Guide For The Modern Age · GRC Chronicles: Navigating The Cyber Seas Of Governance, Risk, And Compliance · Beyond Checkboxes: The Human Element of GRC · Bridging Realms: Translating Your Non-Tech Skills into GRC Gold · Hacking Your Way To The Job Of Your Dreams: The Cybersecurity Career Handbook.",
-  },
-  {
-    role: "Founder and CEO",
-    org: "ExcelMind",
-    period: "2019 — Present",
-    description:
-      "ExcelMind is an educational platform that provides past questions from some of the most popular exams in the world.",
+      "Tolulope Michael is an accomplished cybersecurity author and thought leader whose work focuses on Governance, Risk, and Compliance (GRC), cybersecurity career development, workforce transformation, and operational excellence. His books include: The GRC Bible: A Comprehensive Guide for the Modern Age · GRC Chronicles: Navigating the Cyber Seas of Governance, Risk, and Compliance · Beyond Checkboxes: The Human Element of GRC · Bridging Realms: Translating Your Non-Tech Skills into GRC Gold · Hacking Your Way to the Job of Your Dreams: The Cybersecurity Career Handbook.",
   },
   {
     role: "Senior Cloud Engineer",
     org: "Nomad Health",
-    period: "Dec 2021 — Dec 2022",
+    period: "December 2021 — December 2022",
     description:
-      "Nomad Health is a leading online staffing marketplace designed to connect healthcare professionals with diverse job opportunities.",
+      "At Nomad Health, Tolulope Michael contributed to the design and optimisation of secure cloud infrastructure supporting one of the leading digital healthcare staffing platforms in the United States. His work focused on cloud scalability, infrastructure automation, operational reliability, and security enhancement across highly sensitive healthcare-related systems operating within regulated environments.",
   },
   {
     role: "Cloud Security Engineer",
     org: "ShopRunner",
-    period: "Feb 2019 — Jan 2022",
+    period: "February 2019 — January 2022",
     description:
-      "ShopRunner is an online, members-only network that provides benefits across 100+ stores.",
+      "As a Cloud Security Engineer at ShopRunner, Tolulope Michael played a critical role in strengthening cloud security posture and supporting secure enterprise infrastructure across a large-scale e-commerce ecosystem. He contributed to cloud security operations, infrastructure protection, compliance initiatives, risk management, and secure deployment strategies designed to support millions of users and enterprise-scale operations.",
   },
   {
     role: "Cyber Security Engineer",
-    org: "Insight",
-    period: "Feb 2017 — Dec 2019",
+    org: "Insight Global",
+    period: "February 2017 — December 2019",
     description:
-      "Insight Global is a leading provider of top talent and staffing solutions, specialising in connecting skilled professionals with opportunities in diverse sectors such as healthcare, finance, IT, and government.",
+      "Tolulope Michael worked as a Cyber Security Engineer supporting cybersecurity initiatives across multiple enterprise and government-related environments. His responsibilities included cloud security support, infrastructure protection, compliance operations, risk analysis, governance support, and enterprise security implementation for organisations operating across healthcare, finance, government, and technology sectors.",
   },
   {
     role: "Administrator",
     org: "Lagos State Government",
-    period: "2013 — Jan 2017",
+    period: "2013 — January 2017",
     description:
-      "Lagos State Government is a leading public organisation dedicated to the welfare and development of the Lagos State community, operating within a professional and collaborative environment.",
+      "Tolulope Michael began his professional journey within the Lagos State Government, where he gained foundational experience in administration, operations, coordination, and organisational management within one of Africa's largest and most dynamic public sector institutions. This early experience helped shape his understanding of leadership, operational structure, public systems, and organisational execution, which later became foundational to his entrepreneurial and operational philosophy.",
   },
 ];
 
