@@ -138,7 +138,7 @@ export function Footer() {
               <div className="flex flex-col gap-5">
                 <div>
                   <p className="text-thelix-orange text-xs font-jakarta font-semibold uppercase tracking-wider mb-1">
-                    Dallas
+                    Headquarters — Dallas
                   </p>
                   <p className="text-white/70 text-sm font-jakarta leading-[22px]">
                     14160 N Dallas Parkway,<br />
