@@ -220,10 +220,18 @@ const BooksSection = () => {
   return (
     <section className="bg-white py-16 lg:py-24">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-        <FadeUp>
-          <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px] mb-12">
+        <FadeUp className="flex items-center justify-between mb-12">
+          <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px]">
             Books & Publications
           </h2>
+          <a
+            href="https://www.amazon.com/stores/Tolulope-Michael/author/B0CPT823QH?ref=sr_ntt_srch_lnk_1&qid=1779784575&sr=8-1&shoppingPortalEnabled=true"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-thelix-orange font-jakarta text-sm font-medium hover:underline transition-colors"
+          >
+            See All
+          </a>
         </FadeUp>
         {!loaded && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -259,7 +267,6 @@ const BooksSection = () => {
                     </div>
                   )}
                   <div className="flex flex-col gap-2">
-                    <p className="text-thelix-orange text-sm font-jakarta font-medium">{book.year}</p>
                     <h3 className="text-xl font-bold text-black font-jakarta leading-snug group-hover:text-thelix-orange transition-colors">
                       {book.title}
                     </h3>
