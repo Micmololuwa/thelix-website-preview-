@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Trash2, Link2, Loader2, Plus, LogOut, Newspaper, Users, ImagePlus, X, Pencil, Check, Briefcase, MapPin, BookOpen, Eye, EyeOff } from "lucide-react";
+import { Trash2, Link2, Loader2, Plus, LogOut, Newspaper, Users, ImagePlus, X, Pencil, Check, Briefcase, MapPin, BookOpen, Eye, EyeOff, ArrowUp, ArrowDown } from "lucide-react";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { supabase } from "@/lib/supabase";
 
@@ -177,6 +177,15 @@ function NewsTab({ adminKey }: { adminKey: string }) {
     setArticles((prev) => prev.filter((a) => a.id !== id));
   };
 
+  const moveArticle = async (index: number, direction: "up" | "down") => {
+    const target = direction === "up" ? index - 1 : index + 1;
+    if (target < 0 || target >= articles.length) return;
+    const next = [...articles];
+    [next[index], next[target]] = [next[target], next[index]];
+    setArticles(next);
+    await fetch("/api/news/reorder", { method: "PATCH", headers, body: JSON.stringify({ ids: next.map((a) => a.id) }) });
+  };
+
   return (
     <div className="flex flex-col gap-10">
       {/* Add Article */}
@@ -241,7 +250,7 @@ function NewsTab({ adminKey }: { adminKey: string }) {
         {!loadingArticles && articles.length === 0 && (
           <p className="text-black/40 text-sm font-jakarta">No articles yet. Add one above.</p>
         )}
-        {articles.map((article) => (
+        {articles.map((article, index) => (
           <div key={article.id} className="bg-white rounded-xl p-4 flex gap-4 items-start shadow-sm">
             {article.image && (
               <img src={article.image} alt="" className="w-24 h-16 object-cover rounded-lg flex-shrink-0" />
@@ -255,9 +264,11 @@ function NewsTab({ adminKey }: { adminKey: string }) {
                 {article.date}
               </p>
             </div>
-            <button onClick={() => deleteArticle(article.id)} className="text-red-400 hover:text-red-600 transition-colors flex-shrink-0 p-1">
-              <Trash2 size={16} />
-            </button>
+            <div className="flex gap-1 flex-shrink-0">
+              <button onClick={() => moveArticle(index, "up")} disabled={index === 0} className="text-black/30 hover:text-black transition-colors p-1 disabled:opacity-30" title="Move up"><ArrowUp size={15} /></button>
+              <button onClick={() => moveArticle(index, "down")} disabled={index === articles.length - 1} className="text-black/30 hover:text-black transition-colors p-1 disabled:opacity-30" title="Move down"><ArrowDown size={15} /></button>
+              <button onClick={() => deleteArticle(article.id)} className="text-red-400 hover:text-red-600 transition-colors p-1"><Trash2 size={16} /></button>
+            </div>
           </div>
         ))}
       </div>
@@ -418,6 +429,15 @@ function TeamTab({ adminKey }: { adminKey: string }) {
     if (editId === id) cancelEdit();
   };
 
+  const moveMember = async (index: number, direction: "up" | "down") => {
+    const target = direction === "up" ? index - 1 : index + 1;
+    if (target < 0 || target >= members.length) return;
+    const next = [...members];
+    [next[index], next[target]] = [next[target], next[index]];
+    setMembers(next);
+    await fetch("/api/team/reorder", { method: "PATCH", headers, body: JSON.stringify({ ids: next.map((m) => m.id) }) });
+  };
+
   return (
     <div className="flex flex-col gap-10">
       {/* Add Member */}
@@ -485,6 +505,8 @@ function TeamTab({ adminKey }: { adminKey: string }) {
                     Featured
                   </span>
                 )}
+                <button onClick={() => moveMember(index, "up")} disabled={index === 0} className="text-black/30 hover:text-black transition-colors flex-shrink-0 p-1 disabled:opacity-30" title="Move up"><ArrowUp size={15} /></button>
+                <button onClick={() => moveMember(index, "down")} disabled={index === members.length - 1} className="text-black/30 hover:text-black transition-colors flex-shrink-0 p-1 disabled:opacity-30" title="Move down"><ArrowDown size={15} /></button>
                 <button
                   onClick={() => startEdit(member)}
                   className="text-black/30 hover:text-black transition-colors flex-shrink-0 p-1"
@@ -784,6 +806,15 @@ function BooksTab({ adminKey }: { adminKey: string }) {
     if (editId === id) cancelEdit();
   };
 
+  const moveBook = async (index: number, direction: "up" | "down") => {
+    const target = direction === "up" ? index - 1 : index + 1;
+    if (target < 0 || target >= books.length) return;
+    const next = [...books];
+    [next[index], next[target]] = [next[target], next[index]];
+    setBooks(next);
+    await fetch("/api/books/reorder", { method: "PATCH", headers, body: JSON.stringify({ ids: next.map((b) => b.id) }) });
+  };
+
   return (
     <div className="flex flex-col gap-10">
       {/* Add Book */}
@@ -823,7 +854,7 @@ function BooksTab({ adminKey }: { adminKey: string }) {
         <h2 className="text-lg font-bold text-black font-jakarta">Books ({books.length})</h2>
         {loading && <div className="flex items-center gap-2 text-black/40 text-sm font-jakarta"><Loader2 size={16} className="animate-spin" /> Loading…</div>}
         {!loading && books.length === 0 && <p className="text-black/40 text-sm font-jakarta">No books yet. Add one above.</p>}
-        {books.map((book) => (
+        {books.map((book, index) => (
           <div key={book.id} className="bg-white rounded-xl shadow-sm overflow-hidden">
             {editId !== book.id ? (
               <div className="p-4 flex gap-4 items-center">
@@ -842,6 +873,8 @@ function BooksTab({ adminKey }: { adminKey: string }) {
                   </a>
                 </div>
                 <div className="flex gap-1 flex-shrink-0">
+                  <button onClick={() => moveBook(index, "up")} disabled={index === 0} className="text-black/30 hover:text-black transition-colors p-1 disabled:opacity-30" title="Move up"><ArrowUp size={15} /></button>
+                  <button onClick={() => moveBook(index, "down")} disabled={index === books.length - 1} className="text-black/30 hover:text-black transition-colors p-1 disabled:opacity-30" title="Move down"><ArrowDown size={15} /></button>
                   <button onClick={() => startEdit(book)} className="text-black/30 hover:text-black transition-colors p-1"><Pencil size={15} /></button>
                   <button onClick={() => deleteBook(book.id)} className="text-red-400 hover:text-red-600 transition-colors p-1"><Trash2 size={15} /></button>
                 </div>

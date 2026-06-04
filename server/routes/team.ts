@@ -25,7 +25,7 @@ teamRouter.get("/", async (_req, res) => {
   const { data, error } = await supabase
     .from("team_members")
     .select("*")
-    .order("created_at", { ascending: true });
+    .order("sort_order", { ascending: true });
   if (error) { res.status(500).json({ error: error.message }); return; }
   res.json(data.map((m) => ({ ...m, image: m.image_url })));
 });
@@ -39,9 +39,10 @@ teamRouter.post("/", async (req, res) => {
   }
   const id = Date.now().toString();
   const imageUrl = image ? await uploadImage(image, id).catch(() => "") : "";
+  const { count } = await supabase.from("team_members").select("*", { count: "exact", head: true });
   const { data, error } = await supabase
     .from("team_members")
-    .insert({ id, name: name.trim(), designation: designation.trim(), image_url: imageUrl })
+    .insert({ id, name: name.trim(), designation: designation.trim(), image_url: imageUrl, sort_order: count ?? 0 })
     .select()
     .single();
   if (error) { res.status(500).json({ error: error.message }); return; }
@@ -67,6 +68,18 @@ teamRouter.put("/:id", async (req, res) => {
     .single();
   if (error) { res.status(error.code === "PGRST116" ? 404 : 500).json({ error: error.message }); return; }
   res.json({ ...data, image: data.image_url });
+});
+
+teamRouter.patch("/reorder", async (req, res) => {
+  if (!await auth(req, res)) return;
+  const { ids } = req.body;
+  if (!Array.isArray(ids)) { res.status(400).json({ error: "ids array required" }); return; }
+  const results = await Promise.all(
+    ids.map((id, i) => supabase.from("team_members").update({ sort_order: i }).eq("id", id))
+  );
+  const failed = results.find((r) => r.error);
+  if (failed?.error) { res.status(500).json({ error: failed.error.message }); return; }
+  res.json({ ok: true });
 });
 
 teamRouter.delete("/:id", async (req, res) => {

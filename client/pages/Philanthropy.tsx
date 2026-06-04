@@ -256,7 +256,8 @@ const FeaturesSection = () => (
             </p>
           </div>
           <a
-            href="#"
+            href="/Tolu Michael Foundation.pdf"
+            download="Tolu Michael Foundation Impact Report 2025.pdf"
             aria-label="Download the report"
             className="inline-flex items-center justify-center gap-2.5 px-[15px] py-2.5 bg-white rounded border border-solid border-[#f48220]/40 w-fit hover:bg-orange-50 transition-colors"
           >
@@ -267,7 +268,7 @@ const FeaturesSection = () => (
               src={`${CDN}/si-arrow-right-line.svg`}
               alt=""
               aria-hidden="true"
-              className="w-5 h-5"
+              className="w-5 h-5 rotate-90"
             />
           </a>
         </SlideRight>
