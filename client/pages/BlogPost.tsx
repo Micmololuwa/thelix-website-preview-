@@ -66,18 +66,7 @@ export default function BlogPost() {
       <div className="min-h-screen flex flex-col bg-white">
         <Navbar />
         <main className="flex-1">
-          {/* Cover image */}
-          {post.cover_image && (
-            <div className="w-full h-[320px] sm:h-[420px] lg:h-[500px] overflow-hidden">
-              <img
-                src={post.cover_image}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
-
-          <div className="max-w-[780px] mx-auto px-6 py-10 lg:py-14">
+          <div className="max-w-[780px] mx-auto px-6 pt-10 lg:pt-14 pb-10 lg:pb-14">
             {/* Back link */}
             <Link
               to="/blog"
@@ -104,7 +93,7 @@ export default function BlogPost() {
 
             {/* Title */}
             <motion.h1
-              className="text-3xl sm:text-4xl lg:text-[44px] font-bold text-black font-jakarta leading-tight tracking-tight mb-4"
+              className="text-3xl sm:text-4xl lg:text-[44px] font-bold text-black font-jakarta leading-normal tracking-tight mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.08 }}
@@ -121,6 +110,23 @@ export default function BlogPost() {
               >
                 By {post.author}
               </motion.p>
+            )}
+
+            {/* Cover image — inside content column, below meta */}
+            {post.cover_image && (
+              <motion.div
+                className="w-full rounded-2xl overflow-hidden mb-10"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.2 }}
+              >
+                <img
+                  src={post.cover_image}
+                  alt={post.title}
+                  className="w-full object-cover"
+                  style={{ aspectRatio: "16 / 9" }}
+                />
+              </motion.div>
             )}
 
             {/* Content */}
