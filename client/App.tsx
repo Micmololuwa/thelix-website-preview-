@@ -15,6 +15,8 @@ import News from "./pages/News";
 import Admin from "./pages/Admin";
 import Career from "./pages/Career";
 import Founder from "./pages/Founder";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +34,8 @@ function AnimatedRoutes() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/career" element={<Career />} />
         <Route path="/founder" element={<Founder />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

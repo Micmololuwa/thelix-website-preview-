@@ -5,6 +5,7 @@ import { newsRouter } from "./routes/news.js";
 import { teamRouter } from "./routes/team.js";
 import { careersRouter } from "./routes/careers.js";
 import { booksRouter } from "./routes/books.js";
+import { blogRouter } from "./routes/blog.js";
 
 export function createServer() {
   const app = express();
@@ -22,6 +23,7 @@ export function createServer() {
   app.use("/api/team", teamRouter);
   app.use("/api/careers", careersRouter);
   app.use("/api/books", booksRouter);
+  app.use("/api/blog", blogRouter);
 
   // Catch-all error handler — always returns JSON, never HTML
   app.use((err: any, _req: any, res: any, _next: any) => {

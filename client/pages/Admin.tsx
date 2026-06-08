@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Trash2, Link2, Loader2, Plus, LogOut, Newspaper, Users, ImagePlus, X, Pencil, Check, Briefcase, MapPin, BookOpen, Eye, EyeOff, ArrowUp, ArrowDown } from "lucide-react";
+import { Trash2, Link2, Loader2, Plus, LogOut, Newspaper, Users, ImagePlus, X, Pencil, Check, Briefcase, MapPin, BookOpen, Eye, EyeOff, ArrowUp, ArrowDown, Rss, Globe } from "lucide-react";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { supabase } from "@/lib/supabase";
 
@@ -911,13 +911,213 @@ function BooksTab({ adminKey }: { adminKey: string }) {
   );
 }
 
+// ---- Blog Tab ----
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string;
+  cover_image: string;
+  author: string;
+  category: string;
+  date: string;
+  published: boolean;
+  sort_order: number;
+}
+
+const emptyBlogForm = { title: "", slug: "", content: "", excerpt: "", cover_image: "", author: "", category: "", date: "", published: false };
+
+function BlogTab({ adminKey }: { adminKey: string }) {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [addForm, setAddForm] = useState({ ...emptyBlogForm });
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({ ...emptyBlogForm });
+  const [showAdd, setShowAdd] = useState(false);
+
+  const headers = { "Content-Type": "application/json", "x-admin-key": adminKey };
+
+  useEffect(() => {
+    fetch("/api/blog/admin/all", { headers: { "x-admin-key": adminKey } })
+      .then((r) => r.json())
+      .then((data) => { setPosts(Array.isArray(data) ? data : []); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const addPost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addForm.title.trim() || !addForm.content.trim()) return;
+    setSaving(true);
+    const res = await fetch("/api/blog", { method: "POST", headers, body: JSON.stringify(addForm) });
+    const data = await res.json();
+    setSaving(false);
+    if (res.ok) { setPosts((prev) => [...prev, data]); setAddForm({ ...emptyBlogForm }); setShowAdd(false); }
+  };
+
+  const startEdit = (post: BlogPost) => {
+    setEditId(post.id);
+    setEditForm({ title: post.title, slug: post.slug, content: post.content, excerpt: post.excerpt, cover_image: post.cover_image, author: post.author, category: post.category, date: post.date, published: post.published });
+  };
+
+  const saveEdit = async () => {
+    if (!editId) return;
+    setSaving(true);
+    const res = await fetch(`/api/blog/${editId}`, { method: "PUT", headers, body: JSON.stringify(editForm) });
+    const data = await res.json();
+    setSaving(false);
+    if (res.ok) { setPosts((prev) => prev.map((p) => (p.id === editId ? data : p))); setEditId(null); }
+  };
+
+  const deletePost = async (id: string) => {
+    if (!confirm("Delete this blog post?")) return;
+    await fetch(`/api/blog/${id}`, { method: "DELETE", headers });
+    setPosts((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const togglePublished = async (post: BlogPost) => {
+    const res = await fetch(`/api/blog/${post.id}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify({ ...post, published: !post.published }),
+    });
+    const data = await res.json();
+    if (res.ok) setPosts((prev) => prev.map((p) => (p.id === post.id ? data : p)));
+  };
+
+  return (
+    <div className="flex flex-col gap-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-black font-jakarta">Blog</h2>
+          <p className="text-black/40 text-sm font-jakarta mt-0.5">Write and publish blog posts. Toggle Published to make a post visible on the site.</p>
+        </div>
+        <button
+          onClick={() => setShowAdd((v) => !v)}
+          className="flex items-center gap-2 px-4 py-2.5 bg-[#F48220] text-white text-sm font-medium font-jakarta rounded-lg hover:bg-orange-500 transition-colors"
+        >
+          <Plus size={16} /> New Post
+        </button>
+      </div>
+
+      {/* Add form */}
+      {showAdd && (
+        <form onSubmit={addPost} className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col gap-4">
+          <h3 className="text-base font-bold text-black font-jakarta">New Blog Post</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field label="Title *" value={addForm.title} onChange={(v) => setAddForm((f) => ({ ...f, title: v }))} />
+            <Field label="Author" value={addForm.author} onChange={(v) => setAddForm((f) => ({ ...f, author: v }))} />
+            <Field label="Category" value={addForm.category} onChange={(v) => setAddForm((f) => ({ ...f, category: v }))} />
+            <Field label="Date (leave blank for today)" value={addForm.date} onChange={(v) => setAddForm((f) => ({ ...f, date: v }))} />
+            <div className="sm:col-span-2">
+              <Field label="Cover Image URL" value={addForm.cover_image} onChange={(v) => setAddForm((f) => ({ ...f, cover_image: v }))} />
+            </div>
+            <div className="sm:col-span-2">
+              <Field label="Excerpt (short summary shown on listing)" value={addForm.excerpt} onChange={(v) => setAddForm((f) => ({ ...f, excerpt: v }))} multiline />
+            </div>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-black/50 font-jakarta">Content *</label>
+            <RichTextEditor value={addForm.content} onChange={(v) => setAddForm((f) => ({ ...f, content: v }))} placeholder="Write your blog post…" />
+          </div>
+          <label className="flex items-center gap-2 cursor-pointer w-fit">
+            <input type="checkbox" checked={addForm.published} onChange={(e) => setAddForm((f) => ({ ...f, published: e.target.checked }))} className="accent-[#F48220]" />
+            <span className="text-sm font-jakarta text-black/70">Publish immediately</span>
+          </label>
+          <div className="flex gap-3">
+            <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2.5 bg-[#F48220] text-white text-sm font-medium font-jakarta rounded-lg hover:bg-orange-500 transition-colors disabled:opacity-60">
+              {saving && <Loader2 size={14} className="animate-spin" />}
+              {saving ? "Saving…" : "Publish Post"}
+            </button>
+            <button type="button" onClick={() => setShowAdd(false)} className="px-4 py-2.5 text-sm font-jakarta text-black/50 hover:text-black border border-gray-200 rounded-lg transition-colors">Cancel</button>
+          </div>
+        </form>
+      )}
+
+      {/* Post list */}
+      {loading && <div className="flex items-center gap-2 text-black/40 text-sm font-jakarta"><Loader2 size={15} className="animate-spin" /> Loading posts…</div>}
+      {!loading && posts.length === 0 && <p className="text-black/40 text-sm font-jakarta">No blog posts yet. Click "New Post" to write one.</p>}
+
+      <div className="flex flex-col gap-4">
+        {posts.map((post) => (
+          <div key={post.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+            {editId === post.id ? (
+              <div className="p-6 flex flex-col gap-4">
+                <h3 className="text-base font-bold font-jakarta">Editing: {post.title}</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Field label="Title" value={editForm.title} onChange={(v) => setEditForm((f) => ({ ...f, title: v }))} />
+                  <Field label="Author" value={editForm.author} onChange={(v) => setEditForm((f) => ({ ...f, author: v }))} />
+                  <Field label="Category" value={editForm.category} onChange={(v) => setEditForm((f) => ({ ...f, category: v }))} />
+                  <Field label="Date" value={editForm.date} onChange={(v) => setEditForm((f) => ({ ...f, date: v }))} />
+                  <div className="sm:col-span-2">
+                    <Field label="Cover Image URL" value={editForm.cover_image} onChange={(v) => setEditForm((f) => ({ ...f, cover_image: v }))} />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <Field label="Excerpt" value={editForm.excerpt} onChange={(v) => setEditForm((f) => ({ ...f, excerpt: v }))} multiline />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-medium text-black/50 font-jakarta">Content</label>
+                  <RichTextEditor value={editForm.content} onChange={(v) => setEditForm((f) => ({ ...f, content: v }))} placeholder="Write your blog post…" />
+                </div>
+                <label className="flex items-center gap-2 cursor-pointer w-fit">
+                  <input type="checkbox" checked={editForm.published} onChange={(e) => setEditForm((f) => ({ ...f, published: e.target.checked }))} className="accent-[#F48220]" />
+                  <span className="text-sm font-jakarta text-black/70">Published</span>
+                </label>
+                <div className="flex gap-3">
+                  <button onClick={saveEdit} disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-[#F48220] text-white text-sm font-medium font-jakarta rounded-lg hover:bg-orange-500 transition-colors disabled:opacity-60">
+                    {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                    {saving ? "Saving…" : "Save changes"}
+                  </button>
+                  <button onClick={() => setEditId(null)} className="px-4 py-2 text-sm font-jakarta text-black/50 hover:text-black border border-gray-200 rounded-lg transition-colors">Cancel</button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-start gap-4 p-4">
+                {post.cover_image && (
+                  <img src={post.cover_image} alt={post.title} className="w-20 h-16 object-cover rounded-lg flex-shrink-0" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <span className={`text-xs font-medium font-jakarta px-2 py-0.5 rounded-full ${post.published ? "bg-green-50 text-green-600 border border-green-200" : "bg-gray-100 text-black/40 border border-gray-200"}`}>
+                      {post.published ? "Published" : "Draft"}
+                    </span>
+                    {post.category && <span className="text-xs text-black/40 font-jakarta">{post.category}</span>}
+                    <span className="text-xs text-black/30 font-jakarta">{post.date}</span>
+                  </div>
+                  <p className="text-sm font-bold text-black font-jakarta truncate">{post.title}</p>
+                  {post.excerpt && <p className="text-xs text-black/45 font-jakarta mt-0.5 line-clamp-1">{post.excerpt}</p>}
+                  {post.author && <p className="text-xs text-black/30 font-jakarta mt-0.5">By {post.author}</p>}
+                </div>
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  <button onClick={() => togglePublished(post)} title={post.published ? "Unpublish" : "Publish"} className="p-2 text-black/30 hover:text-green-600 transition-colors" >
+                    <Globe size={16} />
+                  </button>
+                  <button onClick={() => startEdit(post)} title="Edit" className="p-2 text-black/30 hover:text-black transition-colors">
+                    <Pencil size={16} />
+                  </button>
+                  <button onClick={() => deletePost(post.id)} title="Delete" className="p-2 text-black/30 hover:text-red-500 transition-colors">
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ---- Main Admin Panel ----
 export default function Admin() {
   const [adminKey, setAdminKey] = useState<string>("");
   const [adminEmail, setAdminEmail] = useState<string>("");
   const [authed, setAuthed] = useState(false);
   const [checking, setChecking] = useState(true);
-  const [tab, setTab] = useState<"news" | "team" | "careers" | "books">("news");
+  const [tab, setTab] = useState<"news" | "team" | "careers" | "books" | "blog">("news");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -1016,6 +1216,16 @@ export default function Admin() {
           >
             <BookOpen size={16} /> Books
           </button>
+          <button
+            onClick={() => setTab("blog")}
+            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${
+              tab === "blog"
+                ? "border-[#F48220] text-[#F48220]"
+                : "border-transparent text-black/50 hover:text-black"
+            }`}
+          >
+            <Rss size={16} /> Blog
+          </button>
         </div>
       </div>
 
@@ -1024,6 +1234,7 @@ export default function Admin() {
         {tab === "team" && <TeamTab adminKey={adminKey} />}
         {tab === "careers" && <CareersTab adminKey={adminKey} />}
         {tab === "books" && <BooksTab adminKey={adminKey} />}
+        {tab === "blog" && <BlogTab adminKey={adminKey} />}
       </div>
     </div>
   );

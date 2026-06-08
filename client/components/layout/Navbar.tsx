@@ -9,6 +9,7 @@ const NAV_LINKS: { label: string; to: string; external?: boolean }[] = [
   { label: "Solutions", to: "/solutions" },
   { label: "Philanthropy", to: "/philanthropy" },
   { label: "News", to: "/news" },
+  { label: "Blog", to: "/blog" },
 ];
 
 export function Navbar() {
