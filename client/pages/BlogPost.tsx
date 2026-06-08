@@ -67,10 +67,28 @@ export default function BlogPost() {
         <Navbar />
         <main className="flex-1">
           <div className="max-w-[780px] mx-auto px-6 pt-10 lg:pt-14 pb-10 lg:pb-14">
+
+            {/* Cover image — top of article, inside content column */}
+            {post.cover_image && (
+              <motion.div
+                className="w-full rounded-2xl overflow-hidden mb-8"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9 }}
+              >
+                <img
+                  src={post.cover_image}
+                  alt={post.title}
+                  className="w-full object-cover"
+                  style={{ aspectRatio: "16 / 9" }}
+                />
+              </motion.div>
+            )}
+
             {/* Back link */}
             <Link
               to="/blog"
-              className="inline-flex items-center gap-1.5 text-sm text-black/40 hover:text-black font-jakarta transition-colors mb-8"
+              className="inline-flex items-center gap-1.5 text-sm text-black/40 hover:text-black font-jakarta transition-colors mb-6"
             >
               <ChevronLeft size={16} />
               Back to Blog
@@ -81,7 +99,7 @@ export default function BlogPost() {
               className="flex items-center gap-3 flex-wrap mb-4"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
             >
               {post.category && (
                 <span className="text-xs font-medium font-jakarta text-thelix-orange bg-orange-50 border border-orange-200 px-2.5 py-0.5 rounded-full">
@@ -96,7 +114,7 @@ export default function BlogPost() {
               className="text-3xl sm:text-4xl lg:text-[44px] font-bold text-black font-jakarta leading-normal tracking-tight mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.08 }}
+              transition={{ duration: 0.9, delay: 0.15 }}
             >
               {post.title}
             </motion.h1>
@@ -106,27 +124,10 @@ export default function BlogPost() {
                 className="text-black/45 text-sm font-jakarta mb-10 pb-8 border-b border-gray-100"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.18 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
               >
                 By {post.author}
               </motion.p>
-            )}
-
-            {/* Cover image — inside content column, below meta */}
-            {post.cover_image && (
-              <motion.div
-                className="w-full rounded-2xl overflow-hidden mb-10"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, delay: 0.2 }}
-              >
-                <img
-                  src={post.cover_image}
-                  alt={post.title}
-                  className="w-full object-cover"
-                  style={{ aspectRatio: "16 / 9" }}
-                />
-              </motion.div>
             )}
 
             {/* Content */}
