@@ -1,7 +1,9 @@
+import { useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
-import { Bold, Italic, List, ListOrdered, Heading2, Heading3, Undo, Redo } from "lucide-react";
+import { Bold, Italic, List, ListOrdered, Heading2, Heading3, Undo, Redo, ImagePlus, FileText } from "lucide-react";
 
 interface Props {
   value: string;
@@ -10,17 +12,9 @@ interface Props {
 }
 
 const ToolbarBtn = ({
-  onClick,
-  active,
-  disabled,
-  children,
-  title,
+  onClick, active, disabled, children, title,
 }: {
-  onClick: () => void;
-  active?: boolean;
-  disabled?: boolean;
-  children: React.ReactNode;
-  title: string;
+  onClick: () => void; active?: boolean; disabled?: boolean; children: React.ReactNode; title: string;
 }) => (
   <button
     type="button"
@@ -28,32 +22,64 @@ const ToolbarBtn = ({
     disabled={disabled}
     title={title}
     className={`p-1.5 rounded transition-colors ${
-      active
-        ? "bg-[#F48220] text-white"
-        : "text-black/50 hover:text-black hover:bg-gray-100"
+      active ? "bg-[#F48220] text-white" : "text-black/50 hover:text-black hover:bg-gray-100"
     } disabled:opacity-30`}
   >
     {children}
   </button>
 );
 
+const DOC_EXTENSIONS = [
+  ".pdf", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".txt", ".csv", ".zip",
+];
+
 export function RichTextEditor({ value, onChange, placeholder }: Props) {
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Placeholder.configure({ placeholder: placeholder ?? "Write job description…" }),
+      Image.configure({ inline: false, allowBase64: true }),
+      Placeholder.configure({ placeholder: placeholder ?? "Write here…" }),
     ],
     content: value || "",
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
     editorProps: {
       attributes: {
-        class:
-          "min-h-[220px] px-4 py-3 text-sm font-jakarta text-black focus:outline-none prose prose-sm max-w-none",
+        class: "min-h-[220px] px-4 py-3 text-sm font-jakarta text-black focus:outline-none prose prose-sm max-w-none",
       },
     },
   });
 
   if (!editor) return null;
+
+  const handleImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) { alert("Image must be under 10 MB."); return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      editor.chain().focus().setImage({ src: reader.result as string, alt: file.name }).run();
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  const handleDocFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 20 * 1024 * 1024) { alert("File must be under 20 MB."); return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      // Insert as a styled download anchor inside a paragraph
+      const dataUrl = reader.result as string;
+      const anchor = `<p><a href="${dataUrl}" download="${file.name}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid #e5e7eb;border-radius:8px;font-size:13px;color:#111;text-decoration:none;background:#f9fafb;">📎 ${file.name}</a></p>`;
+      editor.chain().focus().insertContent(anchor).run();
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
 
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden focus-within:border-[#F48220] transition-colors">
@@ -86,6 +112,18 @@ export function RichTextEditor({ value, onChange, placeholder }: Props) {
 
         <div className="w-px h-4 bg-gray-200 mx-1" />
 
+        {/* Image / GIF upload */}
+        <ToolbarBtn title="Insert image or GIF" onClick={() => imageInputRef.current?.click()}>
+          <ImagePlus size={15} />
+        </ToolbarBtn>
+
+        {/* Document upload */}
+        <ToolbarBtn title="Attach file (PDF, DOC, etc.)" onClick={() => fileInputRef.current?.click()}>
+          <FileText size={15} />
+        </ToolbarBtn>
+
+        <div className="w-px h-4 bg-gray-200 mx-1" />
+
         <ToolbarBtn title="Undo" onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()}>
           <Undo size={15} />
         </ToolbarBtn>
@@ -96,6 +134,22 @@ export function RichTextEditor({ value, onChange, placeholder }: Props) {
 
       {/* Editor area */}
       <EditorContent editor={editor} />
+
+      {/* Hidden file inputs */}
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleImageFile}
+        className="hidden"
+      />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={DOC_EXTENSIONS.join(",")}
+        onChange={handleDocFile}
+        className="hidden"
+      />
     </div>
   );
 }

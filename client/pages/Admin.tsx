@@ -301,9 +301,8 @@ function PhotoUpload({
       <div className="flex items-start gap-4">
         <div
           onClick={() => inputRef.current?.click()}
-          className={`w-28 h-28 rounded-xl overflow-hidden flex-shrink-0 cursor-pointer border-2 border-dashed transition-colors ${
-            image ? "border-transparent" : "border-gray-200 hover:border-[#F48220]"
-          }`}
+          className={`w-28 h-28 rounded-xl overflow-hidden flex-shrink-0 cursor-pointer border-2 border-dashed transition-colors ${image ? "border-transparent" : "border-gray-200 hover:border-[#F48220]"
+            }`}
         >
           {image ? (
             <img src={image} alt="Preview" className="w-full h-full object-cover" />
@@ -934,6 +933,9 @@ const BLOG_CATEGORIES = [
   "Philanthropy",
   "Insights",
   "Cybersecurity",
+  "Team",
+  "Development",
+  "Design",
 ];
 
 const EXCERPT_LIMIT = 200;
@@ -952,11 +954,12 @@ function dateToInputValue(displayDate: string): string {
 }
 
 // Cover image upload — landscape version of PhotoUpload
-function CoverUpload({ image, fileName, onFile, onClear, inputRef }: {
+function CoverUpload({ image, fileName, onFile, onClear, inputRef, hasError }: {
   image: string; fileName: string;
   onFile: (base64: string, name: string) => void;
   onClear: () => void;
   inputRef: React.RefObject<HTMLInputElement>;
+  hasError?: boolean;
 }) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -969,18 +972,25 @@ function CoverUpload({ image, fileName, onFile, onClear, inputRef }: {
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-medium text-black/50 font-jakarta">Cover Image</label>
+      <div className="flex items-center justify-between">
+        <label className="text-xs font-medium text-black/50 font-jakarta">Cover Image *</label>
+        <span className="text-[11px] text-black/30 font-jakarta">Recommended: 1200 × 675 px · 16:9 ratio · Max 5 MB</span>
+      </div>
       <div
         onClick={() => inputRef.current?.click()}
-        className={`w-full h-40 rounded-xl overflow-hidden cursor-pointer border-2 border-dashed transition-colors ${image ? "border-transparent" : "border-gray-200 hover:border-[#F48220]"}`}
+        className={`w-full rounded-xl overflow-hidden cursor-pointer border-2 border-dashed transition-colors ${image ? "border-transparent" : hasError ? "border-red-400 bg-red-50" : "border-gray-200 hover:border-[#F48220]"
+          }`}
+        style={{ aspectRatio: "16 / 9" }}
       >
         {image ? (
           <img src={image} alt="Cover preview" className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full bg-gray-50 flex flex-col items-center justify-center gap-1.5">
-            <ImagePlus size={24} className="text-gray-300" />
-            <span className="text-xs text-gray-300 font-jakarta">Click to upload cover image</span>
-            <span className="text-[11px] text-gray-200 font-jakarta">JPG, PNG or WebP · Max 5 MB</span>
+            <ImagePlus size={24} className={hasError ? "text-red-300" : "text-gray-300"} />
+            <span className={`text-xs font-jakarta ${hasError ? "text-red-400" : "text-gray-300"}`}>
+              Click to upload cover image
+            </span>
+            <span className="text-[11px] text-gray-300 font-jakarta">JPG, PNG or WebP</span>
           </div>
         )}
       </div>
@@ -1003,36 +1013,80 @@ function CoverUpload({ image, fileName, onFile, onClear, inputRef }: {
 
 const emptyBlogForm = { title: "", content: "", excerpt: "", cover_image: "", author: "", category: "", date: "", published: false };
 
+type BlogErrors = Partial<Record<"title" | "author" | "category" | "cover_image" | "excerpt" | "content", string>>;
+
 function BlogPostForm({
   form, setForm, onSubmit, onCancel, saving, submitLabel, addFileRef,
 }: {
   form: typeof emptyBlogForm;
   setForm: React.Dispatch<React.SetStateAction<typeof emptyBlogForm>>;
-  onSubmit: (e?: React.FormEvent) => void;
+  onSubmit: () => void;
   onCancel: () => void;
   saving: boolean;
   submitLabel: string;
   addFileRef: React.RefObject<HTMLInputElement>;
 }) {
   const [fileName, setFileName] = useState("");
+  const [errors, setErrors] = useState<BlogErrors>({});
+
+  const clearError = (field: keyof BlogErrors) => setErrors((e) => { const next = { ...e }; delete next[field]; return next; });
+
+  const validate = (): boolean => {
+    const errs: BlogErrors = {};
+    if (!form.title.trim()) errs.title = "Title is required.";
+    if (!form.author.trim()) errs.author = "Author is required.";
+    if (!form.category) errs.category = "Please select a category.";
+    if (!form.cover_image) errs.cover_image = "Cover image is required.";
+    if (!form.excerpt.trim()) errs.excerpt = "Excerpt is required.";
+    else if (form.excerpt.length > EXCERPT_LIMIT) errs.excerpt = `Excerpt must be ${EXCERPT_LIMIT} characters or fewer (currently ${form.excerpt.length}).`;
+    if (!form.content.trim() || form.content === "<p></p>") errs.content = "Content is required.";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleSubmit = () => {
+    if (validate()) onSubmit();
+  };
 
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Field label="Title *" value={form.title} onChange={(v) => setForm((f) => ({ ...f, title: v }))} />
-        <Field label="Author" value={form.author} onChange={(v) => setForm((f) => ({ ...f, author: v }))} />
+        {/* Title */}
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-black/50 font-jakarta">Title *</label>
+          <input
+            type="text"
+            value={form.title}
+            onChange={(e) => { setForm((f) => ({ ...f, title: e.target.value })); clearError("title"); }}
+            className={`w-full border rounded-lg px-4 py-2.5 text-sm font-jakarta focus:outline-none transition-colors ${errors.title ? "border-red-400 focus:border-red-400 bg-red-50" : "border-gray-200 focus:border-[#F48220]"}`}
+          />
+          {errors.title && <p className="text-xs text-red-500 font-jakarta">{errors.title}</p>}
+        </div>
+
+        {/* Author */}
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-black/50 font-jakarta">Author *</label>
+          <input
+            type="text"
+            value={form.author}
+            onChange={(e) => { setForm((f) => ({ ...f, author: e.target.value })); clearError("author"); }}
+            className={`w-full border rounded-lg px-4 py-2.5 text-sm font-jakarta focus:outline-none transition-colors ${errors.author ? "border-red-400 focus:border-red-400 bg-red-50" : "border-gray-200 focus:border-[#F48220]"}`}
+          />
+          {errors.author && <p className="text-xs text-red-500 font-jakarta">{errors.author}</p>}
+        </div>
 
         {/* Category dropdown */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-black/50 font-jakarta">Category</label>
+          <label className="text-xs font-medium text-black/50 font-jakarta">Category *</label>
           <select
             value={form.category}
-            onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm font-jakarta focus:outline-none focus:border-[#F48220] bg-white appearance-none"
+            onChange={(e) => { setForm((f) => ({ ...f, category: e.target.value })); clearError("category"); }}
+            className={`w-full border rounded-lg px-4 py-2.5 text-sm font-jakarta focus:outline-none bg-white appearance-none transition-colors ${errors.category ? "border-red-400 focus:border-red-400 bg-red-50" : "border-gray-200 focus:border-[#F48220]"}`}
           >
             <option value="">Select a category…</option>
             {BLOG_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
+          {errors.category && <p className="text-xs text-red-500 font-jakarta">{errors.category}</p>}
         </div>
 
         {/* Date picker */}
@@ -1048,37 +1102,43 @@ function BlogPostForm({
       </div>
 
       {/* Cover image upload */}
-      <CoverUpload
-        image={form.cover_image}
-        fileName={fileName}
-        onFile={(base64, name) => { setForm((f) => ({ ...f, cover_image: base64 })); setFileName(name); }}
-        onClear={() => { setForm((f) => ({ ...f, cover_image: "" })); setFileName(""); if (addFileRef.current) addFileRef.current.value = ""; }}
-        inputRef={addFileRef}
-      />
+      <div className="flex flex-col gap-1">
+        <CoverUpload
+          image={form.cover_image}
+          fileName={fileName}
+          onFile={(base64, name) => { setForm((f) => ({ ...f, cover_image: base64 })); setFileName(name); clearError("cover_image"); }}
+          onClear={() => { setForm((f) => ({ ...f, cover_image: "" })); setFileName(""); if (addFileRef.current) addFileRef.current.value = ""; }}
+          inputRef={addFileRef}
+          hasError={!!errors.cover_image}
+        />
+        {errors.cover_image && <p className="text-xs text-red-500 font-jakarta">{errors.cover_image}</p>}
+      </div>
 
       {/* Excerpt with character limit */}
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-medium text-black/50 font-jakarta">Excerpt <span className="text-black/30">(shown on blog listing)</span></label>
-          <span className={`text-xs font-jakarta ${form.excerpt.length > EXCERPT_LIMIT ? "text-red-500" : "text-black/30"}`}>
+          <label className="text-xs font-medium text-black/50 font-jakarta">Excerpt * <span className="text-black/30">(shown on blog listing)</span></label>
+          <span className={`text-xs font-jakarta ${form.excerpt.length > EXCERPT_LIMIT ? "text-red-500 font-medium" : "text-black/30"}`}>
             {form.excerpt.length}/{EXCERPT_LIMIT}
           </span>
         </div>
         <textarea
           value={form.excerpt}
-          onChange={(e) => {
-            if (e.target.value.length <= EXCERPT_LIMIT) setForm((f) => ({ ...f, excerpt: e.target.value }));
-          }}
+          onChange={(e) => { setForm((f) => ({ ...f, excerpt: e.target.value })); clearError("excerpt"); }}
           rows={3}
           placeholder="A short summary of the post…"
-          className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm font-jakarta focus:outline-none focus:border-[#F48220] resize-y"
+          className={`w-full border rounded-lg px-4 py-2.5 text-sm font-jakarta focus:outline-none resize-y transition-colors ${errors.excerpt || form.excerpt.length > EXCERPT_LIMIT ? "border-red-400 focus:border-red-400 bg-red-50" : "border-gray-200 focus:border-[#F48220]"}`}
         />
+        {errors.excerpt && <p className="text-xs text-red-500 font-jakarta">{errors.excerpt}</p>}
       </div>
 
       {/* Rich text content */}
       <div className="flex flex-col gap-1">
         <label className="text-xs font-medium text-black/50 font-jakarta">Content *</label>
-        <RichTextEditor value={form.content} onChange={(v) => setForm((f) => ({ ...f, content: v }))} placeholder="Write your blog post…" />
+        <div className={errors.content ? "ring-1 ring-red-400 rounded-lg" : ""}>
+          <RichTextEditor value={form.content} onChange={(v) => { setForm((f) => ({ ...f, content: v })); clearError("content"); }} placeholder="Write your blog post…" />
+        </div>
+        {errors.content && <p className="text-xs text-red-500 font-jakarta">{errors.content}</p>}
       </div>
 
       <label className="flex items-center gap-2 cursor-pointer w-fit">
@@ -1089,8 +1149,8 @@ function BlogPostForm({
       <div className="flex gap-3">
         <button
           type="button"
-          onClick={() => onSubmit()}
-          disabled={saving || !form.title.trim() || !form.content.trim()}
+          onClick={handleSubmit}
+          disabled={saving}
           className="flex items-center gap-2 px-5 py-2.5 bg-[#F48220] text-white text-sm font-medium font-jakarta rounded-lg hover:bg-orange-500 transition-colors disabled:opacity-60"
         >
           {saving && <Loader2 size={14} className="animate-spin" />}
@@ -1319,51 +1379,46 @@ export default function Admin() {
         <div className="max-w-4xl mx-auto flex gap-0">
           <button
             onClick={() => setTab("news")}
-            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${
-              tab === "news"
-                ? "border-[#F48220] text-[#F48220]"
-                : "border-transparent text-black/50 hover:text-black"
-            }`}
+            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${tab === "news"
+              ? "border-[#F48220] text-[#F48220]"
+              : "border-transparent text-black/50 hover:text-black"
+              }`}
           >
             <Newspaper size={16} /> News
           </button>
           <button
             onClick={() => setTab("team")}
-            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${
-              tab === "team"
-                ? "border-[#F48220] text-[#F48220]"
-                : "border-transparent text-black/50 hover:text-black"
-            }`}
+            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${tab === "team"
+              ? "border-[#F48220] text-[#F48220]"
+              : "border-transparent text-black/50 hover:text-black"
+              }`}
           >
             <Users size={16} /> Team
           </button>
           <button
             onClick={() => setTab("careers")}
-            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${
-              tab === "careers"
-                ? "border-[#F48220] text-[#F48220]"
-                : "border-transparent text-black/50 hover:text-black"
-            }`}
+            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${tab === "careers"
+              ? "border-[#F48220] text-[#F48220]"
+              : "border-transparent text-black/50 hover:text-black"
+              }`}
           >
             <Briefcase size={16} /> Careers
           </button>
           <button
             onClick={() => setTab("books")}
-            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${
-              tab === "books"
-                ? "border-[#F48220] text-[#F48220]"
-                : "border-transparent text-black/50 hover:text-black"
-            }`}
+            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${tab === "books"
+              ? "border-[#F48220] text-[#F48220]"
+              : "border-transparent text-black/50 hover:text-black"
+              }`}
           >
             <BookOpen size={16} /> Books
           </button>
           <button
             onClick={() => setTab("blog")}
-            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${
-              tab === "blog"
-                ? "border-[#F48220] text-[#F48220]"
-                : "border-transparent text-black/50 hover:text-black"
-            }`}
+            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-jakarta font-medium border-b-2 transition-colors ${tab === "blog"
+              ? "border-[#F48220] text-[#F48220]"
+              : "border-transparent text-black/50 hover:text-black"
+              }`}
           >
             <Rss size={16} /> Blog
           </button>
