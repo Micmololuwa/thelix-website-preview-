@@ -458,6 +458,101 @@ const QuoteSection = () => (
   </section>
 );
 
+// ---- Blog Section ----
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  cover_image: string;
+  author: string;
+  category: string;
+  date: string;
+}
+
+const BlogSection = () => {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/blog")
+      .then((r) => r.json())
+      .then((data: BlogPost[]) => setPosts(Array.isArray(data) ? data.slice(0, 3) : []))
+      .catch(() => {})
+      .finally(() => setLoaded(true));
+  }, []);
+
+  if (loaded && posts.length === 0) return null;
+
+  return (
+    <section className="bg-[#f6f5f5] py-16 lg:py-24">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
+        <FadeUp className="flex items-end justify-between mb-12 flex-wrap gap-4">
+          <div>
+            <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
+              From Our Blog
+            </h2>
+            <p className="text-black/70 text-base leading-[25px] font-jakarta mt-3 max-w-lg">
+              Perspectives and insights from the Thelix team on technology, leadership, and innovation.
+            </p>
+          </div>
+          <Link
+            to="/blog"
+            className="flex items-center gap-2 px-6 py-2.5 border border-thelix-orange text-thelix-orange font-medium text-sm font-jakarta rounded hover:bg-thelix-orange hover:text-white transition-colors flex-shrink-0"
+          >
+            See all posts <ArrowRight size={16} />
+          </Link>
+        </FadeUp>
+
+        {!loaded && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex flex-col gap-3 animate-pulse">
+                <div className="w-full h-52 rounded-xl bg-gray-200" />
+                <div className="h-5 bg-gray-200 rounded w-3/4" />
+                <div className="h-4 bg-gray-200 rounded w-1/2" />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {loaded && (
+          <StaggerGrid className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {posts.map((post) => (
+              <StaggerItem key={post.id}>
+                <Link to={`/blog/${post.slug}`} className="group flex flex-col bg-white rounded-xl overflow-hidden hover:shadow-md transition-shadow h-full">
+                  {post.cover_image ? (
+                    <img src={post.cover_image} alt={post.title} className="w-full h-52 object-cover group-hover:opacity-95 transition-opacity" />
+                  ) : (
+                    <div className="w-full h-52 bg-gradient-to-br from-orange-100 to-orange-50" />
+                  )}
+                  <div className="flex flex-col gap-2.5 p-5 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {post.category && (
+                        <span className="text-xs font-medium font-jakarta text-thelix-orange bg-orange-50 border border-orange-100 px-2 py-0.5 rounded-full">
+                          {post.category}
+                        </span>
+                      )}
+                      {post.date && <time className="text-black/35 text-xs font-jakarta">{post.date}</time>}
+                    </div>
+                    <h3 className="text-base font-bold text-black font-jakarta leading-snug group-hover:text-thelix-orange transition-colors line-clamp-2">
+                      {post.title}
+                    </h3>
+                    {post.excerpt && (
+                      <p className="text-black/55 text-sm font-jakarta leading-relaxed line-clamp-2 flex-1">{post.excerpt}</p>
+                    )}
+                    {post.author && <p className="text-xs text-black/35 font-jakarta mt-auto pt-1">By {post.author}</p>}
+                  </div>
+                </Link>
+              </StaggerItem>
+            ))}
+          </StaggerGrid>
+        )}
+      </div>
+    </section>
+  );
+};
+
 // ---- Latest Updates Section ----
 interface NewsArticle {
   id: string;
@@ -578,6 +673,7 @@ export default function Index() {
         <CommitmentSection />
         <QuoteSection />
         <LatestUpdatesSection />
+        <BlogSection />
         <Footer />
       </div>
     </PageTransition>

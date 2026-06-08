@@ -926,7 +926,181 @@ interface BlogPost {
   sort_order: number;
 }
 
-const emptyBlogForm = { title: "", slug: "", content: "", excerpt: "", cover_image: "", author: "", category: "", date: "", published: false };
+const BLOG_CATEGORIES = [
+  "Technology",
+  "Leadership",
+  "Innovation",
+  "Company News",
+  "Philanthropy",
+  "Insights",
+  "Cybersecurity",
+];
+
+const EXCERPT_LIMIT = 200;
+
+function formatDateDisplay(isoDate: string): string {
+  if (!isoDate) return "";
+  const d = new Date(isoDate + "T00:00:00");
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function dateToInputValue(displayDate: string): string {
+  if (!displayDate) return "";
+  const d = new Date(displayDate);
+  if (isNaN(d.getTime())) return "";
+  return d.toISOString().split("T")[0];
+}
+
+// Cover image upload — landscape version of PhotoUpload
+function CoverUpload({ image, fileName, onFile, onClear, inputRef }: {
+  image: string; fileName: string;
+  onFile: (base64: string, name: string) => void;
+  onClear: () => void;
+  inputRef: React.RefObject<HTMLInputElement>;
+}) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { alert("Image must be under 5 MB."); return; }
+    const reader = new FileReader();
+    reader.onload = () => onFile(reader.result as string, file.name);
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-medium text-black/50 font-jakarta">Cover Image</label>
+      <div
+        onClick={() => inputRef.current?.click()}
+        className={`w-full h-40 rounded-xl overflow-hidden cursor-pointer border-2 border-dashed transition-colors ${image ? "border-transparent" : "border-gray-200 hover:border-[#F48220]"}`}
+      >
+        {image ? (
+          <img src={image} alt="Cover preview" className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full bg-gray-50 flex flex-col items-center justify-center gap-1.5">
+            <ImagePlus size={24} className="text-gray-300" />
+            <span className="text-xs text-gray-300 font-jakarta">Click to upload cover image</span>
+            <span className="text-[11px] text-gray-200 font-jakarta">JPG, PNG or WebP · Max 5 MB</span>
+          </div>
+        )}
+      </div>
+      {image && (
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => inputRef.current?.click()} className="flex items-center gap-1.5 text-xs font-jakarta text-black/50 hover:text-black transition-colors">
+            <ImagePlus size={13} /> Change image
+          </button>
+          <span className="text-black/20">·</span>
+          <button type="button" onClick={onClear} className="flex items-center gap-1 text-xs font-jakarta text-black/40 hover:text-red-500 transition-colors">
+            <X size={12} /> Remove
+          </button>
+          {fileName && <span className="text-[11px] text-black/30 font-jakarta truncate max-w-[180px]">{fileName}</span>}
+        </div>
+      )}
+      <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handleChange} className="hidden" />
+    </div>
+  );
+}
+
+const emptyBlogForm = { title: "", content: "", excerpt: "", cover_image: "", author: "", category: "", date: "", published: false };
+
+function BlogPostForm({
+  form, setForm, onSubmit, onCancel, saving, submitLabel, addFileRef,
+}: {
+  form: typeof emptyBlogForm;
+  setForm: React.Dispatch<React.SetStateAction<typeof emptyBlogForm>>;
+  onSubmit: (e?: React.FormEvent) => void;
+  onCancel: () => void;
+  saving: boolean;
+  submitLabel: string;
+  addFileRef: React.RefObject<HTMLInputElement>;
+}) {
+  const [fileName, setFileName] = useState("");
+
+  return (
+    <div className="flex flex-col gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Field label="Title *" value={form.title} onChange={(v) => setForm((f) => ({ ...f, title: v }))} />
+        <Field label="Author" value={form.author} onChange={(v) => setForm((f) => ({ ...f, author: v }))} />
+
+        {/* Category dropdown */}
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-black/50 font-jakarta">Category</label>
+          <select
+            value={form.category}
+            onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm font-jakarta focus:outline-none focus:border-[#F48220] bg-white appearance-none"
+          >
+            <option value="">Select a category…</option>
+            {BLOG_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </div>
+
+        {/* Date picker */}
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-black/50 font-jakarta">Date</label>
+          <input
+            type="date"
+            value={dateToInputValue(form.date)}
+            onChange={(e) => setForm((f) => ({ ...f, date: formatDateDisplay(e.target.value) }))}
+            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm font-jakarta focus:outline-none focus:border-[#F48220]"
+          />
+        </div>
+      </div>
+
+      {/* Cover image upload */}
+      <CoverUpload
+        image={form.cover_image}
+        fileName={fileName}
+        onFile={(base64, name) => { setForm((f) => ({ ...f, cover_image: base64 })); setFileName(name); }}
+        onClear={() => { setForm((f) => ({ ...f, cover_image: "" })); setFileName(""); if (addFileRef.current) addFileRef.current.value = ""; }}
+        inputRef={addFileRef}
+      />
+
+      {/* Excerpt with character limit */}
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-medium text-black/50 font-jakarta">Excerpt <span className="text-black/30">(shown on blog listing)</span></label>
+          <span className={`text-xs font-jakarta ${form.excerpt.length > EXCERPT_LIMIT ? "text-red-500" : "text-black/30"}`}>
+            {form.excerpt.length}/{EXCERPT_LIMIT}
+          </span>
+        </div>
+        <textarea
+          value={form.excerpt}
+          onChange={(e) => {
+            if (e.target.value.length <= EXCERPT_LIMIT) setForm((f) => ({ ...f, excerpt: e.target.value }));
+          }}
+          rows={3}
+          placeholder="A short summary of the post…"
+          className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm font-jakarta focus:outline-none focus:border-[#F48220] resize-y"
+        />
+      </div>
+
+      {/* Rich text content */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-black/50 font-jakarta">Content *</label>
+        <RichTextEditor value={form.content} onChange={(v) => setForm((f) => ({ ...f, content: v }))} placeholder="Write your blog post…" />
+      </div>
+
+      <label className="flex items-center gap-2 cursor-pointer w-fit">
+        <input type="checkbox" checked={form.published} onChange={(e) => setForm((f) => ({ ...f, published: e.target.checked }))} className="accent-[#F48220]" />
+        <span className="text-sm font-jakarta text-black/70">Publish immediately</span>
+      </label>
+
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={() => onSubmit()}
+          disabled={saving || !form.title.trim() || !form.content.trim()}
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#F48220] text-white text-sm font-medium font-jakarta rounded-lg hover:bg-orange-500 transition-colors disabled:opacity-60"
+        >
+          {saving && <Loader2 size={14} className="animate-spin" />}
+          {saving ? "Saving…" : submitLabel}
+        </button>
+        <button type="button" onClick={onCancel} className="px-4 py-2.5 text-sm font-jakarta text-black/50 hover:text-black border border-gray-200 rounded-lg transition-colors">Cancel</button>
+      </div>
+    </div>
+  );
+}
 
 function BlogTab({ adminKey }: { adminKey: string }) {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -936,6 +1110,8 @@ function BlogTab({ adminKey }: { adminKey: string }) {
   const [editId, setEditId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ ...emptyBlogForm });
   const [showAdd, setShowAdd] = useState(false);
+  const addFileRef = useRef<HTMLInputElement>(null);
+  const editFileRef = useRef<HTMLInputElement>(null);
 
   const headers = { "Content-Type": "application/json", "x-admin-key": adminKey };
 
@@ -946,19 +1122,23 @@ function BlogTab({ adminKey }: { adminKey: string }) {
       .catch(() => setLoading(false));
   }, []);
 
-  const addPost = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const addPost = async () => {
     if (!addForm.title.trim() || !addForm.content.trim()) return;
     setSaving(true);
     const res = await fetch("/api/blog", { method: "POST", headers, body: JSON.stringify(addForm) });
     const data = await res.json();
     setSaving(false);
-    if (res.ok) { setPosts((prev) => [...prev, data]); setAddForm({ ...emptyBlogForm }); setShowAdd(false); }
+    if (res.ok) {
+      setPosts((prev) => [...prev, data]);
+      setAddForm({ ...emptyBlogForm });
+      if (addFileRef.current) addFileRef.current.value = "";
+      setShowAdd(false);
+    }
   };
 
   const startEdit = (post: BlogPost) => {
     setEditId(post.id);
-    setEditForm({ title: post.title, slug: post.slug, content: post.content, excerpt: post.excerpt, cover_image: post.cover_image, author: post.author, category: post.category, date: post.date, published: post.published });
+    setEditForm({ title: post.title, content: post.content, excerpt: post.excerpt, cover_image: post.cover_image, author: post.author, category: post.category, date: post.date, published: post.published });
   };
 
   const saveEdit = async () => {
@@ -967,7 +1147,11 @@ function BlogTab({ adminKey }: { adminKey: string }) {
     const res = await fetch(`/api/blog/${editId}`, { method: "PUT", headers, body: JSON.stringify(editForm) });
     const data = await res.json();
     setSaving(false);
-    if (res.ok) { setPosts((prev) => prev.map((p) => (p.id === editId ? data : p))); setEditId(null); }
+    if (res.ok) {
+      setPosts((prev) => prev.map((p) => (p.id === editId ? data : p)));
+      setEditId(null);
+      if (editFileRef.current) editFileRef.current.value = "";
+    }
   };
 
   const deletePost = async (id: string) => {
@@ -977,66 +1161,41 @@ function BlogTab({ adminKey }: { adminKey: string }) {
   };
 
   const togglePublished = async (post: BlogPost) => {
-    const res = await fetch(`/api/blog/${post.id}`, {
-      method: "PUT",
-      headers,
-      body: JSON.stringify({ ...post, published: !post.published }),
-    });
+    const res = await fetch(`/api/blog/${post.id}`, { method: "PUT", headers, body: JSON.stringify({ ...post, published: !post.published }) });
     const data = await res.json();
     if (res.ok) setPosts((prev) => prev.map((p) => (p.id === post.id ? data : p)));
   };
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-black font-jakarta">Blog</h2>
-          <p className="text-black/40 text-sm font-jakarta mt-0.5">Write and publish blog posts. Toggle Published to make a post visible on the site.</p>
+          <p className="text-black/40 text-sm font-jakarta mt-0.5">Write and publish blog posts. Toggle the globe icon to publish or unpublish.</p>
         </div>
         <button
-          onClick={() => setShowAdd((v) => !v)}
+          onClick={() => { setShowAdd((v) => !v); setEditId(null); }}
           className="flex items-center gap-2 px-4 py-2.5 bg-[#F48220] text-white text-sm font-medium font-jakarta rounded-lg hover:bg-orange-500 transition-colors"
         >
           <Plus size={16} /> New Post
         </button>
       </div>
 
-      {/* Add form */}
       {showAdd && (
-        <form onSubmit={addPost} className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col gap-4">
-          <h3 className="text-base font-bold text-black font-jakarta">New Blog Post</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Title *" value={addForm.title} onChange={(v) => setAddForm((f) => ({ ...f, title: v }))} />
-            <Field label="Author" value={addForm.author} onChange={(v) => setAddForm((f) => ({ ...f, author: v }))} />
-            <Field label="Category" value={addForm.category} onChange={(v) => setAddForm((f) => ({ ...f, category: v }))} />
-            <Field label="Date (leave blank for today)" value={addForm.date} onChange={(v) => setAddForm((f) => ({ ...f, date: v }))} />
-            <div className="sm:col-span-2">
-              <Field label="Cover Image URL" value={addForm.cover_image} onChange={(v) => setAddForm((f) => ({ ...f, cover_image: v }))} />
-            </div>
-            <div className="sm:col-span-2">
-              <Field label="Excerpt (short summary shown on listing)" value={addForm.excerpt} onChange={(v) => setAddForm((f) => ({ ...f, excerpt: v }))} multiline />
-            </div>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-black/50 font-jakarta">Content *</label>
-            <RichTextEditor value={addForm.content} onChange={(v) => setAddForm((f) => ({ ...f, content: v }))} placeholder="Write your blog post…" />
-          </div>
-          <label className="flex items-center gap-2 cursor-pointer w-fit">
-            <input type="checkbox" checked={addForm.published} onChange={(e) => setAddForm((f) => ({ ...f, published: e.target.checked }))} className="accent-[#F48220]" />
-            <span className="text-sm font-jakarta text-black/70">Publish immediately</span>
-          </label>
-          <div className="flex gap-3">
-            <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2.5 bg-[#F48220] text-white text-sm font-medium font-jakarta rounded-lg hover:bg-orange-500 transition-colors disabled:opacity-60">
-              {saving && <Loader2 size={14} className="animate-spin" />}
-              {saving ? "Saving…" : "Publish Post"}
-            </button>
-            <button type="button" onClick={() => setShowAdd(false)} className="px-4 py-2.5 text-sm font-jakarta text-black/50 hover:text-black border border-gray-200 rounded-lg transition-colors">Cancel</button>
-          </div>
-        </form>
+        <div className="bg-white border border-gray-200 rounded-xl p-6">
+          <h3 className="text-base font-bold text-black font-jakarta mb-5">New Blog Post</h3>
+          <BlogPostForm
+            form={addForm}
+            setForm={setAddForm}
+            onSubmit={addPost}
+            onCancel={() => setShowAdd(false)}
+            saving={saving}
+            submitLabel="Publish Post"
+            addFileRef={addFileRef}
+          />
+        </div>
       )}
 
-      {/* Post list */}
       {loading && <div className="flex items-center gap-2 text-black/40 text-sm font-jakarta"><Loader2 size={15} className="animate-spin" /> Loading posts…</div>}
       {!loading && posts.length === 0 && <p className="text-black/40 text-sm font-jakarta">No blog posts yet. Click "New Post" to write one.</p>}
 
@@ -1044,58 +1203,40 @@ function BlogTab({ adminKey }: { adminKey: string }) {
         {posts.map((post) => (
           <div key={post.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
             {editId === post.id ? (
-              <div className="p-6 flex flex-col gap-4">
-                <h3 className="text-base font-bold font-jakarta">Editing: {post.title}</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Field label="Title" value={editForm.title} onChange={(v) => setEditForm((f) => ({ ...f, title: v }))} />
-                  <Field label="Author" value={editForm.author} onChange={(v) => setEditForm((f) => ({ ...f, author: v }))} />
-                  <Field label="Category" value={editForm.category} onChange={(v) => setEditForm((f) => ({ ...f, category: v }))} />
-                  <Field label="Date" value={editForm.date} onChange={(v) => setEditForm((f) => ({ ...f, date: v }))} />
-                  <div className="sm:col-span-2">
-                    <Field label="Cover Image URL" value={editForm.cover_image} onChange={(v) => setEditForm((f) => ({ ...f, cover_image: v }))} />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <Field label="Excerpt" value={editForm.excerpt} onChange={(v) => setEditForm((f) => ({ ...f, excerpt: v }))} multiline />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-medium text-black/50 font-jakarta">Content</label>
-                  <RichTextEditor value={editForm.content} onChange={(v) => setEditForm((f) => ({ ...f, content: v }))} placeholder="Write your blog post…" />
-                </div>
-                <label className="flex items-center gap-2 cursor-pointer w-fit">
-                  <input type="checkbox" checked={editForm.published} onChange={(e) => setEditForm((f) => ({ ...f, published: e.target.checked }))} className="accent-[#F48220]" />
-                  <span className="text-sm font-jakarta text-black/70">Published</span>
-                </label>
-                <div className="flex gap-3">
-                  <button onClick={saveEdit} disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-[#F48220] text-white text-sm font-medium font-jakarta rounded-lg hover:bg-orange-500 transition-colors disabled:opacity-60">
-                    {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
-                    {saving ? "Saving…" : "Save changes"}
-                  </button>
-                  <button onClick={() => setEditId(null)} className="px-4 py-2 text-sm font-jakarta text-black/50 hover:text-black border border-gray-200 rounded-lg transition-colors">Cancel</button>
-                </div>
+              <div className="p-6">
+                <h3 className="text-base font-bold font-jakarta mb-5">Editing: {post.title}</h3>
+                <BlogPostForm
+                  form={editForm}
+                  setForm={setEditForm}
+                  onSubmit={saveEdit}
+                  onCancel={() => setEditId(null)}
+                  saving={saving}
+                  submitLabel="Save changes"
+                  addFileRef={editFileRef}
+                />
               </div>
             ) : (
               <div className="flex items-start gap-4 p-4">
                 {post.cover_image && (
-                  <img src={post.cover_image} alt={post.title} className="w-20 h-16 object-cover rounded-lg flex-shrink-0" />
+                  <img src={post.cover_image} alt={post.title} className="w-20 h-14 object-cover rounded-lg flex-shrink-0" />
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     <span className={`text-xs font-medium font-jakarta px-2 py-0.5 rounded-full ${post.published ? "bg-green-50 text-green-600 border border-green-200" : "bg-gray-100 text-black/40 border border-gray-200"}`}>
                       {post.published ? "Published" : "Draft"}
                     </span>
-                    {post.category && <span className="text-xs text-black/40 font-jakarta">{post.category}</span>}
-                    <span className="text-xs text-black/30 font-jakarta">{post.date}</span>
+                    {post.category && <span className="text-xs text-thelix-orange font-jakarta bg-orange-50 border border-orange-100 px-2 py-0.5 rounded-full">{post.category}</span>}
+                    {post.date && <span className="text-xs text-black/30 font-jakarta">{post.date}</span>}
                   </div>
                   <p className="text-sm font-bold text-black font-jakarta truncate">{post.title}</p>
                   {post.excerpt && <p className="text-xs text-black/45 font-jakarta mt-0.5 line-clamp-1">{post.excerpt}</p>}
                   {post.author && <p className="text-xs text-black/30 font-jakarta mt-0.5">By {post.author}</p>}
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0">
-                  <button onClick={() => togglePublished(post)} title={post.published ? "Unpublish" : "Publish"} className="p-2 text-black/30 hover:text-green-600 transition-colors" >
+                  <button onClick={() => togglePublished(post)} title={post.published ? "Unpublish" : "Publish"} className="p-2 text-black/30 hover:text-green-600 transition-colors">
                     <Globe size={16} />
                   </button>
-                  <button onClick={() => startEdit(post)} title="Edit" className="p-2 text-black/30 hover:text-black transition-colors">
+                  <button onClick={() => { startEdit(post); setShowAdd(false); }} title="Edit" className="p-2 text-black/30 hover:text-black transition-colors">
                     <Pencil size={16} />
                   </button>
                   <button onClick={() => deletePost(post.id)} title="Delete" className="p-2 text-black/30 hover:text-red-500 transition-colors">
