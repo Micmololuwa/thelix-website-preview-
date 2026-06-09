@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FadeUp, FadeIn, StaggerGrid, StaggerItem, PageTransition } from "@/components/ui/motion";
+import { CategoryChip } from "@/lib/categoryColors.tsx";
 
 interface BlogPost {
   id: string;
@@ -68,14 +69,10 @@ const FeaturedPost = ({ post }: { post: BlogPost }) => (
           </div>
           <div className="lg:flex-1 bg-[#f6f5f5] rounded-2xl p-6 lg:p-10 flex flex-col gap-5 justify-center">
             <div className="flex items-center gap-3 flex-wrap">
-              {post.category && (
-                <span className="text-xs font-medium font-jakarta text-thelix-orange bg-orange-50 border border-orange-200 px-2.5 py-0.5 rounded-full">
-                  {post.category}
-                </span>
-              )}
+              {post.category && <CategoryChip category={post.category} />}
               <time className="text-black/40 text-sm font-jakarta">{post.date}</time>
             </div>
-            <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-tight leading-snug group-hover:text-thelix-orange transition-colors">
+            <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-tight leading-[1.5] group-hover:text-thelix-orange transition-colors">
               {post.title}
             </h2>
             {post.excerpt && (
@@ -116,14 +113,10 @@ const PostCard = ({ post }: { post: BlogPost }) => (
       )}
       <div className="flex flex-col gap-3 p-5 flex-1">
         <div className="flex items-center gap-2 flex-wrap">
-          {post.category && (
-            <span className="text-xs font-medium font-jakarta text-thelix-orange bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full">
-              {post.category}
-            </span>
-          )}
+          {post.category && <CategoryChip category={post.category} />}
           <time className="text-black/35 text-xs font-jakarta">{post.date}</time>
         </div>
-        <h3 className="text-base font-bold text-black font-jakarta leading-snug group-hover:text-thelix-orange transition-colors line-clamp-2">
+        <h3 className="text-base font-bold text-black font-jakarta leading-[1.5] group-hover:text-thelix-orange transition-colors line-clamp-2">
           {post.title}
         </h3>
         {post.excerpt && (
