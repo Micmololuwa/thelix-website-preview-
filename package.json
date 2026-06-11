@@ -18,9 +18,9 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",
     "@tiptap/extension-image": "^3.26.0",
-    "@tiptap/extension-placeholder": "^3.23.4",
-    "@tiptap/react": "^3.23.4",
-    "@tiptap/starter-kit": "^3.23.4",
+    "@tiptap/extension-placeholder": "^3.26.0",
+    "@tiptap/react": "^3.26.0",
+    "@tiptap/starter-kit": "^3.26.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "react-markdown": "^10.1.0",
