@@ -122,6 +122,16 @@ html {
   }
 }
 
+/* Partner logos marquee (mobile) */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.partner-logos-marquee {
+  animation: marquee-scroll 40s linear infinite;
+}
+
 /* Tiptap editor placeholder */
 .tiptap p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
