@@ -87,25 +87,47 @@ const HeroSection = () => (
 
 // ---- Partners Section ----
 const partnerLogos = [
-  { src: "/emc.png", alt: "ExcelMind Cyber" },
-  { src: "/excelmind.png", alt: "ExcelMind" },
-  { src: "/lft.png", alt: "Lightforth" },
-  { src: "/Vizacheck.png", alt: "Vizacheck" },
-  { src: "/veripass.png", alt: "Veripass" },
-  { src: "/creditveto.png", alt: "Credit Veto" },
+  { src: "/emc.png", alt: "ExcelMind Cyber", url: "https://www.excelmindcyber.com/" },
+  { src: "/excelmind.png", alt: "ExcelMind", url: "https://excelmind.org/" },
+  { src: "/lft.png", alt: "Lightforth", url: "https://lightforth.ai/" },
+  { src: "/Vizacheck.png", alt: "Vizacheck", url: "https://vizacheck.com/" },
+  { src: "/veripass.png", alt: "Veripass", url: "https://veripass.org/" },
+  { src: "/creditveto.png", alt: "Credit Veto", url: "https://www.creditvetoafrica.com/" },
 ];
 
+const PartnerLogo = ({ logo }: { logo: (typeof partnerLogos)[number] }) => (
+  <a
+    href={logo.url}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label={logo.alt}
+    className="flex-shrink-0"
+  >
+    <img
+      src={logo.src}
+      alt={logo.alt}
+      className="h-10 w-auto object-contain"
+    />
+  </a>
+);
+
 const PartnersSection = () => (
-  <section className="bg-white py-8 border-b border-gray-100">
-    <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <StaggerGrid className="flex flex-wrap items-center justify-between gap-8">
+  <section className="bg-white py-8 border-b border-gray-100 overflow-hidden">
+    <div className="max-w-[1440px] mx-auto lg:px-[100px]">
+      {/* Mobile: single line, auto-scrolling */}
+      <div className="flex lg:hidden overflow-hidden">
+        <div className="flex items-center gap-12 animate-marquee">
+          {[...partnerLogos, ...partnerLogos].map((logo, i) => (
+            <PartnerLogo key={`${logo.alt}-${i}`} logo={logo} />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: static row */}
+      <StaggerGrid className="hidden lg:flex flex-wrap items-center justify-between gap-8 px-6">
         {partnerLogos.map((logo) => (
           <StaggerItem key={logo.alt}>
-            <img
-              src={logo.src}
-              alt={logo.alt}
-              className="h-10 w-auto object-contain"
-            />
+            <PartnerLogo logo={logo} />
           </StaggerItem>
         ))}
       </StaggerGrid>
@@ -120,7 +142,7 @@ const OrangeFeaturesBanner = () => (
       <div className="flex flex-col gap-12 lg:gap-20">
         <FadeUp>
           <div className="flex flex-col gap-3 max-w-3xl">
-            <h2 className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-white font-jakarta leading-tight tracking-[2.6px]">
+            <h2 className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-white font-jakarta leading-tight tracking-[1px]">
               Building Tomorrow's Economy Through Strategic Business Units
             </h2>
             <p className="text-white/80 text-base leading-[25px] max-w-[868px] font-jakarta">
@@ -164,7 +186,7 @@ const VentureCardsSection = () => {
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
         <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
           <SlideLeft className="flex flex-col gap-6 lg:w-[45%] lg:flex-shrink-0">
-            <h2 className="text-4xl sm:text-[45px] font-bold text-white font-jakarta leading-tight tracking-[1.8px]">
+            <h2 className="text-4xl sm:text-[45px] font-bold text-white font-jakarta leading-tight tracking-[0.6px]">
               Built to Remove the Barriers That Hold People Back
             </h2>
             <p className="text-white/80 text-base leading-[27px] font-jakarta">
@@ -277,7 +299,7 @@ const PortfolioSection = () => {
     <section className="py-16 lg:py-24" style={{ background: "rgba(13,6,0,0.03)" }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
         <FadeUp className="text-center mb-12">
-          <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
+          <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[0.6px] leading-tight">
             Our Business Units
           </h2>
           <p className="text-black/80 text-base leading-[25px] font-jakarta mt-3 max-w-xl mx-auto">
@@ -488,7 +510,7 @@ const LatestUpdatesSection = () => {
     <section className="bg-white py-16 lg:py-24">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
         <FadeUp className="text-center mb-12 max-w-lg mx-auto">
-          <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
+          <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[0.6px] leading-tight">
             Latest Update
           </h2>
           <p className="text-black/80 text-base leading-[25px] font-jakarta mt-3">
