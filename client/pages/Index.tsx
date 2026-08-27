@@ -64,25 +64,48 @@ const HeroSection = () => (
 
 // ---- Partners Section ----
 const partnerLogos = [
-  { src: "/emc.png", alt: "ExcelMind Cyber" },
-  { src: "/excelmind.png", alt: "ExcelMind" },
-  { src: "/lft.png", alt: "Lightforth" },
-  { src: "/Vizacheck.png", alt: "Vizacheck" },
-  { src: "/veripass.png", alt: "Veripass" },
-  { src: "/creditveto.png", alt: "Credit Veto" },
+  { src: "/emc.png", alt: "ExcelMind Cyber", url: "https://www.excelmindcyber.com/" },
+  { src: "/excelmind.png", alt: "ExcelMind", url: "https://excelmind.org/" },
+  { src: "/lft.png", alt: "Lightforth", url: "https://lightforth.ai/" },
+  { src: "/Vizacheck.png", alt: "Vizacheck", url: "https://vizacheck.com/" },
+  { src: "/veripass.png", alt: "Veripass", url: "https://veripass.org/" },
+  { src: "/creditveto.png", alt: "Credit Veto", url: "https://www.creditvetoafrica.com/" },
 ];
 
 const PartnersSection = () => (
-  <section className="bg-white py-8 border-b border-gray-100">
+  <section className="bg-white py-8 border-b border-gray-100 overflow-hidden">
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <div className="flex flex-wrap items-center justify-between gap-8">
+      {/* Mobile: single line, auto-scrolling marquee */}
+      <div className="lg:hidden overflow-hidden">
+        <div className="flex w-max items-center gap-10 partner-logos-marquee">
+          {[...partnerLogos, ...partnerLogos].map((logo, i) => (
+            <a
+              key={`${logo.alt}-${i}`}
+              href={logo.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-shrink-0"
+            >
+              <img
+                src={logo.src}
+                alt={logo.alt}
+                className="h-10 w-auto object-contain"
+              />
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: static row */}
+      <div className="hidden lg:flex items-center justify-between gap-8">
         {partnerLogos.map((logo) => (
-          <img
-            key={logo.alt}
-            src={logo.src}
-            alt={logo.alt}
-            className="h-10 w-auto object-contain"
-          />
+          <a key={logo.alt} href={logo.url} target="_blank" rel="noopener noreferrer">
+            <img
+              src={logo.src}
+              alt={logo.alt}
+              className="h-10 w-auto object-contain"
+            />
+          </a>
         ))}
       </div>
     </div>
@@ -95,7 +118,7 @@ const OrangeFeaturesBanner = () => (
     <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
       <div className="flex flex-col gap-12 lg:gap-20">
         <div className="flex flex-col gap-3 max-w-3xl">
-          <h2 className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-white font-jakarta leading-tight tracking-[2.6px]">
+          <h2 className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-white font-jakarta leading-tight tracking-[0.8px]">
             Building Tomorrow's Economy Through Strategic Business Units
           </h2>
           <p className="text-white/80 text-base leading-[25px] max-w-[868px] font-jakarta">
@@ -139,7 +162,7 @@ const VentureCardsSection = () => {
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
         <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
           <div className="flex flex-col gap-6 lg:w-[45%] lg:flex-shrink-0">
-            <h2 className="text-4xl sm:text-[45px] font-bold text-white font-jakarta leading-tight tracking-[1.8px]">
+            <h2 className="text-4xl sm:text-[45px] font-bold text-white font-jakarta leading-tight tracking-[0.6px]">
               Built to Remove the Barriers That Hold People Back
             </h2>
 
@@ -253,7 +276,7 @@ const PortfolioSection = () => {
     <section className="py-16 lg:py-24" style={{ background: "rgba(13,6,0,0.03)" }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
         <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
+          <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[0.6px] leading-tight">
             Our Business Units
           </h2>
           <p className="text-black/80 text-base leading-[25px] font-jakarta mt-3 max-w-xl mx-auto">
@@ -366,7 +389,7 @@ const CommitmentSection = () => (
       <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
         <div className="flex flex-col gap-10 lg:w-[46%]">
           <div className="flex flex-col gap-3">
-            <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
+            <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[0.6px] leading-tight">
               Our Commitment to Impactful Business Building
             </h2>
             <p className="text-black/80 text-base leading-[25px] font-jakarta">
@@ -459,7 +482,7 @@ const LatestUpdatesSection = () => {
     <section className="bg-white py-16 lg:py-24">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
         <div className="text-center mb-12 max-w-lg mx-auto">
-          <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[1.8px] leading-tight">
+          <h2 className="text-4xl sm:text-[45px] font-bold text-black font-jakarta tracking-[0.6px] leading-tight">
             Latest Update
           </h2>
           <p className="text-black/80 text-base leading-[25px] font-jakarta mt-3">
