@@ -1,343 +1,137 @@
-import { useState, useEffect } from "react";
-import { Target, Eye, TrendingUp, Users, Globe, Lightbulb, Heart, ShieldCheck } from "lucide-react";
-import { motion } from "framer-motion";
-import { Navbar } from "@/components/layout/Navbar";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import type { ReactNode } from "react";
 import { Footer } from "@/components/layout/Footer";
-import {
-  FadeUp,
-  FadeIn,
-  SlideLeft,
-  SlideRight,
-  StaggerGrid,
-  StaggerItem,
-  PageTransition,
-} from "@/components/ui/motion";
+import { InnerPageHeader } from "@/components/layout/InnerPageHeader";
 
-interface TeamMember {
-  id: string;
-  name: string;
-  designation: string;
-  image: string;
-}
-
-// ---- Hero ----
-const AboutHero = () => (
-  <section
-    style={{
-      background:
-        "linear-gradient(180deg, rgba(196,223,232,1) 0%, rgba(246,246,245,1) 45%, rgba(242,209,192,1) 100%)",
-    }}
-  >
-    <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] pt-16 pb-12">
-      <motion.h1
-        className="text-4xl sm:text-5xl lg:text-[65px] font-bold text-black font-jakarta max-w-3xl"
-        style={{ lineHeight: 1.2 }}
-        initial={{ opacity: 0, y: 36 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-      >
-        Building Strategic Business Units for Long-term Growth
-      </motion.h1>
-    </div>
-    <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] pb-16">
-      <FadeIn>
-        <img
-          src="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1440&h=544&fit=crop&q=80"
-          alt="Team members gathered in a meeting room"
-          className="w-full h-[300px] sm:h-[400px] lg:h-[544px] object-cover rounded-2xl"
-        />
-      </FadeIn>
-    </div>
-  </section>
-);
-
-// ---- Our Story ----
-const OurStorySection = () => (
-  <section className="bg-white py-16 lg:py-24">
-    <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <div className="flex flex-col lg:flex-row items-start gap-10 lg:gap-[11px]">
-        <FadeUp className="lg:flex-1 flex-shrink-0">
-          <h2 className="text-2xl sm:text-[28px] font-bold text-black font-jakarta tracking-[1.12px]">
-            Our Story
-          </h2>
-        </FadeUp>
-        <FadeUp delay={0.12} className="lg:flex-1 flex flex-col gap-[27px]">
-          <p className="text-black/80 text-lg leading-[27px] font-jakarta">
-            Thelix Holdings is a holding company that has built six strategic business units
-            spanning Financial Services, EdTech, Cybersecurity, Education, Healthcare, and
-            Identity Verification — with operations globally. Driven by our commitment to creating
-            sustainable economic and social wealth, we believe in the power of building world-class
-            companies from the ground up. Our approach combines deep industry expertise, strong
-            operational leadership, and a proven track record of scaling businesses that deliver
-            real-world impact.
-          </p>
-          <p className="text-black/80 text-lg leading-[27px] font-jakarta">
-            Our philanthropic efforts, through the Tolu Michael Foundation community empowerment
-            programs, are dedicated to encouraging entrepreneurship, advocating for economic
-            development, and conducting impactful research worldwide.
-          </p>
-        </FadeUp>
-      </div>
-    </div>
-  </section>
-);
-
-// ---- Mission & Vision ----
-const MissionVisionSection = () => (
-  <section className="bg-white pb-16 lg:pb-24" aria-label="Mission and vision statements">
-    <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-      <div className="flex flex-col lg:flex-row gap-10 lg:gap-8">
-        {/* Mission */}
-        <SlideLeft className="flex flex-col gap-[27px] flex-1">
-          <div className="flex items-center gap-[27px]">
-            <Target className="w-[45px] h-[45px] text-thelix-orange flex-shrink-0" />
-          </div>
-          <img
-            src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=900&h=390&fit=crop&q=80"
-            alt="Thelix Holdings leadership team in a strategy session"
-            className="w-full h-[390px] object-cover"
-          />
-          <div className="flex flex-col gap-[11px]">
-            <h3 className="font-medium text-black text-[26px] font-jakarta tracking-[1.04px]">
-              Transforming Industries, Empowering Communities
-            </h3>
-            <p className="text-black/80 text-lg leading-[27px] font-jakarta">
-              At Thelix Holdings, our mission is to drive transformative change across diverse
-              industries by building world-class business units in fintech, EdTech, cybersecurity,
-              education, healthcare, and identity verification. We are dedicated to creating
-              long-term value for our stakeholders through operational excellence, continuous
-              innovation, and empowering communities globally with cutting-edge solutions.
-            </p>
-          </div>
-        </SlideLeft>
-
-        {/* Vision */}
-        <SlideRight className="flex flex-col gap-[27px] flex-1">
-          <div className="flex items-center gap-[27px]">
-            <Eye className="w-[45px] h-[45px] text-thelix-orange flex-shrink-0" />
-          </div>
-          <img
-            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&h=390&fit=crop&q=80"
-            alt="Global skyline representing Thelix Holdings' vision for the future"
-            className="w-full h-[390px] object-cover"
-          />
-          <div className="flex flex-col gap-[11px]">
-            <h3 className="font-medium text-black text-[26px] font-jakarta tracking-[1.04px]">
-              A World Where Economic Freedom is Universal
-            </h3>
-            <p className="text-black/80 text-lg leading-[27px] font-jakarta">
-              To be the world's most impactful holding company — empowering over 300,000
-              lives by 2030 through six transformative business units, community development
-              programmes, and innovative solutions that create lasting economic freedom across
-              continents.
-            </p>
-          </div>
-        </SlideRight>
-      </div>
-    </div>
-  </section>
-);
-
-// ---- Features ----
-type FeatureRow = { title: string; description: string; Icon: React.ElementType }[];
-
-const featureRows: FeatureRow[] = [
-  [
-    {
-      title: "Purposeful Business Building",
-      description:
-        "We build and scale companies from the ground up in high-potential sectors, ensuring every business unit creates measurable economic and social value for all stakeholders.",
-      Icon: TrendingUp,
-    },
-    {
-      title: "Deep Industry Expertise",
-      description:
-        "Our leadership team brings decades of cross-sector experience, embedded directly in our business units to drive operational excellence and sustainable, scalable growth.",
-      Icon: Users,
-    },
-    {
-      title: "Global Reach, Local Impact",
-      description:
-        "With business units operating across multiple continents, we understand local market dynamics while leveraging global networks to drive meaningful scale.",
-      Icon: Globe,
-    },
-  ],
-  [
-    {
-      title: "Innovation-Led Growth",
-      description:
-        "Every company we build is rooted in transformative technology that disrupts legacy industries and creates entirely new markets for underserved populations.",
-      Icon: Lightbulb,
-    },
-    {
-      title: "Community Empowerment",
-      description:
-        "Through the Tolu Michael Foundation, we invest in people — funding entrepreneurship programmes, education initiatives, and economic research worldwide.",
-      Icon: Heart,
-    },
-    {
-      title: "Responsible Operations",
-      description:
-        "ESG principles guide every decision we make, ensuring each of our business units contributes positively to the environment, society, and governance standards globally.",
-      Icon: ShieldCheck,
-    },
-  ],
+const beliefs = [
+  ["01", "Innovation With Purpose", "We believe the most valuable innovations solve real problems and make a meaningful difference in people’s lives."],
+  ["02", "People Before Possibilities", "Technology creates its greatest value when it empowers people. Human needs and aspirations sit at the heart of what we build."],
+  ["03", "Ambition Without Borders", "Great ideas should not be limited by geography. We think globally and build with a vision that extends beyond boundaries."],
+  ["04", "Progress That Lasts", "Success is measured not only by what we create, but by the value it continues to deliver over time."],
 ];
 
-const FeaturesSection = () => (
-  <section className="bg-[#07060f] py-[70px]">
-    <div className="max-w-[1440px] mx-auto px-6 lg:px-[101px]">
-      <div className="max-w-[1238px] mx-auto flex flex-col gap-[72px]">
-        <FadeUp>
-          <h2 className="text-white text-4xl sm:text-[45px] font-bold font-jakarta tracking-[1.8px]">
-            What Sets Thelix Holdings Apart
-          </h2>
-        </FadeUp>
-        <div className="flex flex-col gap-[50px]">
-          {featureRows.map((row, rowIndex) => (
-            <StaggerGrid
-              key={rowIndex}
-              className="flex flex-col sm:flex-row items-start gap-10 sm:gap-[55px]"
-              delay={rowIndex * 0.05}
-            >
-              {row.map((feature) => (
-                <StaggerItem key={feature.title}>
-                  <article className="flex flex-col gap-[35px] flex-1 min-w-0">
-                    <feature.Icon className="w-[41px] h-[41px] text-thelix-orange flex-shrink-0" />
-                    <div className="flex flex-col gap-3">
-                      <h3 className="text-white text-[26.8px] font-bold font-jakarta">
-                        {feature.title}
-                      </h3>
-                      <p className="text-white/70 text-[18.6px] font-jakarta leading-[30.9px]">
-                        {feature.description}
-                      </p>
-                    </div>
-                  </article>
-                </StaggerItem>
-              ))}
-            </StaggerGrid>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
-);
+const approach = [
+  ["01", "We Identify", "Meaningful challenges, unmet needs, and opportunities where innovation can create real value."],
+  ["02", "We Imagine", "We challenge conventional thinking and shape bold ideas into practical solutions."],
+  ["03", "We Build", "Technology, talent, and execution come together to create businesses designed around real needs."],
+  ["04", "We Grow", "We refine and scale every business with a focus on relevance, performance, and lasting impact."],
+];
 
-// ---- Team ----
-const TeamSection = () => {
-  const [members, setMembers] = useState<TeamMember[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/team")
-      .then((r) => r.json())
-      .then((data: TeamMember[]) => setMembers(data))
-      .catch(() => { })
-      .finally(() => setLoading(false));
-  }, []);
-
-  const featured = members[0] ?? null;
-  const rest = members.slice(1);
-
+function Reveal({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const reduceMotion = useReducedMotion();
   return (
-    <section className="bg-[#f8f8f7] py-16 lg:py-24" aria-labelledby="team-title">
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-        <FadeUp>
-          <h2
-            id="team-title"
-            className="text-4xl sm:text-[45px] font-bold text-black font-jakarta text-center mb-16"
-          >
-            Meet The Team
-          </h2>
-        </FadeUp>
-
-        {loading && (
-          <div className="flex justify-center py-12">
-            <div className="w-8 h-8 border-2 border-[#F48220] border-t-transparent rounded-full animate-spin" />
-          </div>
-        )}
-
-        {!loading && members.length === 0 && (
-          <p className="text-center text-black/40 font-jakarta">
-            Team members coming soon.
-          </p>
-        )}
-
-        {!loading && featured && (
-          <>
-            <FadeUp className="flex justify-center mb-12">
-              <article className="flex flex-col items-center gap-4">
-                {featured.image ? (
-                  <img
-                    src={featured.image}
-                    alt={`${featured.name} portrait`}
-                    className="w-[280px] sm:w-[344px] h-auto aspect-square object-cover rounded-2xl"
-                  />
-                ) : (
-                  <div className="w-[280px] sm:w-[344px] aspect-square bg-gray-100 rounded-2xl flex items-center justify-center">
-                    <Users className="w-16 h-16 text-gray-300" />
-                  </div>
-                )}
-                <div className="text-center">
-                  <h3 className="font-bold text-[#07060f] text-2xl font-jakarta">
-                    {featured.name}
-                  </h3>
-                  <p className="text-[#4c4c4c] text-sm font-jakarta leading-[30px]">
-                    {featured.designation}
-                  </p>
-                </div>
-              </article>
-            </FadeUp>
-
-            {rest.length > 0 && (
-              <StaggerGrid className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                {rest.map((member) => (
-                  <StaggerItem key={member.id}>
-                    <article className="flex flex-col items-center gap-4">
-                      {member.image ? (
-                        <img
-                          src={member.image}
-                          alt={`${member.name} portrait`}
-                          className="w-full h-[200px] sm:h-[285px] object-cover rounded-xl"
-                        />
-                      ) : (
-                        <div className="w-full h-[200px] sm:h-[285px] bg-gray-100 rounded-xl flex items-center justify-center">
-                          <Users className="w-10 h-10 text-gray-300" />
-                        </div>
-                      )}
-                      <div className="text-center">
-                        <h3 className="font-bold text-[#07060f] text-xl sm:text-2xl font-jakarta">
-                          {member.name}
-                        </h3>
-                        <p className="text-[#4c4c4c] text-sm font-jakarta leading-[30px]">
-                          {member.designation}
-                        </p>
-                      </div>
-                    </article>
-                  </StaggerItem>
-                ))}
-              </StaggerGrid>
-            )}
-          </>
-        )}
-      </div>
-    </section>
+    <motion.div
+      initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: reduceMotion ? 0 : 0.65, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
   );
-};
+}
 
-// ---- Page ----
+function Label({ children }: { children: ReactNode }) {
+  return <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">{children}</p>;
+}
+
 export default function About() {
   return (
-    <PageTransition>
-      <div className="min-h-screen">
-        <Navbar />
-        <AboutHero />
-        <OurStorySection />
-        <MissionVisionSection />
-        <FeaturesSection />
-        <TeamSection />
-        <Footer />
-      </div>
-    </PageTransition>
+    <main className="bg-white text-black">
+      <InnerPageHeader />
+
+      <section className="relative flex min-h-[100svh] items-end overflow-hidden bg-neutral-300 px-5 pb-16 pt-32 sm:px-8 sm:pb-20 lg:px-16 lg:pb-24" aria-labelledby="about-hero-heading">
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0_/_0.62),rgb(0_0_0_/_0.06)),url('/joinus-image.png')] bg-cover bg-center" />
+        <Reveal className="relative z-10 mx-auto w-full max-w-[1320px] text-white">
+          <Label>Who we are</Label>
+          <h1 id="about-hero-heading" className="mt-5 max-w-[1080px] text-[clamp(3.25rem,7vw,7rem)] leading-[0.92] tracking-[-0.045em] [font-family:var(--font-display)] [text-wrap:balance]">
+            We Build Businesses That Shape What’s Next.
+          </h1>
+          <p className="mt-7 max-w-[670px] text-base leading-[1.6] text-white/85 sm:text-lg [text-wrap:pretty]">
+            Thelix Holdings is a technology and innovation group turning ambitious ideas into businesses that solve real-world problems and create lasting value across industries.
+          </p>
+        </Reveal>
+      </section>
+
+      <section className="px-5 py-24 sm:px-8 sm:py-32 lg:px-16 lg:py-40">
+        <div className="mx-auto grid max-w-[1320px] gap-12 lg:grid-cols-[0.8fr_1.4fr] lg:gap-24">
+          <Reveal><Label>01 — Our story</Label></Reveal>
+          <Reveal>
+            <h2 className="max-w-[850px] text-[clamp(2.75rem,5vw,5rem)] leading-[1] tracking-[-0.035em] [font-family:var(--font-display)] [text-wrap:balance]">Every Great Venture Begins With a Reason to Build.</h2>
+            <div className="mt-10 max-w-[720px] space-y-6 text-base leading-[1.65] text-neutral-700 sm:text-lg">
+              <p>Founded in 2023, Thelix Holdings was born from a belief that meaningful innovation begins with identifying real problems and having the courage to solve them.</p>
+              <p>What started as an entrepreneurial vision has grown into a group of businesses operating across cybersecurity, education, financial empowerment, global mobility, and career technology.</p>
+              <p>Although each business serves a different purpose, they share the same ambition: to create practical solutions that open doors, empower people, and make everyday possibilities greater.</p>
+              <p className="font-semibold text-black">And for us, this is only the beginning.</p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-black px-5 py-24 text-white sm:px-8 sm:py-32 lg:px-16 lg:py-40">
+        <div className="mx-auto max-w-[1320px]">
+          <Reveal><Label>02 — Why we exist</Label><h2 className="mt-6 max-w-[1000px] text-[clamp(3rem,6vw,6.5rem)] leading-[0.95] tracking-[-0.04em] [font-family:var(--font-display)] [text-wrap:balance]">To Make Possibility Accessible to More People.</h2></Reveal>
+          <Reveal className="mt-14 grid gap-8 border-t border-white/20 pt-8 lg:grid-cols-2 lg:gap-20">
+            <p className="text-lg leading-[1.6] text-white/70">We exist to bridge the gap between challenges and opportunities by building technology-driven businesses that make a meaningful difference.</p>
+            <p className="text-lg leading-[1.6] text-white/70">From helping individuals develop new skills to supporting institutions, careers, and global ambitions, our purpose is to create solutions that help people move forward.</p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="px-5 py-24 sm:px-8 sm:py-32 lg:px-16 lg:py-40">
+        <div className="mx-auto max-w-[1320px]">
+          <Reveal><Label>03 — Vision & mission</Label><h2 className="mt-6 max-w-[900px] text-[clamp(2.75rem,5vw,5rem)] leading-none tracking-[-0.035em] [font-family:var(--font-display)]">Guided by Vision. Grounded in Purpose.</h2></Reveal>
+          <div className="mt-16 grid gap-5 lg:grid-cols-2">
+            <Reveal className="rounded-[8px] bg-[#f2f0e9] p-7 shadow-[0_0_0_1px_rgb(0_0_0_/_0.05),0_12px_32px_-20px_rgb(0_0_0_/_0.24)] sm:p-10 lg:min-h-[360px]"><Label>Our vision</Label><p className="mt-16 text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.12] tracking-[-0.025em] [font-family:var(--font-display)]">To build a globally influential ecosystem of innovative businesses that transform industries, expand opportunities, and improve lives.</p></Reveal>
+            <Reveal className="rounded-[8px] bg-neutral-300 p-7 shadow-[0_0_0_1px_rgb(0_0_0_/_0.05),0_12px_32px_-20px_rgb(0_0_0_/_0.24)] sm:p-10 lg:min-h-[360px]"><Label>Our mission</Label><p className="mt-16 text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.12] tracking-[-0.025em] [font-family:var(--font-display)]">To identify meaningful challenges and develop technology-driven businesses that deliver practical solutions, empower people, and create sustainable value.</p></Reveal>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-neutral-100 px-5 py-24 sm:px-8 sm:py-32 lg:px-16 lg:py-40">
+        <div className="mx-auto max-w-[1320px]">
+          <Reveal><Label>04 — What we believe</Label><h2 className="mt-6 max-w-[880px] text-[clamp(2.75rem,5vw,5rem)] leading-none tracking-[-0.035em] [font-family:var(--font-display)]">Our Beliefs Shape Everything We Build.</h2></Reveal>
+          <div className="mt-16 grid gap-px overflow-hidden rounded-[8px] bg-black/10 sm:grid-cols-2">
+            {beliefs.map(([number, title, description]) => <Reveal key={number} className="min-h-[300px] bg-white p-7 sm:p-10"><p className="text-xs font-semibold tracking-[0.14em] text-neutral-400">{number}</p><h3 className="mt-16 text-3xl leading-[1.05] [font-family:var(--font-display)]">{title}</h3><p className="mt-5 max-w-[470px] leading-[1.6] text-neutral-600">{description}</p></Reveal>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 py-24 sm:px-8 sm:py-32 lg:px-16 lg:py-40">
+        <div className="mx-auto max-w-[1320px]">
+          <Reveal><Label>05 — How we build</Label><h2 className="mt-6 max-w-[900px] text-[clamp(2.75rem,5vw,5rem)] leading-none tracking-[-0.035em] [font-family:var(--font-display)]">From Possibility to Purpose-Driven Businesses.</h2></Reveal>
+          <div className="mt-16 border-t border-black">
+            {approach.map(([number, title, description]) => <Reveal key={number} className="grid gap-5 border-b border-black py-8 sm:grid-cols-[80px_0.7fr_1fr] sm:items-start sm:gap-8"><p className="text-sm tabular-nums text-neutral-500">{number}</p><h3 className="text-3xl [font-family:var(--font-display)]">{title}</h3><p className="max-w-[560px] leading-[1.6] text-neutral-600">{description}</p></Reveal>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f2f0e9] px-5 py-24 sm:px-8 sm:py-32 lg:px-16 lg:py-40">
+        <div className="mx-auto max-w-[1320px]">
+          <Reveal><Label>06 — Our journey</Label><h2 className="mt-6 max-w-[920px] text-[clamp(2.75rem,5vw,5rem)] leading-none tracking-[-0.035em] [font-family:var(--font-display)]">Every Milestone Is a Step Toward Something Greater.</h2></Reveal>
+          <div className="mt-16 grid gap-8 lg:grid-cols-3">
+            <Reveal><p className="text-6xl [font-family:var(--font-display)]">2023</p><h3 className="mt-6 text-xl font-semibold [font-family:var(--font-body)]">The Beginning</h3><p className="mt-4 leading-[1.6] text-neutral-600">Thelix Holdings was established to develop innovative businesses that create meaningful opportunities and solve real-world challenges.</p></Reveal>
+            <Reveal><p className="text-6xl [font-family:var(--font-display)]">05</p><h3 className="mt-6 text-xl font-semibold [font-family:var(--font-body)]">A Growing Ecosystem</h3><p className="mt-4 leading-[1.6] text-neutral-600">Our journey now spans technology, education, cybersecurity, credit, global mobility, and career development.</p></Reveal>
+            <Reveal><p className="text-6xl [font-family:var(--font-display)]">Now</p><h3 className="mt-6 text-xl font-semibold [font-family:var(--font-body)]">Building What’s Next</h3><p className="mt-4 leading-[1.6] text-neutral-600">We continue to strengthen our companies and pursue a future where our solutions create value globally.</p></Reveal>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-black px-5 py-24 text-white sm:px-8 sm:py-32 lg:px-16 lg:py-40">
+        <div className="mx-auto grid max-w-[1320px] gap-12 lg:grid-cols-[0.85fr_1fr] lg:items-center lg:gap-20">
+          <Reveal><img src="/TM's Image.png" alt="Tolulope Michael, Founder and Chief Visionary Officer" className="aspect-square w-full rounded-[8px] object-cover outline outline-1 -outline-offset-1 outline-white/10" /></Reveal>
+          <Reveal><Label>07 — Our leadership</Label><h2 className="mt-6 text-[clamp(2.75rem,5vw,5rem)] leading-none tracking-[-0.035em] [font-family:var(--font-display)]">Visionary Thinking. Purposeful Leadership.</h2><p className="mt-8 max-w-[620px] text-lg leading-[1.6] text-white/70">As founder of Thelix Holdings, Tolulope Michael leads the group’s vision of building innovative, technology-driven businesses that address real-world challenges and create opportunities across industries.</p><p className="mt-8 text-sm font-bold uppercase tracking-[0.12em]">Tolulope Michael</p><p className="mt-2 text-sm text-white/60">Founder & Chief Visionary Officer</p><a href="https://tolumichael.com/" target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex min-h-11 items-center border-b border-white text-sm font-semibold">Meet Our Founder <ArrowUpRight className="ms-2 size-4" aria-hidden="true" /></a></Reveal>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden px-5 py-28 text-white sm:px-8 sm:py-36 lg:px-16 lg:py-48">
+        <div className="absolute inset-0 bg-[linear-gradient(rgb(0_0_0_/_0.52),rgb(0_0_0_/_0.52)),url('/home_page_photo.jpg')] bg-cover bg-center" />
+        <Reveal className="relative z-10 mx-auto max-w-[1320px] text-center"><Label>08 — Our global outlook</Label><h2 className="mx-auto mt-6 max-w-[920px] text-[clamp(3rem,6vw,6rem)] leading-[0.95] tracking-[-0.04em] [font-family:var(--font-display)]">Our Vision Goes Beyond Borders.</h2><p className="mx-auto mt-8 max-w-[700px] text-lg leading-[1.6] text-white/80">We’re building toward a future where technology creates greater access, opportunity, and progress—taking meaningful solutions further and creating value beyond where we began.</p><a href="/#our-companies" className="mt-10 inline-flex min-h-11 items-center rounded-[3px] bg-white pl-6 pr-[22px] text-sm font-semibold text-black transition-transform duration-150 active:scale-[0.96]">Explore Our Companies <ArrowUpRight className="ms-2 size-4" aria-hidden="true" /></a></Reveal>
+      </section>
+
+      <Footer />
+    </main>
   );
 }

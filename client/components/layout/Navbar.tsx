@@ -6,19 +6,21 @@ const NAV_LINKS: { label: string; to: string; external?: boolean }[] = [
   { label: "Home", to: "/" },
   { label: "About Us", to: "/about" },
   { label: "Our Founder", to: "/founder" },
+  { label: "Our Impact", to: "/impact" },
+  { label: "Leadership", to: "/leadership" },
   { label: "Solutions", to: "/solutions" },
   { label: "Philanthropy", to: "/philanthropy" },
 ];
 
 const RESOURCES_LINKS = [
-  { label: "News", to: "/news" },
+  { label: "News & Insights", to: "https://blog.thelixholdings.com" },
   { label: "Blog", to: "/blog" },
 ];
 
 function ResourcesDropdown({ pathname }: { pathname: string }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const isActive = pathname === "/news" || pathname === "/blog";
+  const isActive = pathname === "/news-insights" || pathname === "/blog";
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -69,7 +71,7 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 bg-white border-b border-white/40 shadow-sm">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px] flex items-center justify-between h-[70px]">
         <Link to="/" onClick={() => setMobileOpen(false)}>
-          <img src="/Thelix logo.png" alt="Thelix Holdings" className="h-9 w-auto" />
+          <img src="/thelix-logo.svg" alt="Thelix Holdings" className="h-8 w-auto" />
         </Link>
 
         {/* Desktop */}
@@ -149,7 +151,7 @@ export function Navbar() {
             <button
               onClick={() => setResourcesOpen((v) => !v)}
               className={`w-full flex items-center justify-between py-3 font-medium text-sm font-jakarta transition-colors ${
-                pathname === "/news" || pathname === "/blog" ? "text-thelix-orange" : "text-black"
+                pathname === "/news-insights" || pathname === "/blog" ? "text-thelix-orange" : "text-black"
               }`}
             >
               Resources

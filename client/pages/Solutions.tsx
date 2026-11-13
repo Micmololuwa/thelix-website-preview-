@@ -26,9 +26,8 @@ const SolutionsHero = () => (
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1], delay: 0.22 }}
       >
-        Companies we built spanning fintech, EdTech, cybersecurity, education, identity
-        verification, and healthcare — each designed to solve real problems at scale and reshape
-        their respective industries.
+        Five companies spanning fintech, cybersecurity, global mobility, revenue operations, and
+        career development — each designed to solve real problems at scale and reshape its industry.
       </motion.p>
     </div>
   </section>
@@ -44,15 +43,6 @@ const SBUS = [
     image: "/magnific__talk__11997.png",
     imageAlt: "CreditVeto platform in action",
     url: "https://www.creditvetoafrica.com/",
-  },
-  {
-    id: "excelmind",
-    logo: <img src="/excelmind.png" alt="ExcelMind" className="h-10 w-auto object-contain" />,
-    heading: "Excelmind Helps Schools Run Better and Grow Faster",
-    body: "Simplify admissions, automate student records, and keep parents engaged — all from one dashboard. Now you have time to focus on teaching and growth, not admin work.",
-    image: "https://c.animaapp.com/nC2rat2M/img/rectangle-288-2.png",
-    imageAlt: "Student engaged in digital learning on ExcelMind",
-    url: "https://excelmind.africa",
   },
   {
     id: "excelmindcyber",
@@ -73,22 +63,22 @@ const SBUS = [
     url: "https://veripass.co",
   },
   {
-    id: "vizacheck",
-    logo: <img src="/Vizacheck.png" alt="VizaCheck" className="h-10 w-auto object-contain" />,
-    heading: "Reducing Visa Rejection Risk Before You Apply",
-    body: "VizaCheck is an intelligent visa screening platform that evaluates an applicant's profile against current embassy criteria and approval patterns — before they submit. By identifying risk factors early and providing actionable recommendations, VizaCheck helps applicants strengthen their cases, reduce rejection rates, and apply with confidence.",
-    image: "https://c.animaapp.com/nC2rat2M/img/rectangle-288-5.png",
-    imageAlt: "VizaCheck visa screening dashboard",
-    url: "https://vizacheck.com",
+    id: "cosella",
+    logo: <img src="/cosella-logo.svg" alt="Cosella" className="h-10 w-auto object-contain" />,
+    heading: "Turn More of Your Leads Into Collected Cash",
+    body: "Cosella brings forms, lead scoring, routing, call preparation, live sales coaching, and payments into one revenue operations platform for high-ticket sales teams.",
+    image: "/magnific__talk__11997.png",
+    imageAlt: "Cosella revenue operations platform",
+    url: "https://mycosella.com/",
   },
   {
-    id: "lightforth",
-    logo: <img src="/lft.png" alt="Lightforth" className="h-10 w-auto object-contain" />,
-    heading: "Land Your Dream Job Faster with AI",
-    body: "Lightforth is an AI-powered career acceleration platform. We optimize your resume for any job, automatically apply to matching opportunities, and prepare you to ace every interview — all in one place.",
-    image: "https://c.animaapp.com/nC2rat2M/img/rectangle-288-3.png",
-    imageAlt: "Professional using Lightforth career platform",
-    url: "https://lightforth.com",
+    id: "skill-venture",
+    logo: <img src="/skillventure.png" alt="Skill Venture" className="h-12 w-auto object-contain" />,
+    heading: "Turn Your Expertise Into Opportunity",
+    body: "Skill Venture helps professionals package their knowledge, build authority, and create new career and business opportunities through practical education and guided development.",
+    image: "/joinus-image.png",
+    imageAlt: "Skill Venture career development experience",
+    url: "https://skillventure.com/",
   },
 ];
 

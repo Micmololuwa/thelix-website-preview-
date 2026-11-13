@@ -1,182 +1,96 @@
-import { Link } from "react-router-dom";
+import type { ReactNode } from "react";
 
-const COMPANY_LINKS: { label: string; to: string; external?: boolean }[] = [
-  { label: "About Us", to: "/about" },
-  { label: "Investment", to: "/investment" },
-  { label: "Philanthropy", to: "/philanthropy" },
-  { label: "Sustainability", to: "/sustainability" },
-  { label: "News", to: "/news" },
-  { label: "Careers", to: "https://jobs.thelixholdings.com/", external: true },
+const EXPLORE_LINKS = [
+  { label: "About Us", href: "/about" },
+  { label: "Our Companies", href: "/#our-companies" },
+  { label: "Our Impact", href: "/impact" },
+  { label: "Our Leadership", href: "/leadership" },
+  { label: "Philanthropy", href: "/philanthropy" },
+  { label: "News & Insights", href: "https://blog.thelixholdings.com", external: true },
+  { label: "Careers", href: "https://jobs.thelixholdings.com/", external: true },
 ];
 
-const SOLUTION_LINKS = [
-  { label: "Finance", to: "/solutions" },
-  { label: "Edutech", to: "/solutions" },
-  { label: "Education", to: "/solutions" },
-  { label: "Healthcare", to: "/solutions" },
-  { label: "Tourism", to: "/solutions" },
+const COMPANY_LINKS = [
+  { label: "ExcelMindCyber", href: "https://excelmindcyber.com" },
+  { label: "Veripass", href: "https://veripass.co" },
+  { label: "Cosella", href: "https://mycosella.com/" },
+  { label: "Credit Veto", href: "https://www.creditvetoafrica.com/" },
+  { label: "Skill Venture", href: "https://skillventure.com/" },
+];
+const SOCIAL_LINKS = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/thelix-holdings/posts/?feedView=all" },
+  { label: "Instagram", href: "https://www.instagram.com/_thelixholdings/" },
+  { label: "Facebook", href: "https://www.facebook.com/thelixholdings" },
+  { label: "YouTube", href: "https://www.youtube.com/@Thelixholdings" },
+  { label: "X (Twitter)", href: "https://x.com/Thelixholdings" },
 ];
 
-const LinkedInIcon = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-  </svg>
-);
+const linkClass =
+  "inline-flex min-h-10 items-center text-sm text-black transition-opacity duration-150 hover:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2";
 
-const XIcon = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.73-8.835L1.254 2.25H8.08l4.26 5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-  </svg>
-);
-
-const InstagramIcon = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-  </svg>
-);
-
-export function Footer() {
+export function Footer({ sharedBackground = false }: { sharedBackground?: boolean }) {
   return (
-    <footer className="bg-[#1c1714] pt-16 pb-8">
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-[100px]">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-0 lg:justify-between mb-12">
+    <footer
+      id="site-footer"
+      className={`${sharedBackground ? "bg-transparent" : "bg-neutral-700 bg-[linear-gradient(rgb(15_15_15_/_0.44),rgb(15_15_15_/_0.44)),url('/home_page_photo.jpg')] bg-cover bg-center"} px-5 py-20 sm:px-10 sm:py-24 lg:px-[150px] lg:py-[150px]`}
+      aria-label="Site footer"
+    >
+      <div className="mx-auto max-w-[1440px] rounded-[10px] bg-[#f7f5ef] px-6 py-10 shadow-[0_0_0_1px_rgb(255_255_255_/_0.16),0_24px_70px_-24px_rgb(0_0_0_/_0.48),0_8px_24px_-12px_rgb(0_0_0_/_0.25)] sm:px-10 sm:py-12 lg:min-h-[660px] lg:px-12 lg:py-14">
+        <h2 className="mb-20 text-[32px] leading-[1.1] tracking-[-0.02em] text-neutral-950 [text-wrap:balance] lg:mb-24">
+          Built on Vision. Driven by Purpose.
+        </h2>
 
-          {/* Brand */}
-          <div className="max-w-xs flex flex-col gap-5">
-            <img
-              src="/Thelix-white-logo.png"
-              alt="Thelix Holdings"
-              className="h-16 w-auto object-contain object-left"
-            />
-            <p className="text-white/80 text-base leading-[23px] font-jakarta">
-              Building sustainable economic and social wealth through six strategic business
-              units, operational excellence, and community empowerment across global markets.
-            </p>
-            {/* Social icons */}
-            <div className="flex items-center gap-4 pt-1">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
+          <FooterColumn title="Explore">
+            {EXPLORE_LINKS.map((link) => (
               <a
-                href="https://www.linkedin.com/company/thelix-holdings/posts/?feedView=all"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="text-white/60 hover:text-thelix-orange transition-colors"
+                key={link.label}
+                href={link.href}
+                className={linkClass}
+                {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               >
-                <LinkedInIcon />
+                {link.label}
               </a>
-              <a
-                href="https://x.com/Thelixholdings"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="X (Twitter)"
-                className="text-white/60 hover:text-thelix-orange transition-colors"
-              >
-                <XIcon />
-              </a>
-              <a
-                href="#"
-                aria-label="Instagram"
-                className="text-white/60 hover:text-thelix-orange transition-colors"
-              >
-                <InstagramIcon />
-              </a>
-            </div>
-          </div>
+            ))}
+          </FooterColumn>
 
-          {/* Nav columns */}
-          <div className="flex flex-col sm:flex-row gap-12 sm:gap-16 lg:gap-24">
-            <div className="flex flex-col gap-6">
-              <h4 className="text-white/80 font-bold text-xl font-jakarta leading-[25px]">
-                Our Company
-              </h4>
-              <nav aria-label="Company links" className="flex flex-col gap-1">
-                {COMPANY_LINKS.map((link) =>
-                  link.external ? (
-                    <a
-                      key={link.label}
-                      href={link.to}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white/80 text-sm font-jakarta leading-[34px] hover:text-thelix-orange transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  ) : (
-                    <Link
-                      key={link.label}
-                      to={link.to}
-                      className="text-white/80 text-sm font-jakarta leading-[34px] hover:text-thelix-orange transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  )
-                )}
-              </nav>
-            </div>
+          <FooterColumn title="Our Companies">
+            {COMPANY_LINKS.map((link) => <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={linkClass}>{link.label}</a>)}
+          </FooterColumn>
 
-            <div className="flex flex-col gap-6">
-              <h4 className="text-white/80 font-bold text-xl font-jakarta leading-[25px]">
-                Our Solution
-              </h4>
-              <nav aria-label="Solution links" className="flex flex-col gap-1">
-                {SOLUTION_LINKS.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.to}
-                    className="text-white/80 text-sm font-jakarta leading-[34px] hover:text-thelix-orange transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
+          <FooterColumn title="Get in Touch">
+            <div className="space-y-5 pt-3 text-sm leading-[1.65] text-neutral-700">
+              <address className="not-italic">
+                <strong className="block text-xs uppercase tracking-[0.1em] text-black">Headquarters — Dallas</strong>
+                <span className="mt-2 block">14160 N Dallas Parkway,<br />Suite 760,<br />Dallas TX 75254</span>
+              </address>
+              <address className="not-italic">
+                <strong className="block text-xs uppercase tracking-[0.1em] text-black">Lagos</strong>
+                <span className="mt-2 block">5, Balogun Street,<br />Anifowose, Ikeja,<br />Lagos</span>
+              </address>
+              <a href="mailto:info@thelixholdings.com" className="inline-flex min-h-10 items-center underline decoration-black/25 underline-offset-4 transition-opacity duration-150 hover:opacity-60">info@thelixholdings.com</a>
             </div>
+          </FooterColumn>
 
-            {/* Contact */}
-            <div className="flex flex-col gap-6">
-              <h4 className="text-white/80 font-bold text-xl font-jakarta leading-[25px]">
-                Contact Us
-              </h4>
-              <div className="flex flex-col gap-5">
-                <div>
-                  <p className="text-thelix-orange text-xs font-jakarta font-semibold uppercase tracking-wider mb-1">
-                    Headquarters — Dallas
-                  </p>
-                  <p className="text-white/70 text-sm font-jakarta leading-[22px]">
-                    14160 N Dallas Parkway,<br />
-                    Suite 760,<br />
-                    Dallas TX 75254
-                  </p>
-                </div>
-                <div>
-                  <p className="text-thelix-orange text-xs font-jakarta font-semibold uppercase tracking-wider mb-1">
-                    Lagos
-                  </p>
-                  <p className="text-white/70 text-sm font-jakarta leading-[22px]">
-                    5, Balogun Street,<br />
-                    Anifowose, Ikeja,<br />
-                    Lagos
-                  </p>
-                </div>
-                <a
-                  href="mailto:info@thelixholdings.com"
-                  className="text-white/70 text-sm font-jakarta hover:text-thelix-orange transition-colors"
-                >
-                  info@thelixholdings.com
-                </a>
-              </div>
-            </div>
-          </div>
+          <FooterColumn title="Follow Our Journey">
+            {SOCIAL_LINKS.map((link) => <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={linkClass}>{link.label}</a>)}
+          </FooterColumn>
         </div>
 
-        {/* Bottom bar */}
-        <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-white/80 text-base leading-[23px] font-jakarta">
-            Copyright © 2025 Thelix Holdings
-          </p>
-          <p className="text-white/80 text-base leading-[23px] font-jakarta">
-            Powered by Thelix Holdings
-          </p>
+        <div className="mt-20 grid gap-8 lg:mt-32 lg:grid-cols-2 lg:items-end">
+          <img src="/thelix-logo.svg" alt="Thelix Holdings" className="h-14 w-auto object-contain object-left sm:h-16" />
+          <p className="text-sm text-neutral-500 lg:text-end">© 2026 Thelix Holdings. All rights reserved.</p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div>
+      <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-black [font-family:var(--font-body)]">{title}</h3>
+      <nav aria-label={title} className="mt-2 flex flex-col items-start">{children}</nav>
+    </div>
   );
 }
