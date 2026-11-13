@@ -13,7 +13,7 @@ const NAV_LINKS: { label: string; to: string; external?: boolean }[] = [
 ];
 
 const RESOURCES_LINKS = [
-  { label: "News & Insights", to: "https://blog.thelixholdings.com" },
+  { label: "News & Insights", to: "https://blog.thelixholdings.com", external: true },
   { label: "Blog", to: "/blog" },
 ];
 
@@ -48,6 +48,7 @@ function ResourcesDropdown({ pathname }: { pathname: string }) {
             <Link
               key={link.label}
               to={link.to}
+              {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               onClick={() => setOpen(false)}
               className={`block px-4 py-3 text-sm font-jakarta transition-colors hover:bg-orange-50 hover:text-thelix-orange ${
                 pathname === link.to ? "text-thelix-orange bg-orange-50/60" : "text-black"
@@ -163,6 +164,7 @@ export function Navbar() {
                   <Link
                     key={link.label}
                     to={link.to}
+                    {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     onClick={() => { setMobileOpen(false); setResourcesOpen(false); }}
                     className={`block py-2.5 text-sm font-jakarta transition-colors ${
                       pathname === link.to ? "text-thelix-orange" : "text-black/70 hover:text-thelix-orange"

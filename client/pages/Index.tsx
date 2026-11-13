@@ -17,7 +17,7 @@ const menuItems = [
   { label: "Our Impact", href: "/impact" },
   { label: "Leadership", href: "/leadership" },
   { label: "Philanthropy", href: "/philanthropy" },
-  { label: "News & Insights", href: "https://blog.thelixholdings.com" },
+  { label: "News & Insights", href: "https://blog.thelixholdings.com", external: true },
 ];
 
 const floatingRectangles = [
@@ -657,6 +657,7 @@ export default function Index() {
                   <motion.a
                     key={item.label}
                     href={item.href}
+                    {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     role="listitem"
                     initial={reduceMotion ? false : { opacity: 0, y: 20, filter: "blur(4px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}

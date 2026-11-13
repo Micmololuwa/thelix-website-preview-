@@ -9,7 +9,7 @@ const menuItems = [
   { label: "Our Impact", href: "/impact" },
   { label: "Leadership", href: "/leadership" },
   { label: "Philanthropy", href: "/philanthropy" },
-  { label: "News & Insights", href: "https://blog.thelixholdings.com" },
+  { label: "News & Insights", href: "https://blog.thelixholdings.com", external: true },
 ];
 
 export function InnerPageHeader() {
@@ -56,7 +56,7 @@ export function InnerPageHeader() {
             <motion.div id="inner-page-menu" initial={reduceMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: reduceMotion ? 0 : 0.2, delay: reduceMotion ? 0 : 0.18 }} className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pb-5 pt-4 sm:px-8 sm:pb-8 lg:px-12">
               <div className="border-t border-black">
                 {menuItems.map((item, index) => (
-                  <motion.a key={item.label} href={item.href} initial={reduceMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.35, delay: reduceMotion ? 0 : 0.2 + index * 0.05, ease: [0.22, 1, 0.36, 1] }} onClick={() => setIsMenuOpen(false)} className="group grid min-h-[62px] grid-cols-[38px_1fr] items-center gap-3 border-b border-black py-2 sm:min-h-[74px] sm:grid-cols-[50px_1fr] sm:gap-5">
+                  <motion.a key={item.label} href={item.href} {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})} initial={reduceMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.35, delay: reduceMotion ? 0 : 0.2 + index * 0.05, ease: [0.22, 1, 0.36, 1] }} onClick={() => setIsMenuOpen(false)} className="group grid min-h-[62px] grid-cols-[38px_1fr] items-center gap-3 border-b border-black py-2 sm:min-h-[74px] sm:grid-cols-[50px_1fr] sm:gap-5">
                     <span className="flex size-7 items-center justify-center border border-black text-[11px] font-semibold tabular-nums sm:size-8">{String(index + 1).padStart(2, "0")}</span>
                     <span className="text-[clamp(1.6rem,3.5vw,3rem)] leading-none [font-family:var(--font-display)] transition-transform duration-200 group-hover:translate-x-2">{item.label}</span>
                   </motion.a>
